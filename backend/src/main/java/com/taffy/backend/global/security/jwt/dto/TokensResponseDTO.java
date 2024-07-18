@@ -1,9 +1,13 @@
 package com.taffy.backend.global.security.jwt.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
-public class TokensResponseDTO {
-    private final String atk;
-    private final String rtk;
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class TokensResponseDTO{
+    private String atk;
+    private String rtk;
 }

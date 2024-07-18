@@ -3,10 +3,8 @@ package com.taffy.backend.member.dto;
 import lombok.Getter;
 
 @Getter
-public class signUpRequestDto {
+public class LoginRequestDto {
 
     private String email;
-    private String nickName;
-    private String Password;
-
+    private String password;
 }

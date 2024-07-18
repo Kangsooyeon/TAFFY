@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taffy.backend.global.security.jwt.dto.MemberRefreshTokenDTO;
 import com.taffy.backend.global.security.jwt.dto.TokensResponseDTO;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +38,7 @@ public class JwtProvider {
         return new TokensResponseDTO(atk, null);
     }
 
-    public TokensResponseDTO createTokensByLogin(int id) throws JsonProcessingException {
+    public TokensResponseDTO createTokensByLogin(Long id) throws JsonProcessingException {
         Subject atkSubject = Subject.atk(id);
         Subject rtkSubject = Subject.rtk(id);
         String atk = createToken(atkSubject, atkLive);
@@ -62,12 +59,12 @@ public class JwtProvider {
                 .compact();
     }
 
-
-    public Claims validateAndGetUserId(String token){
-        Jws<Claims> jws = Jwts.parser()
+    public Claims validateAndGetUserId(String token) throws JwtException {
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
-                .parseClaimsJws(token);
-        return jws.getBody();
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public boolean isValidToken(String token) {

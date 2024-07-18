@@ -10,11 +10,11 @@ public class Subject {
         this.memberId = memberId;
     }
 
-    public static Subject atk(long memberId) {
+    public static Subject atk(Long memberId) {
         return new Subject(memberId);
     }
 
-    public static Subject rtk(long memberId) {
+    public static Subject rtk(Long memberId) {
         return new Subject(memberId);
     }
 }

@@ -4,6 +4,8 @@ import com.taffy.backend.global.audit.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Builder
@@ -18,14 +20,17 @@ public class Member extends BaseTime {
     @Column(name = "user_email")
     private String email;
 
-    @OneToOne
+    @Column(name = "password")
+    private String password;
+
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "country_id")
     private Country country;
 
     @Column(name = "profile_img")
     private String profile_img;
 
-    @OneToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "belt_id")
     private Belt belt;
 
