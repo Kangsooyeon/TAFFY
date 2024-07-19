@@ -15,11 +15,8 @@ import com.taffy.backend.member.repository.CountryRepository;
 import com.taffy.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +51,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public TokensResponseDTO login(LoginRequestDto loginRequestDto){
         Member member = memberRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
         boolean matches = passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword());
