@@ -7,14 +7,12 @@ import lombok.Getter;
 public class SignUpRequestDto {
 
     @Email
+    @NotEmpty
     private String email;
 
     @NotEmpty
     @Size(min = 4, max = 20)
     private String nickName;
-
-    @NotEmpty
-    @Size(min = 4, max = 20)
 
     @NotEmpty
     @Size(min = 4, max = 20)
