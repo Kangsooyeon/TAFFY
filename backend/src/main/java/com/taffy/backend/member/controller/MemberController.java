@@ -34,11 +34,7 @@ public class MemberController {
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
         TokensResponseDTO tokens = memberService.login(loginRequestDto);
-        Cookie cookie = new Cookie("token", tokens.getAtk());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60);
-        httpServletResponse.addCookie(cookie);
+        cookieTokenSetting(httpServletResponse, tokens);
         return ResponseEntity.status(OK).body("로그인 완료");
     }
 
@@ -46,5 +42,18 @@ public class MemberController {
     public ResponseEntity<String> mailConfirm(@RequestBody MailDto mailDto){
         String authenticationCode = mailService.sendSimpleMessage(mailDto.getEmail());
         return ResponseEntity.status(OK).body(authenticationCode);
+    }
+
+    private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
+        Cookie cookieAtk = new Cookie("atk", tokens.getAtk());
+        Cookie cookieRtk = new Cookie("rtk", tokens.getRtk());
+        cookieAtk.setHttpOnly(true);
+        cookieAtk.setPath("/");
+        cookieAtk.setMaxAge(60 * 60);
+        cookieRtk.setHttpOnly(true);
+        cookieRtk.setPath("/");
+        cookieRtk.setMaxAge(60 * 60);
+        httpServletResponse.addCookie(cookieAtk);
+        httpServletResponse.addCookie(cookieRtk);
     }
 }
