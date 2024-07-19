@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,10 +43,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (token != null && !token.equalsIgnoreCase("null")) {
                 Claims claims = jwtProvider.validateAndGetUserId(token);
-                String memberId = claims.getSubject().substring(13,45);
+                String payload = claims.getSubject();
+                Member member = objectMapper.readValue(payload, Member.class);
+                Long memberId = member.getMemberId();
                 Date expiration = claims.getExpiration();
-                log.info("Authenticated user ID : " + memberId);
-                log.info("Authenticated expiration : " + expiration);
+                log.info("Authenticated user ID : {}", memberId);
+                log.info("Authenticated expiration : {}", expiration);
 
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         memberId,
@@ -74,6 +77,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwtExceptionHandler(response, ErrorCode.JWT_ILLEGAL_ARGUMENT.getMessage());
         }
     }
+
     private String parseBearerToken(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");
 
@@ -90,5 +94,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         objectMapper.writeValue(response.getWriter(), dto);
+    }
+
+    @Getter
+    static class Member {
+        private Long memberId;
     }
 }
