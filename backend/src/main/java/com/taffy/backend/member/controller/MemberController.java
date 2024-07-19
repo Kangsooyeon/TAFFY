@@ -11,12 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +42,12 @@ public class MemberController {
         return ResponseEntity.status(OK).body(authenticationCode);
     }
 
+    @DeleteMapping("/api/user")
+    public ResponseEntity<String> deleteMember(@AuthenticationPrincipal Long memberId){
+        memberService.deleteMember(memberId);
+        return ResponseEntity.status(NO_CONTENT).body("회원 삭제 완료");
+    }
+    
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
         Cookie cookieAtk = new Cookie("atk", tokens.getAtk());
         Cookie cookieRtk = new Cookie("rtk", tokens.getRtk());

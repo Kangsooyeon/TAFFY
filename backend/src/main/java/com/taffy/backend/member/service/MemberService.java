@@ -65,4 +65,9 @@ public class MemberService {
         }
         return null;
     }
+
+    @Transactional
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
 }
