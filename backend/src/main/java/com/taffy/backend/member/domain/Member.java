@@ -1,6 +1,7 @@
 package com.taffy.backend.member.domain;
 
 import com.taffy.backend.global.audit.BaseTime;
+import com.taffy.backend.record.domain.Record;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,5 +37,8 @@ public class Member extends BaseTime {
 
     @Column(name = "nickname")
     private String nickname;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Record record;
 
 }
