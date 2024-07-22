@@ -15,7 +15,6 @@ public class SignUpRequestDto {
     private String nickName;
 
     @NotEmpty
-    @Size(min = 4, max = 20)
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$", message = "영문/숫자/특수문자 8~20자 이내로 작성해주세요")
     private String password;
 

@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -24,7 +25,7 @@ public class MemberController {
     private final MailService mailService;
 
     @PostMapping("/api/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto){
+    public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto, BindingResult bindingResult){
         memberService.signUp(signUpRequestDto);
         return ResponseEntity.status(CREATED).body("회원가입 완료");
     }
@@ -37,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/api/mail")
-    public ResponseEntity<String> mailConfirm(@RequestBody MailDto mailDto){
+    public ResponseEntity<String> mailConfirm(@RequestBody MailDto mailDto, BindingResult bindingResult){
         String authenticationCode = mailService.sendSimpleMessage(mailDto.getEmail());
         return ResponseEntity.status(OK).body(authenticationCode);
     }
@@ -46,6 +47,13 @@ public class MemberController {
     public ResponseEntity<String> deleteMember(@AuthenticationPrincipal Long memberId){
         memberService.deleteMember(memberId);
         return ResponseEntity.status(NO_CONTENT).body("회원 삭제 완료");
+    }
+
+    @GetMapping("/api/reissue")
+    public ResponseEntity<?> reissueToken(@AuthenticationPrincipal Long memberId, HttpServletResponse httpServletResponse) {
+        TokensResponseDTO reissueToken = memberService.reissueToken(memberId);
+        cookieTokenSetting(httpServletResponse, reissueToken);
+        return ResponseEntity.status(OK).body("토큰 재발급 완료");
     }
     
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {

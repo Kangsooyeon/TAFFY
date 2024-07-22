@@ -15,6 +15,7 @@ public class Member extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "user_email")
