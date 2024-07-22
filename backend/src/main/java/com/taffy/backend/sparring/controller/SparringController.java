@@ -1,7 +1,7 @@
 package com.taffy.backend.sparring.controller;
 
-import com.taffy.backend.sparring.entity.UserEntity;
-import com.taffy.backend.sparring.service.UserService;
+import com.taffy.backend.sparring.model.UserModel;
+import com.taffy.backend.sparring.service.SparringService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +14,28 @@ import java.util.List;
 @RequestMapping("/api/spar")
 public class SparringController {
 
-    private final UserService userService;
+    private final SparringService sparringService;
 
-    @PostMapping("/redisTest")
-    public ResponseEntity<?> addRedisKey(@RequestBody UserEntity userEntity) {
-        userService.saveUser(userEntity);
-        return new ResponseEntity<>("유저가 캐시에 저장됐습니다.",HttpStatus.CREATED);
+    @PostMapping("/enqueue")
+    public ResponseEntity<?> enqueueUser(@RequestBody UserModel userModel) {
+        sparringService.enqueueUser(userModel);
+        return new ResponseEntity<>("enqueue 성공", HttpStatus.CREATED);
     }
 
-    @GetMapping("/redisTest")
-    public ResponseEntity<?> getRedisKeys() {
-        List<Object> users = userService.getUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @GetMapping("/dequeue")
+    public ResponseEntity<?> dequeueUsers() {
+        List<UserModel> matchedUsers = sparringService.dequeueUsers();
+
+        if (matchedUsers.size() == 2) {
+            return new ResponseEntity<>(matchedUsers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/queue")
+    public ResponseEntity<List<Object>> getQueue() {
+        List<Object> userQueue = sparringService.getQueue();
+        return new ResponseEntity<>(userQueue, HttpStatus.OK);
     }
 }
