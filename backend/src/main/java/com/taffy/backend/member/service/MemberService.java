@@ -70,4 +70,14 @@ public class MemberService {
     public void deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);
     }
+
+    public TokensResponseDTO reissueToken(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
+        try {
+            TokensResponseDTO reissueTokens = jwtProvider.createTokensByLogin(member.getId());
+            return reissueTokens;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

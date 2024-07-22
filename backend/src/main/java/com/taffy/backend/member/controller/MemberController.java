@@ -47,6 +47,13 @@ public class MemberController {
         memberService.deleteMember(memberId);
         return ResponseEntity.status(NO_CONTENT).body("회원 삭제 완료");
     }
+
+    @GetMapping("/api/reissue")
+    public ResponseEntity<?> reissueToken(@AuthenticationPrincipal Long memberId, HttpServletResponse httpServletResponse) {
+        TokensResponseDTO reissueToken = memberService.reissueToken(memberId);
+        cookieTokenSetting(httpServletResponse, reissueToken);
+        return ResponseEntity.status(OK).body("토큰 재발급 완료");
+    }
     
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
         Cookie cookieAtk = new Cookie("atk", tokens.getAtk());
