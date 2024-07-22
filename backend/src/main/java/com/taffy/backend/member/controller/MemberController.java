@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -24,7 +25,7 @@ public class MemberController {
     private final MailService mailService;
 
     @PostMapping("/api/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto){
+    public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto, BindingResult bindingResult){
         memberService.signUp(signUpRequestDto);
         return ResponseEntity.status(CREATED).body("회원가입 완료");
     }
@@ -37,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/api/mail")
-    public ResponseEntity<String> mailConfirm(@RequestBody MailDto mailDto){
+    public ResponseEntity<String> mailConfirm(@RequestBody MailDto mailDto, BindingResult bindingResult){
         String authenticationCode = mailService.sendSimpleMessage(mailDto.getEmail());
         return ResponseEntity.status(OK).body(authenticationCode);
     }

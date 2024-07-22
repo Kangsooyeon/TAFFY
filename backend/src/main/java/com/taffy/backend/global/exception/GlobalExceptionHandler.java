@@ -1,5 +1,7 @@
 package com.taffy.backend.global.exception;
 
+import com.taffy.backend.global.aop.CustomValidationException;
+import com.taffy.backend.global.aop.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> TaffyExceptionHandler(RuntimeException e) {
         log.error(e.getMessage());
         return serverError();
+    }
+
+    @ExceptionHandler(CustomValidationException.class)
+    public ResponseEntity<?> validationApiException(CustomValidationException e) {
+        log.error(e.getMessage());
+        return new ResponseEntity<>(new ResponseDto<>(HttpStatus.BAD_REQUEST.value(), e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<String> error(TaffyException e) {
