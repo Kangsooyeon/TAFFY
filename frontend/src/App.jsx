@@ -2,6 +2,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
+import SparingPage from "./pages/sparingPage/sparingPage";
 import './styles/fonts/font.css';
 import { Navbar, Navbar2 } from './components/common/navbar';
 
@@ -30,6 +31,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/sp" element={<SparingPage />} />
       </Routes>
     </>
   );

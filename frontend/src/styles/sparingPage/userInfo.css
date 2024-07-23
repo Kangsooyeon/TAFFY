@@ -1,0 +1,70 @@
+.box {
+  height: 249px;
+  width: 580px;
+}
+
+.box .view {
+  height: 249px;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 584px;
+}
+
+.box .overlap-group {
+  height: 254px;
+  left: -36px;
+  position: relative;
+  top: 80px;
+  width: 541px;
+}
+
+.box .vector {
+  height: 231px;
+  left: 0;
+  position: absolute;
+  top: 24px;
+  width: 541px;
+}
+
+.box .text-wrapper {
+  -webkit-text-stroke: 1.5px #ffffff;
+  color: #000000;
+  font-family: "LeeJiYeon-Regular", Helvetica;
+  font-size: 96px;
+  font-weight: 400;
+  height: 120px;
+  left: 85px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 34px;
+  transform: rotate(-13.41deg);
+  width: 309px;
+}
+
+.box .div {
+  color: #ff0000;
+  font-family: "LeeJiYeon-Regular", Helvetica;
+  font-size: 50px;
+  font-weight: 400;
+  height: 80px;
+  left: 112px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 148px;
+  transform: rotate(-13.41deg);
+  width: 189px;
+}
+
+.box .red-b {
+  height: 74px;
+  left: 275px;
+  object-fit: cover;
+  position: absolute;
+  top: 115px;
+  width: 127px;
+}
