@@ -16,6 +16,11 @@ const Navbar = ({ isLoggedIn, handleLogin, handleLogout }) => {
           <img src={logo} alt="TAFFY" />
         </Link>
       </div>
+      <div className="links">
+        <Link to="/ps_edu">품새 교육</Link>
+        <Link to="/ps_test">품새 심사</Link>
+        <Link to="/sp">겨루기</Link>
+      </div>
       <div className="icons">
         {isLoggedIn ? (
           <>
