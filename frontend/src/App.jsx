@@ -1,9 +1,11 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import './styles/fonts/font.css';
 import { Navbar, Navbar2 } from './components/common/navbar';
+import store from './actions/store';
 
 function App() {
   const location = useLocation();
@@ -21,7 +23,7 @@ function App() {
   };
 
   return (
-    <>
+    <Provider store={store}>
       {isMainOrLanding ? (
         <Navbar2 isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
       ) : (
@@ -31,7 +33,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
       </Routes>
-    </>
+    </Provider>
   );
 }
 

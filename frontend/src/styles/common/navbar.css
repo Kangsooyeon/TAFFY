@@ -33,6 +33,15 @@
 .icons {
   display: flex;
   align-items: center;
+  margin-right : 50px;
+  margin-top : 10px;
+  gap : 20px;
+}
+
+.icons a{
+  font-family: HappinessM;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .icons img {
