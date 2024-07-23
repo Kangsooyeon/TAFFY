@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'HappinessL';
+  src: url('/src/styles/fonts/HappinessL.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HappinessM';
+  src: url('/src/styles/fonts/HappinessM.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}

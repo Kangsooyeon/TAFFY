@@ -1,0 +1,9 @@
+.landingPage {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.landingPage button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
