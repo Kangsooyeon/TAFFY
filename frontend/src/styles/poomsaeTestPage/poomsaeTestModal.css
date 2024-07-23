@@ -1,0 +1,39 @@
+.modal-overlay {
+    position: absolute;
+    top: 370px;
+    left: 50%; /* 너비의 절반만큼 왼쪽으로 이동하여 중앙 정렬 */
+    transform: translateX(-50%);
+    width: 1400px; /* 너비 설정 */
+    height: 0px; /* 높이 설정 */
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 모달이 다른 콘텐츠 위에 오도록 설정 */
+  }
+  
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+}
+  
+.modal-image {
+    max-width: 50%;
+    height: auto;
+    border-radius: 8px;
+}
+  
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+}

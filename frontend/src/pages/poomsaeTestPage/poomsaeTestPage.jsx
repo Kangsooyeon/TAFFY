@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
+import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
 
 
 const PoomsaeTestPage = () => {
+    const [selectedImage, setSelectedImage] = useState(null);
+
     const belt_images = [
         'src/assets/images/common/belt/yellowBelt.png',
         'src/assets/images/common/belt/greenBelt.png',
@@ -14,14 +18,23 @@ const PoomsaeTestPage = () => {
         'src/assets/images/common/belt/blackBelt.png',
     ];
 
+    const handleItemClick = (imageUrl) => {
+        setSelectedImage(imageUrl); 
+    };
+    
+    const handleCloseModal = () => {
+        setSelectedImage(null);
+    };
+    
+
     return (
         <div className="poomsae-test-page">
             <div className="belt-box">
             {belt_images.map((url, index) => (
-                <PoomsaeBeltItem key={index} imageUrl={url} />
+                <PoomsaeBeltItem key={index} imageUrl={url} onClick={() => handleItemClick(url)} />
             ))}
             </div>
-
+            {selectedImage && <PoomsaeTestModal imageUrl={selectedImage} onClose={handleCloseModal} />}
         </div>
     );
 };
