@@ -27,10 +27,14 @@
   width: 541px;
 }
 
-.box .text-wrapper {
+.userInfoBox {
+  transform: rotate(-13.41deg);
+}
+
+.box .nickname {
   -webkit-text-stroke: 1.5px #ffffff;
   color: #000000;
-  font-family: "LeeJiYeon-Regular", Helvetica;
+  font-family: "Lee", Helvetica;
   font-size: 96px;
   font-weight: 400;
   height: 120px;
@@ -40,13 +44,12 @@
   position: absolute;
   text-align: center;
   top: 34px;
-  transform: rotate(-13.41deg);
   width: 309px;
 }
 
 .box .div {
   color: #ff0000;
-  font-family: "LeeJiYeon-Regular", Helvetica;
+  font-family: "Lee", Helvetica;
   font-size: 50px;
   font-weight: 400;
   height: 80px;
@@ -56,11 +59,10 @@
   position: absolute;
   text-align: center;
   top: 148px;
-  transform: rotate(-13.41deg);
   width: 189px;
 }
 
-.box .red-b {
+.box .belt {
   height: 74px;
   left: 275px;
   object-fit: cover;

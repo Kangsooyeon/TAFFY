@@ -15,8 +15,8 @@
 }
 
 @font-face {
-  font-family: 'LeeJiYeon-Regular';
-  src: url('/src/styles/fonts/이지연글씨.woff') format('woff');
+  font-family: 'Lee';
+  src: url('/src/styles/fonts/Lee.woff') format('woff');
   font-weight: 800;
   font-style: normal;
   font-display: swap;

@@ -1,12 +1,8 @@
 .sparingPage {
   background-image: url('/src/assets/images/sparingPage/background-layer.png');
   background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   background-position: center;
-
-  height: 1080px;
-  width: 1920px;
-  position: fixed;
-  left: 0;
-  top: 0;
+  min-height: 100vh;
 }
