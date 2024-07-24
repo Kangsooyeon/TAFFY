@@ -19,7 +19,7 @@ public class Ps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ps_id")
-    private Long psId;
+    private Integer psId;
 
     @Column(name = "ps_ko_name", length = 255, nullable = false)
     private String psKoName;

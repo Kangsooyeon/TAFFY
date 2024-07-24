@@ -18,7 +18,7 @@ public class Mv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mv_id")
-    private Long mvId;
+    private Integer mvId;
 
     @Column(name = "mv_url", length = 500)
     private String mvUrl;

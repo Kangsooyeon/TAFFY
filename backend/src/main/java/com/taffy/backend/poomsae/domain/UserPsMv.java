@@ -23,7 +23,7 @@ public class UserPsMv extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_ps_mv_id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -17,7 +17,7 @@ public class PsMv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ps_mv_id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ps_id", nullable = false)
