@@ -3,6 +3,7 @@ import { useState } from 'react';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import PoomsaeTestPage from "./pages/poomsaeTestPage/poomsaeTestPage";
+import PoomsaeTestDetailPage from "./pages/poomsaeTestPage/poomsaeTestDetailPage";
 import './styles/fonts/font.css';
 import { Navbar, Navbar2 } from './components/common/navbar';
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
+        <Route path="/ps_test/detail" element={<PoomsaeTestDetailPage />} />
       </Routes>
     </>
   );
