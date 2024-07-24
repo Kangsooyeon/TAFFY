@@ -62,6 +62,12 @@ public class MemberController {
         memberService.modificationInfo(memberId, memberInfoUpdateRequestDto);
         return ResponseEntity.status(OK).body("회원정보 수정 완료");
     }
+
+    @PutMapping("/api/belt")
+    public ResponseEntity<String> beltPromotion(@AuthenticationPrincipal Long memberId){
+        memberService.beltPromotion(memberId);
+        return ResponseEntity.status(OK).body("축하합니다! 띠 단계 1단계 승급하였습니다.");
+    }
     
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
         Cookie cookieAtk = new Cookie("atk", tokens.getAtk());

@@ -89,4 +89,16 @@ public class MemberService {
 
         member.updateInfo(memberInfoUpdateRequestDto, country);
     }
+
+    @Transactional
+    public void beltPromotion(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
+        long beltLevel = member.getBelt().getId() + 1;
+
+        if (beltLevel > 11){
+            throw new TaffyException(ErrorCode.CANNOT_BELT_UPGRADE);
+        }
+        Belt belt = beltRepository.findById(beltLevel).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUNT));
+        member.beltPromotion(belt);
+    }
 }
