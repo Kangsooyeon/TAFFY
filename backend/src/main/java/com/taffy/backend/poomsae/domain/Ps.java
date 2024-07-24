@@ -40,7 +40,7 @@ public class Ps {
     private String psThumb;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "belt_id", nullable = false)
+    @JoinColumn(name = "belt_id", nullable = false)
     private Belt belt;
 
     @OneToMany(mappedBy = "ps", cascade = CascadeType.ALL, orphanRemoval = true)
