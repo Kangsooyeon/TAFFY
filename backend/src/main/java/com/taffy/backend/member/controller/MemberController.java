@@ -4,6 +4,7 @@ import com.taffy.backend.global.email.MailService;
 import com.taffy.backend.global.email.dto.MailDto;
 import com.taffy.backend.global.security.jwt.dto.TokensResponseDTO;
 import com.taffy.backend.member.dto.LoginRequestDto;
+import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
 import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
@@ -50,10 +51,16 @@ public class MemberController {
     }
 
     @GetMapping("/api/reissue")
-    public ResponseEntity<?> reissueToken(@AuthenticationPrincipal Long memberId, HttpServletResponse httpServletResponse) {
+    public ResponseEntity<String> reissueToken(@AuthenticationPrincipal Long memberId, HttpServletResponse httpServletResponse) {
         TokensResponseDTO reissueToken = memberService.reissueToken(memberId);
         cookieTokenSetting(httpServletResponse, reissueToken);
         return ResponseEntity.status(OK).body("토큰 재발급 완료");
+    }
+
+    @PatchMapping("/api/user")
+    public ResponseEntity<String> modificationInfo(@AuthenticationPrincipal Long memberId, @RequestBody MemberInfoUpdateRequestDto memberInfoUpdateRequestDto){
+        memberService.modificationInfo(memberId, memberInfoUpdateRequestDto);
+        return ResponseEntity.status(OK).body("회원정보 수정 완료");
     }
     
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {

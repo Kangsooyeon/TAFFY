@@ -9,6 +9,7 @@ import com.taffy.backend.member.domain.Belt;
 import com.taffy.backend.member.domain.Country;
 import com.taffy.backend.member.domain.Member;
 import com.taffy.backend.member.dto.LoginRequestDto;
+import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
 import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.repository.BeltRepository;
 import com.taffy.backend.member.repository.CountryRepository;
@@ -79,5 +80,13 @@ public class MemberService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Transactional
+    public void modificationInfo(Long memberId, MemberInfoUpdateRequestDto memberInfoUpdateRequestDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
+        Country country = countryRepository.findByCountryName(memberInfoUpdateRequestDto.getCountryName());
+
+        member.updateInfo(memberInfoUpdateRequestDto, country);
     }
 }
