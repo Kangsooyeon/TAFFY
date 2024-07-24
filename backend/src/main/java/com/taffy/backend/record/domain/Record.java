@@ -20,7 +20,7 @@ public class Record extends BaseTime {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private Member member;
 
     @Column(name = "win")
