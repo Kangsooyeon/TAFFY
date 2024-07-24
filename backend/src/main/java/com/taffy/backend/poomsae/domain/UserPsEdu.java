@@ -24,7 +24,7 @@ public class UserPsEdu extends BaseTime {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private Member member;
 
     @ManyToOne
