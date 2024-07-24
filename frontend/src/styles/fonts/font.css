@@ -13,3 +13,35 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Lee';
+  src: url('/src/styles/fonts/Lee.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Antonio';
+  src: url('/src/styles/fonts/Antonio.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Antonior';
+  src: url('/src/styles/fonts/Antonior.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Antoniol';
+  src: url('/src/styles/fonts/Antoniol.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
