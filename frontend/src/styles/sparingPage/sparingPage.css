@@ -4,5 +4,41 @@
   background-position: center;
   background-repeat: no-repeat;
   background-position: center;
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  width: 33.33%;
+}
+
+.leftSection > div:first-child {
+  flex: 1;
+}
+
+.leftSection > div:last-child {
+  flex: 2;
+}
+
+.centerSection {
+  width: 33.33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  width: 33.33%;
+}
+
+.rightSection > div:first-child {
+  flex: 3;
+}
+
+.rightSection > div:last-child {
+  flex: 1;
 }

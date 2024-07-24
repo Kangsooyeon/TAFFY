@@ -1,6 +1,9 @@
+import '../../styles/sparingPage/userCharacter.css'
+
+
 const userCharacter = () => {
   return (
-    <div>
+    <div className="characterbox">
       <p>4</p>
     </div>
   )

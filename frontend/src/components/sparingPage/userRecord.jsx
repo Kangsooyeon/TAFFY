@@ -1,7 +1,9 @@
+import '../../styles/sparingPage/userRecord.css'
+
 const userRecord = () => {
   return (
-    <div>
-      <p>6</p>
+    <div className="box">
+      <img className="recordbox" alt="recordbox" src="..\src\assets\images\sparingPage\spar-info-block.png" />
     </div>
   )
 }
