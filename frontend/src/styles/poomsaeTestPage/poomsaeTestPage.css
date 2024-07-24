@@ -28,5 +28,5 @@
     height: 104px; /* 높이 설정 */
     display: flex; /* 내부 요소를 정렬하기 위한 flexbox 사용 */
     align-items: center; /* 세로 중앙 정렬 */
-    justify-content: center; /* 가로 중앙 정렬 */
+    justify-content: space-between; /* 가로 중앙 정렬 */
 }

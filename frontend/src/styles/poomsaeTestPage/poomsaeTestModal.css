@@ -1,30 +1,68 @@
 .modal-overlay {
-    position: absolute;
-    top: 370px;
-    left: 50%; /* 너비의 절반만큼 왼쪽으로 이동하여 중앙 정렬 */
-    transform: translateX(-50%);
-    width: 1400px; /* 너비 설정 */
-    height: 0px; /* 높이 설정 */
+    position: relative;
     background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000; /* 모달이 다른 콘텐츠 위에 오도록 설정 */
   }
   
 .modal-content {
     background: #fff;
-    padding: 20px;
+    top: 80px;
+    left: 50%; /* 너비의 절반만큼 왼쪽으로 이동하여 중앙 정렬 */
+    transform: translateX(-50%);
+    padding: 30px;
+    width: 1300px; /* 너비 설정 */
+    height: 580px; /* 높이 설정 */
     border-radius: 8px;
-    text-align: center;
+    /* text-align: center; */
     position: relative;
 }
-  
-.modal-image {
-    max-width: 50%;
-    height: auto;
-    border-radius: 8px;
+
+.modal-title {
+    position: relative;
+    color: black;
+    font-size: 80px;
+    height: 80px;
+    left: 30px;
+    margin: 0;
+    font-family: 'HappinessM';
 }
+
+.modal-ps{
+    display: flex; /* 내부 요소를 정렬하기 위한 flexbox 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between; /*가로 중앙 정렬*/
+}
+
+.modal-image-box{
+    position: relative;
+    top: 10px;
+    left: 30px;
+    background: black;
+    width: 400px;
+    height: 480px;
+    display: flex; /* 내부 요소를 정렬하기 위한 flexbox 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+}
+
+.modal-image{
+    width: 90%;
+    height: 90%;
+}
+
+.modal-desc{
+    width: 480px;
+
+}
+
+.modal-ps-description{
+    position: relative;
+    width: 500px;
+    font-size: 20px;
+    font-family: 'HappinessM';
+
+}
+
   
 .modal-close {
     position: absolute;
