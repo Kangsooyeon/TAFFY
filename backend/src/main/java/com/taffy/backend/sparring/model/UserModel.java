@@ -1,6 +1,8 @@
 package com.taffy.backend.sparring.model;
 
 import java.io.Serializable;
+import java.util.Objects;
+
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,18 +27,16 @@ public class UserModel implements Serializable {
     private int loseCnt;
     private int drawCnt;
 
-       @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserModel userModel = (UserModel) o;
-        return userId == userModel.userId && winCnt == userModel.winCnt && loseCnt == userModel.loseCnt && drawCnt == userModel.drawCnt && Objects.equals(nickname, userModel.nickname) && Objects.equals(beltName, userModel.beltName) && Objects.equals(profileImg, userModel.profileImg);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, nickname, beltName, profileImg, winCnt, loseCnt, drawCnt);
-    }
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    UserModel userModel = (UserModel) o;
+    return userId == userModel.userId && winCnt == userModel.winCnt && loseCnt == userModel.loseCnt && drawCnt == userModel.drawCnt && Objects.equals(nickname, userModel.nickname) && Objects.equals(beltName, userModel.beltName) && Objects.equals(profileImg, userModel.profileImg);
 }
 
-
+@Override
+public int hashCode() {
+    return Objects.hash(userId, nickname, beltName, profileImg, winCnt, loseCnt, drawCnt);
+}
+}
