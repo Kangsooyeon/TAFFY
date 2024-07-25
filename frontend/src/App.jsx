@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
+import PoomsaeEduPage from "./pages/poomsaeEduPage/poomsaeEduPage";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import store from './actions/store';
@@ -34,6 +35,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
+        <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
       </Routes>
     </Provider>
   );
