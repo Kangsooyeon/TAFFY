@@ -1,8 +1,8 @@
-.characterbox {
+.quickbutton {
   border-radius: 10px;
   border: 3.5px solid #000;
   opacity: 0.8;
-  background: #FFF;
-  width: 100%;
-  height: 80%
+  background: #E22829;
+  margin: 20px;
+  width: 100%
 }

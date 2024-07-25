@@ -1,16 +1,20 @@
 .sparingPage {
+  padding-top: 55px;
+  padding-bottom: 55px;
   background-image: url('/src/assets/images/sparingPage/background-layer.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
   display: flex;
+  height: calc(100vh);
 }
 
-.leftSection {
+.leftSection, .centerSection, .rightSection {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 33.33%;
 }
 
@@ -22,23 +26,10 @@
   flex: 2;
 }
 
-.centerSection {
-  width: 33.33%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.rightSection {
-  display: flex;
-  flex-direction: column;
-  width: 33.33%;
-}
-
 .rightSection > div:first-child {
-  flex: 3;
+  flex: 5;
 }
 
 .rightSection > div:last-child {
-  flex: 1;
+  flex: 2;
 }

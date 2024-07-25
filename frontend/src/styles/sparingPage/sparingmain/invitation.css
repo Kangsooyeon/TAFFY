@@ -1,0 +1,9 @@
+.invitation {
+    margin: 20px;
+    border-radius: 10px;
+    border: 3.5px solid #000;
+    opacity: 0.8;
+    background: #F5E8D7;
+    width: 90%;
+    height: 50%;
+}

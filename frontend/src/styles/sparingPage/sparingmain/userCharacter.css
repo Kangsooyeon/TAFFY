@@ -1,0 +1,9 @@
+.characterbox {
+  border-radius: 10px;
+  border: 3.5px solid #000;
+  opacity: 0.8;
+  background: #FFF;
+  width: 100%;
+  margin: 20px;
+  height: 100%
+}

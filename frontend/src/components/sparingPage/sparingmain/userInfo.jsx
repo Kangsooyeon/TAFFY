@@ -1,4 +1,4 @@
-import '../../styles/sparingPage/userInfo.css'
+import '../../../styles/sparingPage/sparingmain/userInfo.css'
 
 const userInfo = () => {
   return (

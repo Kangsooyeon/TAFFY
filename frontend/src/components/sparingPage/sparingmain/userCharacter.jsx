@@ -1,5 +1,4 @@
-import '../../styles/sparingPage/userCharacter.css'
-
+import '../../../styles/sparingPage/sparingmain/userCharacter.css'
 
 const userCharacter = () => {
   return (
