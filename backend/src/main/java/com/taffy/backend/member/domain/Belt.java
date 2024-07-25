@@ -21,6 +21,7 @@ public class Belt {
     @Column(name = "belt_name")
     private String belt_name;
 
-
+    @Column(name = "belt_title")
+    private String belt_title;
 
 }
