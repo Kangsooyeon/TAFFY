@@ -24,4 +24,19 @@ public class UserModel implements Serializable {
     private int winCnt;
     private int loseCnt;
     private int drawCnt;
+
+       @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserModel userModel = (UserModel) o;
+        return userId == userModel.userId && winCnt == userModel.winCnt && loseCnt == userModel.loseCnt && drawCnt == userModel.drawCnt && Objects.equals(nickname, userModel.nickname) && Objects.equals(beltName, userModel.beltName) && Objects.equals(profileImg, userModel.profileImg);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, nickname, beltName, profileImg, winCnt, loseCnt, drawCnt);
+    }
 }
+
+
