@@ -13,8 +13,8 @@ const Dropdown = ({ options, selectedOption, onOptionSelect }) => {
         <img src={selectedOption} alt="Selected Language" className='lang'/>
       </button>
       <div className={`menu ${isOpen ? 'active' : ''}`}>
-        {options.map((option) => (
-          <button key={option} onClick={() => {
+        {options.map((option, index) => (
+          <button key={index} onClick={() => {
             onOptionSelect(option.value);
             setIsOpen(false);
           }}>

@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
@@ -33,7 +33,7 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/main" element={<MainPage />} />
+        <Route path="/main" element={<MainPage language={language}/>} />
       </Routes>
     </Provider>
   );
