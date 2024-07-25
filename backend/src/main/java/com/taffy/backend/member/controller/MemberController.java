@@ -5,6 +5,7 @@ import com.taffy.backend.global.email.dto.MailDto;
 import com.taffy.backend.global.security.jwt.dto.TokensResponseDTO;
 import com.taffy.backend.member.dto.LoginRequestDto;
 import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
+import com.taffy.backend.member.dto.NicknameDuplicateDto;
 import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.service.MemberService;
 import com.taffy.backend.poomsae.dto.MyPageDto;
@@ -74,6 +75,12 @@ public class MemberController {
     public ResponseEntity<MyPageDto> myPage(@AuthenticationPrincipal Long memberId){
         MyPageDto myPageDto = memberService.myPage(memberId);
         return ResponseEntity.status(OK).body(myPageDto);
+    }
+
+    @PostMapping("/api/nickname")
+    public ResponseEntity<String> duplicateNickname(@RequestBody NicknameDuplicateDto nicknameDuplicateDto){
+        memberService.isNicknameDuplicate(nicknameDuplicateDto);
+        return ResponseEntity.status(OK).body("사용가능한 닉네임 입니다");
     }
     
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {

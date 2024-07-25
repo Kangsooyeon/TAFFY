@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
     Optional<Member> findByEmail(String email);
+    boolean existsByNickname(String nickName);
 
     @Query("select r from Record r join fetch r.member m where r.member = :mid")
     Record findUserAndRecord(@Param("mid") Member member);
