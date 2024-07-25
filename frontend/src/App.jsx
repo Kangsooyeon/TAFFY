@@ -12,6 +12,7 @@ function App() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isMainOrLanding = location.pathname === '/' || location.pathname === '/main';
+  const isDetailPage = location.pathname === '/ps_test/detail';
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -24,10 +25,12 @@ function App() {
 
   return (
     <>
-      {isMainOrLanding ? (
-        <Navbar2 isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
-      ) : (
-        <Navbar isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
+      {!isDetailPage && (
+        isMainOrLanding ? (
+          <Navbar2 isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
+        ) : (
+          <Navbar isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
+        )
       )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
