@@ -7,6 +7,7 @@ import com.taffy.backend.member.dto.LoginRequestDto;
 import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
 import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.service.MemberService;
+import com.taffy.backend.poomsae.dto.MyPageDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -67,6 +68,12 @@ public class MemberController {
     public ResponseEntity<String> beltPromotion(@AuthenticationPrincipal Long memberId){
         memberService.beltPromotion(memberId);
         return ResponseEntity.status(OK).body("축하합니다! 띠 단계 1단계 승급하였습니다.");
+    }
+
+    @GetMapping("/api/user")
+    public ResponseEntity<MyPageDto> myPage(@AuthenticationPrincipal Long memberId){
+        MyPageDto myPageDto = memberService.myPage(memberId);
+        return ResponseEntity.status(OK).body(myPageDto);
     }
     
     private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
