@@ -10,6 +10,7 @@ import com.taffy.backend.member.domain.Country;
 import com.taffy.backend.member.domain.Member;
 import com.taffy.backend.member.dto.LoginRequestDto;
 import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
+import com.taffy.backend.member.dto.NicknameDuplicateDto;
 import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.repository.BeltRepository;
 import com.taffy.backend.member.repository.CountryRepository;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +131,15 @@ public class MemberService {
                 .build();
 
         return myPageDto;
+    }
+
+    @Transactional(readOnly = true)
+    public void isNicknameDuplicate(NicknameDuplicateDto nicknameDuplicateDto) {
+        boolean isExistNickname = memberRepository.existsByNickname(nicknameDuplicateDto.getNickName());
+
+        if (isExistNickname){
+            throw new TaffyException(ErrorCode.NICHNAME_ALREADY_EXIST);
+        }
     }
 
     private static List<PoomSaeCompletedDto> getPoomSaeCompletedDtos(List<UserPsEdu> userAndPoomSaeComplete) {
