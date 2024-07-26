@@ -15,10 +15,12 @@ import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.repository.BeltRepository;
 import com.taffy.backend.member.repository.CountryRepository;
 import com.taffy.backend.member.repository.MemberRepository;
+import com.taffy.backend.poomsae.domain.Ps;
 import com.taffy.backend.poomsae.domain.UserPsEdu;
 import com.taffy.backend.poomsae.domain.UserPsTest;
 import com.taffy.backend.poomsae.dto.MyPageDto;
 import com.taffy.backend.poomsae.dto.PoomSaeCompletedDto;
+import com.taffy.backend.poomsae.repostiory.PsRepository;
 import com.taffy.backend.poomsae.repostiory.UserPsEduRepository;
 import com.taffy.backend.poomsae.repostiory.UserPsMvRepository;
 import com.taffy.backend.poomsae.repostiory.UserPsTestRepository;
@@ -48,6 +50,7 @@ public class MemberService {
     private final UserPsMvRepository userPsMvRepository;
     private final UserPsTestRepository userPsTestRepository;
     private final RecordRepository recordRepository;
+    private final PsRepository psRepository;
 
 
     @Transactional
@@ -70,6 +73,8 @@ public class MemberService {
                 .country(country)
                 .build();
 
+        memberRepository.save(member);
+
         // Insert Initial Data
         // record
         Record initialRecord = Record.builder()
@@ -78,8 +83,25 @@ public class MemberService {
                         .lose(0)
                         .draw(0)
                         .build();
-        memberRepository.save(member);
+
         recordRepository.save(initialRecord);
+
+        // user_ps_edu : 유저 품새 교육 완료 여부
+        List<UserPsEdu> userPsEduList = new ArrayList<>();
+        for (Long psId = 1L; psId <= 8L; psId++) {
+            Ps ps = psRepository.findById(psId).orElseThrow(() -> new TaffyException(ErrorCode.PS_NOT_FOUND));
+            UserPsEdu userPsEdu = UserPsEdu.builder()
+                    .member(member)
+                    .ps(ps)
+                    .userPsEduDone(false)  // 초기에는 모든 품새 교육이 완료되지 않은 상태
+                    .build();
+            userPsEduList.add(userPsEdu);
+        }
+        userPsEduRepository.saveAll(userPsEduList);
+
+        // user_ps_mv : 유저 품새당 기본동작 완료 여부
+
+        // user_ps_test : 유저 품새 심사 통과 여부
     }
 
     @Transactional(readOnly = true)
