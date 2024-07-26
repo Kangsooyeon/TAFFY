@@ -39,6 +39,8 @@ mail:
     port: 6379
     host: i11e104.p.ssafy.io
 
+server:
+  port:8081
 
 openvidu:
   url: http://localhost:4443
