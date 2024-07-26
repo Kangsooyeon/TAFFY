@@ -3,7 +3,6 @@ import '../../../styles/sparingPage/sparingmain/userCharacter.css'
 const userCharacter = () => {
   return (
     <div className="characterbox">
-      <p>4</p>
     </div>
   )
 }

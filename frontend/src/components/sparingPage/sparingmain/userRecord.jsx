@@ -12,21 +12,21 @@ const userRecord = () => {
       <div className="countbox">
         <div className="countdiv">
           <div className="totalcount">
-            <p>총횟수</p>
-            <hr />
-            <p>20회</p>
+            <p className="custom-title">총 횟수</p>
+            <hr className="custom-hr"/>
+            <p style={{fontSize: '50px', margin: '0px'}}>20<span style={{fontSize: '20px'}}>회</span></p>
           </div>
           <div className="wincount">
-            <p>이긴횟수</p>
-            <hr />
-            <p>10회</p>
+            <p className="custom-title">이긴 횟수</p>
+            <hr className="custom-hr"/>
+            <p style={{fontSize: '50px', margin: '0px'}}>10<span style={{fontSize: '20px'}}>회</span></p>
           </div>
         </div>
         <div className="winscore">
-          <p>승률</p>
-          <hr />
-          <p>50%</p>
-        </div>
+          <p className="custom-title">승률</p>
+          <hr className="custom-hr"/>
+          <p style={{fontSize: '50px', margin: '0px'}}>50<span style={{fontSize: '20px'}}>%</span></p>
+          </div>
       </div>
       <div style={{margin: '-4px', width: '99%'}}>
         <img src={SparInfoBottom} alt="" className="recordimgbottom"/>
