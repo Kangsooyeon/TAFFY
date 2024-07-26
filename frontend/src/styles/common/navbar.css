@@ -33,18 +33,61 @@
 .icons {
   display: flex;
   align-items: center;
+  margin-right: 20px;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.icons a {
+  font-family: HappinessM;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .icons img {
   height: 25px;
+  width: auto; /* 이미지를 일정한 높이로 유지하기 위해 width를 auto로 설정 */
+  object-fit: contain; /* 이미지가 비율에 맞게 조정되도록 설정 */
   margin-right: 30px;
-  margin-left:-10px;
+  margin-left: -10px;
   cursor: pointer;
 }
 
+.icons .loginIcon {
+  height: 25px; /* 로그인 아이콘의 크기를 줄임 */
+  width: auto; /* 로그인 아이콘의 가로 크기를 줄임 */
+  object-fit: contain; /* 이미지가 비율에 맞게 조정되도록 설정 */
+}
+
+.icons .loginIconKo {
+  height: 25px;
+  width: 38px; /* 한국어 로그인 아이콘의 가로 크기를 줄임 */
+  object-fit: contain;
+  margin-bottom: 7px;
+}
+
+.icons .myIcon {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 30px;
+  margin-left: -10px;
+  cursor: pointer;
+  position: relative;
+  top: -5px; /* 마이페이지 아이콘을 위로 올림 */
+}
+
+.lang {
+  height: 25px;
+  width: auto; /* 이미지를 일정한 높이로 유지하기 위해 width를 auto로 설정 */
+  object-fit: contain; /* 이미지가 비율에 맞게 조정되도록 설정 */
+  margin-right: -30px;
+  cursor: pointer;
+}
 
 /* 반응형 */
-@media (max-width: 768px) {
+
+@media (max-width: 1000px) {
   .navbar {
     height: 40px;
   }
@@ -55,11 +98,31 @@
 
   .links {
     margin-left: 10px;
-    gap: 10px;
+    gap: 2px;
+    font-size: 10px;
   }
 
   .links a {
     font-size: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 40px;
+  }
+
+  .logo img {
+    height: 20px;
+  }
+
+  .links {
+    margin-left: 3px;
+    gap: 2px;
+  }
+
+  .links a {
+    font-size: 22px;
   }
 }
 
@@ -73,11 +136,11 @@
   }
 
   .links {
-    margin-left: 10px;
+    margin-left:2px;
     gap: 10px;
   }
   
   .links a {
-    font-size: 10px;
+    font-size: 15px;
   }
 }
