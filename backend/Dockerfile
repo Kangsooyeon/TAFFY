@@ -1,6 +1,31 @@
 # open jdk 21 버전의 환경을 구성
 FROM openjdk:17
 
+# Docker CLI 설치에 필요한 패키지 설치
+RUN apt-get update && \
+    apt-get -y install apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common
+
+# Docker의 공식 GPG 키 추가
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+# Docker의 공식 저장소 추가
+RUN add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable"
+
+# Docker CLI 설치
+RUN apt-get update && \
+    apt-get -y install docker-ce-cli
+
+# Jenkins 사용자로 전환
+USER jenkins
+
+
 # tzdata 패키지 설치 및 타임존 설정
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo Asia/Seoul > /etc/timezone
 
