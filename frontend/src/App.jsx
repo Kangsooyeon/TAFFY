@@ -5,6 +5,7 @@ import MainPage from "./pages/mainPage/mainPage";
 import SparingPage from "./pages/sparingPage/sparingPage";
 import './styles/fonts/font.css';
 import { Navbar, Navbar2 } from './components/common/navbar';
+import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage"
 
 function App() {
   const location = useLocation();
@@ -32,6 +33,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/sp" element={<SparingPage />} />
+        <Route path="/sp/game" element={<SparingDetailPage/>}/>
       </Routes>
     </>
   );
