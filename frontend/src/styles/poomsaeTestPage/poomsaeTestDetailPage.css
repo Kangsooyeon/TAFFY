@@ -38,3 +38,10 @@
     align-items: center;
     justify-content: center;
 }
+
+.poomsae-image {
+    max-width: 100%; /* 이미지가 div를 넘지 않도록 */
+    height: auto;    /* 비율을 유지하면서 높이 조정 */
+    display: block;  /* 이미지 주위에 여백이 생기지 않도록 */
+    margin: 0 auto;  /* 가운데 정렬 */
+}

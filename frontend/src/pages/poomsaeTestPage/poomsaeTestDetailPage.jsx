@@ -1,7 +1,4 @@
-
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
-
-
 
 const PoomsaeTestDetailPage = () => {
 
@@ -11,6 +8,10 @@ const PoomsaeTestDetailPage = () => {
                 <p>태극 1장</p>
             </div>
             <div className="detail-content">
+                <img 
+                    src="/assets/images/common/popUp.png"  
+                    className="poomsae-image"
+                />
             </div>
         </div>
     );
