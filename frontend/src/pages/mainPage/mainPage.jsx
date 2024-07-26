@@ -28,7 +28,7 @@ const MainPage = ({ language }) => {
 }
 
 MainPage.propTypes = {
-  language: PropTypes.string.isRequired, // 추가
+  language: PropTypes.string.isRequired,
 };
 
 export default MainPage;
