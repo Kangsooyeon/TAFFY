@@ -29,7 +29,7 @@ public class MemberController {
 
     @PostMapping("/api/sign-up")
     public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto, BindingResult bindingResult){
-        memberService.signUp(signUpRequestDto);
+        memberService.signUpWithInitialData(signUpRequestDto);
         return ResponseEntity.status(CREATED).body("회원가입 완료");
     }
 

@@ -16,10 +16,14 @@ import com.taffy.backend.member.repository.BeltRepository;
 import com.taffy.backend.member.repository.CountryRepository;
 import com.taffy.backend.member.repository.MemberRepository;
 import com.taffy.backend.poomsae.domain.UserPsEdu;
+import com.taffy.backend.poomsae.domain.UserPsTest;
 import com.taffy.backend.poomsae.dto.MyPageDto;
 import com.taffy.backend.poomsae.dto.PoomSaeCompletedDto;
 import com.taffy.backend.poomsae.repostiory.UserPsEduRepository;
+import com.taffy.backend.poomsae.repostiory.UserPsMvRepository;
+import com.taffy.backend.poomsae.repostiory.UserPsTestRepository;
 import com.taffy.backend.record.domain.Record;
+import com.taffy.backend.record.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,10 +42,16 @@ public class MemberService {
     private final BeltRepository beltRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+    // 초기 데이터 설정을 위함
     private final UserPsEduRepository userPsEduRepository;
+    private final UserPsMvRepository userPsMvRepository;
+    private final UserPsTestRepository userPsTestRepository;
+    private final RecordRepository recordRepository;
+
 
     @Transactional
-    public void signUp(SignUpRequestDto signUpRequestDto) {
+    public void signUpWithInitialData(SignUpRequestDto signUpRequestDto) {
 
         boolean existsEmail = memberRepository.existsByEmail(signUpRequestDto.getEmail());
         if (existsEmail) {
@@ -60,7 +70,16 @@ public class MemberService {
                 .country(country)
                 .build();
 
+        // Insert Initial Data
+        // record
+        Record initialRecord = Record.builder()
+                        .member(member)
+                        .win(0)
+                        .lose(0)
+                        .draw(0)
+                        .build();
         memberRepository.save(member);
+        recordRepository.save(initialRecord);
     }
 
     @Transactional(readOnly = true)
