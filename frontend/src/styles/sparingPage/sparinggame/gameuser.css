@@ -1,0 +1,36 @@
+.gameuserinfobox {
+  width: 100px;
+  height: 100px;
+  background: #163665;
+  position: relative;
+  clip-path: polygon(
+    30% 0%, 70% 0%,
+    100% 30%, 100% 70%,
+    70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
+}
+
+.gameuserinfobox:before {
+  content: "";
+  width: 100px;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-bottom: 29px solid #163665;
+  border-left: 29px solid #f5e8d7;
+  border-right: 29px solid #F5E8D7;
+}
+
+.gameuserinfobox:after {
+  content: "";
+  width: 100px;
+  height: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 29px solid #163665;
+  border-left: 29px solid #F5E8D7;
+  border-right: 29px solid #F5E8D7;
+}

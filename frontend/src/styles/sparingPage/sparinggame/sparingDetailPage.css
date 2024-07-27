@@ -1,0 +1,49 @@
+.sparinggame {
+  /* padding-top: 55px; */
+  /* padding-bottom: 55px; */
+  background-image: url('/src/assets/images/sparingPage/background-layer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* display: flex; */
+  height: calc(100vh);
+  position: relative
+}
+
+.sparinggameleft {
+  width: 12%;
+  height: 26%;
+}
+
+.sparinggameright {
+  position: absolute;
+  width: 12%;
+  height: 26%;
+  right: 0px
+}
+
+.sparingstage {
+  position: absolute;
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: #F5E8D7;
+  width: 94%;
+  height: 61%; 
+  top: 15%;
+  left: 3%;
+  z-index: 1
+}
+
+.sparingmat {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  width: 90%;
+  transform: translate(-50%)
+}
+
+.sparinggamebox {
+  display: flex;
+  z-index: 1000
+}
