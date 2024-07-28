@@ -203,7 +203,7 @@ public class MemberService {
     private static List<PoomSaeCompletedDto> getPoomSaeCompletedDtos(List<UserPsEdu> userAndPoomSaeComplete) {
         List<PoomSaeCompletedDto> poomSaeCompletedDto = new ArrayList<>();
         for(UserPsEdu userPsEdu : userAndPoomSaeComplete){
-            poomSaeCompletedDto.add(new PoomSaeCompletedDto(userPsEdu.getId(), userPsEdu.getUserPsEduDone()));
+            poomSaeCompletedDto.add(new PoomSaeCompletedDto(userPsEdu.getPs().getPsId(), userPsEdu.getUserPsEduDone()));
         }
         return poomSaeCompletedDto;
     }
