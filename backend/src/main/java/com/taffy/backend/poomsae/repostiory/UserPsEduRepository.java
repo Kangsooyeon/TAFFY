@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserPsEduRepository extends JpaRepository<UserPsEdu, Long> {
+public interface UserPsEduRepository extends JpaRepository<UserPsEdu, Integer> {
 
     @Query("select upe from UserPsEdu upe join fetch upe.ps p where upe.member = :mid")
     List<UserPsEdu> findUserAndPoomSaeComplete(@Param("mid") Member member);

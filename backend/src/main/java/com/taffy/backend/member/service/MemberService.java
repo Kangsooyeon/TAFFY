@@ -15,15 +15,10 @@ import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.repository.BeltRepository;
 import com.taffy.backend.member.repository.CountryRepository;
 import com.taffy.backend.member.repository.MemberRepository;
-import com.taffy.backend.poomsae.domain.Ps;
-import com.taffy.backend.poomsae.domain.UserPsEdu;
-import com.taffy.backend.poomsae.domain.UserPsTest;
+import com.taffy.backend.poomsae.domain.*;
 import com.taffy.backend.poomsae.dto.MyPageDto;
 import com.taffy.backend.poomsae.dto.PoomSaeCompletedDto;
-import com.taffy.backend.poomsae.repostiory.PsRepository;
-import com.taffy.backend.poomsae.repostiory.UserPsEduRepository;
-import com.taffy.backend.poomsae.repostiory.UserPsMvRepository;
-import com.taffy.backend.poomsae.repostiory.UserPsTestRepository;
+import com.taffy.backend.poomsae.repostiory.*;
 import com.taffy.backend.record.domain.Record;
 import com.taffy.backend.record.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +45,7 @@ public class MemberService {
     private final UserPsTestRepository userPsTestRepository;
     private final RecordRepository recordRepository;
     private final PsRepository psRepository;
+    private final PsMvRepository psMvRepository;
 
 
     @Transactional
@@ -86,7 +81,7 @@ public class MemberService {
 
         recordRepository.save(initialRecord);
 
-        List<Ps> allPs = psRepository.findAll();
+        List<Ps> allPs = psRepository.findAll();    // 모든 ps 데이터 가져오기
         // user_ps_edu : 유저 품새 교육 완료 여부
         List<UserPsEdu> userPsEduList = new ArrayList<>();
         for (Ps ps : allPs) {
@@ -110,8 +105,19 @@ public class MemberService {
             userPsTestList.add(userPsTest);
         }
         userPsTestRepository.saveAll(userPsTestList);
-        // user_ps_mv : 유저 품새당 기본동작 완료 여부
 
+        // user_ps_mv : 유저 품새당 기본동작 완료 여부
+        List<PsMv> allPsMv = psMvRepository.findAll();  // 모든 ps_mv 데이터 가져오기
+        List<UserPsMv> userPsMvList = new ArrayList<>();
+        for (PsMv psMv : allPsMv) {
+            UserPsMv userPsMv = UserPsMv.builder()
+                    .member(member)
+                    .psMv(psMv)
+                    .userPsMvDone(false)
+                    .build();
+            userPsMvList.add(userPsMv);
+        }
+        userPsMvRepository.saveAll(userPsMvList);
 
     }
 

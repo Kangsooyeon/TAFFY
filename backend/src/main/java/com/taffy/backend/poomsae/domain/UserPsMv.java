@@ -36,4 +36,9 @@ public class UserPsMv extends BaseTime {
     @Column(name = "user_ps_mv_done", nullable = false)
     private Boolean userPsMvDone;
 
+    // 동작완료 메서드
+    public void setUserPsMvDone() {
+        this.userPsMvDone = true;
+    }
+
 }
