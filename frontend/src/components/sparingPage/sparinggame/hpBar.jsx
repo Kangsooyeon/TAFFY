@@ -1,6 +1,11 @@
-const HpBar = () => {
+import '../../../styles/sparingPage/sparinggame/hpBar.css'
+
+const HpBar = ({className}) => {
   return (
-    <p>2</p>
+    <div className={`guagebarbox ${className}`}>
+      <div className="gaugebar">
+      </div>
+    </div>
   )
 }
 

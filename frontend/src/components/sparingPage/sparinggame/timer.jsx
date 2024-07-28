@@ -1,6 +1,11 @@
+import '../../../styles/sparingPage/sparinggame/timer.css'
+// import TimerImg from '../../../assets/images/sparingPage/timer.png'
+
 const Timer = () => {
   return (
-    <p>5</p>
+    <div className="timerbox">
+      <p className="timersecond">5</p>
+    </div>
   )
 }
 

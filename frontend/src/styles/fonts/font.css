@@ -21,3 +21,19 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Su';
+  src: url('/src/styles/fonts/SuseongHyejeong.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Jo';
+  src: url('/src/styles/fonts/JoJongSuk.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}

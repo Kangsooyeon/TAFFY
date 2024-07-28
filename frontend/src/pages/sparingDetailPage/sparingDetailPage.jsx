@@ -18,19 +18,19 @@ const SparingDetailPage = () => {
       <img src={Left} className="sparinggameleft" alt="" />
       <img src={Right} className="sparinggameright" alt="" />
       <div className="sparingstage">
-      <img src={Mat} className="sparingmat" alt="" />
-      <GameUser />
-      <GameUser />
+        <img src={Mat} className="sparingmat" alt="" />
       </div>
-      <div className="sparinggamebox">
-        <Character />
-        <HpBar />
-        <Mission />
-        <Score />
-        <Timer />
-        <WebCam />
-
-      </div>
+      <GameUser className="gameuserleft"/>
+      <GameUser className="gameuserright"/>
+      <HpBar className="hpbarleft"/>
+      <HpBar className="hpbarright"/>
+      <Score />
+      <Character className="characterleft"/>
+      <Character className="characterright"/>
+      <Mission />
+      <Timer />
+      <WebCam className="webcamleft"/>
+      <WebCam className="webcamright"/>
     </div>
   )
 }

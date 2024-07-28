@@ -1,6 +1,10 @@
+import '../../../styles/sparingPage/sparinggame/score.css'
+
 const Score = () => {
   return (
-    <p>4</p>
+    <div className="scorebox">
+      <p>2 <span>:</span> 0</p>
+    </div>
   )
 }
 
