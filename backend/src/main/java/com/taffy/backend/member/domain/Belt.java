@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Belt {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "belt_id")
     private Long id;
 

@@ -33,7 +33,7 @@ public class Member extends BaseTime {
     @Column(name = "profile_img")
     private String profile_img;
 
-    @OneToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "belt_id")
     private Belt belt;
 
