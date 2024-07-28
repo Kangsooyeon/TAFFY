@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/edu")
 @RequiredArgsConstructor
 public class UserPsEduController {
 
     private final UserPsEduService userPsEduService;
 
-    @GetMapping("/edu/main")
+    @GetMapping("/main")
     public ResponseEntity<ResponseDto> poomSaeEduMain(@AuthenticationPrincipal Long userId){
         List<MainPageDto> mainPageDtos = userPsEduService.poomSaeEduMain(userId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true,HttpStatus.OK.value(),mainPageDtos));
