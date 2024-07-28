@@ -86,22 +86,33 @@ public class MemberService {
 
         recordRepository.save(initialRecord);
 
+        List<Ps> allPs = psRepository.findAll();
         // user_ps_edu : 유저 품새 교육 완료 여부
         List<UserPsEdu> userPsEduList = new ArrayList<>();
-        for (Long psId = 1L; psId <= 8L; psId++) {
-            Ps ps = psRepository.findById(psId).orElseThrow(() -> new TaffyException(ErrorCode.PS_NOT_FOUND));
+        for (Ps ps : allPs) {
             UserPsEdu userPsEdu = UserPsEdu.builder()
                     .member(member)
                     .ps(ps)
-                    .userPsEduDone(false)  // 초기에는 모든 품새 교육이 완료되지 않은 상태
+                    .userPsEduDone(false)
                     .build();
             userPsEduList.add(userPsEdu);
         }
         userPsEduRepository.saveAll(userPsEduList);
 
+        // user_ps_test : 유저 품새 심사 통과 여부
+        List<UserPsTest> userPsTestList = new ArrayList<>();
+        for (Ps ps : allPs) {
+            UserPsTest userPsTest = UserPsTest.builder()
+                    .member(member)
+                    .ps(ps)
+                    .isPassed(false)
+                    .build();
+            userPsTestList.add(userPsTest);
+        }
+        userPsTestRepository.saveAll(userPsTestList);
         // user_ps_mv : 유저 품새당 기본동작 완료 여부
 
-        // user_ps_test : 유저 품새 심사 통과 여부
+
     }
 
     @Transactional(readOnly = true)
