@@ -1,0 +1,125 @@
+.sparingresultpage {
+  background-image: url('/src/assets/images/sparingPage/background-layer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: calc(100vh);
+  position: relative;
+}
+
+.resultbox {
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: #F5E8D7;
+  width: 67%;
+  height: 72%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%)
+}
+
+.resultbottom {
+  position: absolute;
+  bottom: -5.2%;
+  width: 99.5%;
+}
+
+.resulttopleft {
+  position: absolute;
+  top: 0%;
+  left: 0.5%;
+  width: 30%;
+  height: 8%
+}
+
+.resulttopright {
+  position: absolute;
+  top: 0%;
+  right: 0.5%;
+  width: 30%;
+  height: 8%;
+  transform: scaleX(-1)
+}
+
+.resulttitle {
+  width: 48%;
+  position: absolute;
+  top: -8%
+}
+
+.exitbutton {
+  position: absolute;
+  bottom: 11%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  border-radius: 5px;
+  border: 3px solid #000;
+  background: #E22829;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  font-family: 'Su';
+  font-size: 20px;
+  color: white;
+  height: 6%;
+  width: 9%;
+  text-align: center;
+  padding: 0
+}
+
+.exitp {
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  transform: translate(-50%);
+  font-family: 'Su';
+  font-size: 20px;
+}
+
+.vicrateafterleft {
+  left: 31%;
+  bottom: 35%
+}
+
+.vicrateafterright {
+  right: 31%;
+  bottom: 35%
+}
+
+.vicorloseleft {
+  left: 19%;
+  top: 15%
+}
+
+.vicorloseright {
+  right: 19%;
+  top: 15%
+}
+
+.characterfaceleft {
+  left: 25%;
+  top: 23%;
+  transform: scaleX(-1)
+}
+
+.characterfaceright {
+  right: 25%;
+  top: 23%
+}
+
+.me {
+  font-family: 'Lee';
+  font-size: 64px;
+  position: absolute;
+}
+
+.you {
+  font-family: 'Lee';
+  font-size: 64px;
+  position: absolute;
+
+}

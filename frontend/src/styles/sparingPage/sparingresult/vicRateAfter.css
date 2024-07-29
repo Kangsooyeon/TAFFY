@@ -1,0 +1,20 @@
+.vicrateafterbox {
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: rgba(235, 205, 40, 0.30);
+  box-shadow: 4px 4px 4px 3px rgba(0, 0, 0, 0.25);
+  width: 15%;
+  height: 15%;
+  position: absolute;
+  /* display: flex; */
+  text-align: center;
+  font-family: 'Lee';
+}
+
+.afterhr {
+  border: none;
+  margin: 0;
+  border-top: 1px solid #985A30;  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  z-index: 9999;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
+}

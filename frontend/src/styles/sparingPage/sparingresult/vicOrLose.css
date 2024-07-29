@@ -1,0 +1,9 @@
+.vicorlosebox {
+  height: 25%;
+  position: absolute;
+  z-index: 9999
+}
+
+.vicorlosebox img {
+  height: 100%;
+}
