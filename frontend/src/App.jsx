@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import LoginPage from "./pages//loginPage";
+import SignupPage from "./pages//signupPage";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import store from './actions/store';
@@ -38,6 +39,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/login" element={<LoginPage language={language}/>} />
+        <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
     </Provider>
   );

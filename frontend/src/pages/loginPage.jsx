@@ -1,4 +1,3 @@
-import '../styles/mainPage/mainPage.css';
 import '../styles/loginPage.css';
 
 const Login = () => {

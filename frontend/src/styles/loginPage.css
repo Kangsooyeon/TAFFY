@@ -15,7 +15,7 @@
 
 .login-box {
     width: 50%;
-    height: 500px;
+    height: 450px;
     background-color: white;
     border: 1px solid gray;
     border-radius: 10px;
@@ -25,7 +25,7 @@
 
 .login-title {
     color: black;
-    height: 15%;
+    height: 20%;
     display: flex;
     justify-content: center;
     margin-top: 10px;
@@ -44,7 +44,7 @@
     /* justify-content: center; */
     text-align: center;
     padding: 50px 30px;
-    gap: 30px;
+    gap: 40px;
     /* border: 1px solid gray; */
 }
 
@@ -81,7 +81,7 @@
     padding: 10px 20px; /* 버튼 크기 조정 */
     width: 120px;
     height: 50px;
-    background-color: #007BFF; /* 버튼 배경 색상 */
+    background-color: #163665; /* 버튼 배경 색상 */
     color: white; /* 버튼 텍스트 색상 */
     font-family: 'HappinessM';
     font-size: 30px;
