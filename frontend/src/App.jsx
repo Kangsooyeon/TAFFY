@@ -7,6 +7,7 @@ import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
+import PopUp from './components/common/popUp';
 import store from './actions/store';
 
 function App() {
@@ -39,6 +40,13 @@ function App() {
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
+      <PopUp 
+          title="Are you sure you want to log out?" 
+          btnText1="Yes" 
+          btnHref1="/main" // Navigate to the main page on confirmation
+          btnText2="No" 
+          btnHref2="#" // Just close the popup on cancellation
+        />
 
     </Provider> 
   );
