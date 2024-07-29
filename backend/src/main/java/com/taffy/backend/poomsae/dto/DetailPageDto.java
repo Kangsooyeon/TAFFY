@@ -16,6 +16,7 @@ public class DetailPageDto {
     private String psKoName;
     private String psUrl;
     private String psKoDesc;
+    private Integer size;
     private List<MvDto> movements;
 
 }
