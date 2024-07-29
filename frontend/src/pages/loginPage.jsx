@@ -1,6 +1,11 @@
 import '../styles/loginPage.css';
 
-const Login = () => {
+const Login = ({ setIsLoggedIn, navigate }) => {
+    const handleLogin = () => {
+        setIsLoggedIn(true);
+        navigate('/main');
+    };
+
     return (
         <div className="loginPage">
             <div className="login-box">
@@ -18,16 +23,12 @@ const Login = () => {
                         <input type="password" placeholder="Please enter a password"/>
                     </div>
                     <div>
-                        <button>Login</button>  
+                        <button onClick={handleLogin}>Login</button>  
                     </div>
                 </div>
             </div>
-            
         </div>
-
     );
 }
-
-
 
 export default Login;
