@@ -2,6 +2,10 @@
     position: relative; /* ::before 가상 요소를 위한 상대 위치 설정 */
     width: 100%;
     height: 100vh; /* 페이지 전체 높이 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
   
 .poomsae-test-page::before {
@@ -29,4 +33,15 @@
     display: flex; /* 내부 요소를 정렬하기 위한 flexbox 사용 */
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: space-between; /* 가로 중앙 정렬 */
+}
+
+.pop-up-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* Ensure popup is above all other content */
 }
