@@ -1,0 +1,104 @@
+.signupPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('/src/assets/images/mainPage/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.signup-box {
+    width: 50%;
+    height: 600px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.signup-title {
+    color: black;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.signup-title p {
+    color: black;
+    font-family: 'HappinessM';
+    font-size: 65px;
+    margin: 0;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 30px;
+    gap: 20px;
+}
+
+.signup-form label {
+    display: inline-block;
+    width: 150px; /* Ensure all labels have the same width */
+    text-align: left; /* Align text to the left */
+    color: black;
+    font-family: 'HappinessL';
+    font-size: 35px;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.input-wrapper {
+    display: flex;
+    width: calc(100% - 50px); 
+    align-items: center;
+    justify-content: end;
+}
+
+.input-box input, .input-box select {
+    width: calc(100% - 170px); /* Adjust width to account for label and button */
+    height: 40px;
+    margin: 0;
+    border: 0.5px solid grey;
+    border-radius: 7px;
+    font-family: 'HappinessL';
+    font-size: 30px;
+}
+
+.action-button {
+    margin-left: 10px;
+    width: 120px;
+    height: 40px;
+    background-color: #163665;
+    color: white;
+    font-family: 'HappinessM';
+    font-size: 21px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    width: 120px;
+    height: 50px;
+    background-color: #163665;
+    color: white;
+    font-family: 'HappinessM';
+    font-size: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
