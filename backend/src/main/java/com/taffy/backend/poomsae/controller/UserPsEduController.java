@@ -3,7 +3,6 @@ package com.taffy.backend.poomsae.controller;
 import com.taffy.backend.poomsae.dto.DetailPageDto;
 import com.taffy.backend.poomsae.dto.MainPageDto;
 import com.taffy.backend.poomsae.dto.ResponseDto;
-import com.taffy.backend.poomsae.repostiory.PsRepository;
 import com.taffy.backend.poomsae.service.PsMvService;
 import com.taffy.backend.poomsae.service.UserPsEduService;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +28,13 @@ public class UserPsEduController {
     @GetMapping("/main")
     public ResponseEntity<ResponseDto> poomSaeEduMain(@AuthenticationPrincipal Long userId){
         List<MainPageDto> mainPageDtos = userPsEduService.poomSaeEduMain(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true,HttpStatus.OK.value(),mainPageDtos));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), mainPageDtos));
     }
 
     // 품새교육 상세페이지
     @GetMapping("/{psId}")
-    public ResponseEntity<ResponseDto> poomSaeEduDetail(@PathVariable Integer psId){
-        DetailPageDto detailPageDto = psMvService.getPsDetail(psId);
+    public ResponseEntity<ResponseDto> poomSaeEduDetail(@AuthenticationPrincipal Long userId, @PathVariable Integer psId){
+        DetailPageDto detailPageDto = psMvService.getPsDetail(psId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), detailPageDto));
     }
-
-
 }

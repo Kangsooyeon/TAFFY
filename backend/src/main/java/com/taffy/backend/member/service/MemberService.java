@@ -18,7 +18,7 @@ import com.taffy.backend.member.repository.MemberRepository;
 import com.taffy.backend.poomsae.domain.*;
 import com.taffy.backend.poomsae.dto.MyPageDto;
 import com.taffy.backend.poomsae.dto.PoomSaeCompletedDto;
-import com.taffy.backend.poomsae.repostiory.*;
+import com.taffy.backend.poomsae.repository.*;
 import com.taffy.backend.record.domain.Record;
 import com.taffy.backend.record.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;

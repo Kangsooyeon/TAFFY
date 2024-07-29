@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MvDto {
     private Integer mvId;
+    private Integer mvSeq;
     private String mvKoName;
     private String mvThumb;
+    private Boolean isDone;
 }

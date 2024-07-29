@@ -6,7 +6,7 @@ import com.taffy.backend.member.domain.Member;
 import com.taffy.backend.member.repository.MemberRepository;
 import com.taffy.backend.poomsae.domain.UserPsEdu;
 import com.taffy.backend.poomsae.dto.MainPageDto;
-import com.taffy.backend.poomsae.repostiory.UserPsEduRepository;
+import com.taffy.backend.poomsae.repository.UserPsEduRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
