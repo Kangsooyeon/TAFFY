@@ -1,8 +1,13 @@
 
 .image-container {
-  position: relative;
-  width: fit-content;
-  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .background-image {
@@ -10,7 +15,7 @@
   height: auto;
 }
 
-.text-overlay {
+.text-overlay { 
   position: absolute;
   top: 50%;
   left: 50%;
@@ -21,7 +26,7 @@
 }
 
 .text-overlay h1 {
-  font-size: 85px;
+  font-size: 75px;
   margin: 0px;
   font-family: HappinessM;
 }
