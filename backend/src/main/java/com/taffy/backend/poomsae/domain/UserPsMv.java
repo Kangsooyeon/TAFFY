@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_ps_mv")
+@Table(name = "User_Ps_Mv")
 public class UserPsMv extends BaseTime {
 
     @Id

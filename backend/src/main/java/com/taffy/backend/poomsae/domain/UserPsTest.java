@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_ps_test")
+@Table(name = "User_Ps_Test")
 public class UserPsTest extends BaseTime {
 
     @Id

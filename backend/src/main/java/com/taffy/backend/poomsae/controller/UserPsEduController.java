@@ -39,4 +39,5 @@ public class UserPsEduController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), detailPageDto));
     }
 
+
 }

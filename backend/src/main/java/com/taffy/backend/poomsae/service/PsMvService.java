@@ -35,6 +35,8 @@ public class PsMvService {
 
         // 해당 품새의 기본동작 유니크 리스트
         List<MvDto> mvDtos = psMvRepository.findUniqueMvByPsId(psId);
+        // 해당 품새의 기본동작 리스트
+//        List<MvDto> mvDtos = psMvRepository.findMvByPsId(psId);
 
         return new DetailPageDto(ps.get().getPsId(), ps.get().getPsKoName(), ps.get().getPsUrl(), ps.get().getPsKoDesc(), mvDtos.size(), mvDtos);
     }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "ps_mv")
+@Table(name = "Ps_Mv")
 public class PsMv {
 
     @Id
