@@ -21,8 +21,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    navigate('/main');
+    setShowPopUp(true); 
   };
 
   return (
@@ -40,14 +39,15 @@ function App() {
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
-      <PopUp 
-          title="Are you sure you want to log out?" 
-          btnText1="Yes" 
-          btnHref1="/main" // Navigate to the main page on confirmation
-          btnText2="No" 
-          btnHref2="#" // Just close the popup on cancellation
+      {showPopUp && (
+        <PopUp 
+          title="로그아웃 하시겠습니까?" 
+          btnText1="네" 
+          btnHref1="/main" 
+          btnText2="아니오" 
+          btnHref2="" 
         />
-
+      )}
     </Provider> 
   );
 }
