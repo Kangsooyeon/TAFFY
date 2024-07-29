@@ -3,6 +3,7 @@ import '../../styles/poomsaeEduPage/modal.css';
 import Youtube from './youtube'; 
 import PsDescription from './psDescription';
 import { useEffect, useState } from 'react';
+import MvItem from './mvItem';
 
 const Modal = ({ text, videoUrl, description, modalClose, onLearnComplete, language }) => {
   const [buttonText, setButtonText] = useState('');
@@ -14,6 +15,7 @@ const Modal = ({ text, videoUrl, description, modalClose, onLearnComplete, langu
   return (
     <div className='modal'>
       <div className='modalWrapper'>
+        <button className='completeButton' onClick={onLearnComplete}>학습 완료!</button>
         <button className='closeButton' onClick={modalClose}>X</button>
         <div className='modalContent'>
           <div className='leftSection'>
@@ -22,7 +24,14 @@ const Modal = ({ text, videoUrl, description, modalClose, onLearnComplete, langu
             <PsDescription description={description} />
           </div>
           <div className='rightSection'>
-            <button onClick={onLearnComplete}>학습 완료!</button>
+              <div className='mvItems'>
+                <MvItem/>
+                <MvItem/>
+                <MvItem/>
+                <MvItem/>
+                <MvItem/>
+                <MvItem/>
+              </div>
           </div>
         </div>
         <div className='modalFooter'>

@@ -1,0 +1,33 @@
+.mvItem {
+  width: 90%;
+  height: 80%;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
+  padding: 2%;
+  /* margin: 5% 10%; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mvItem:hover {
+  width: 92%;
+  height: 85%;
+  cursor: pointer;
+}
+
+div.mvItem img {
+  width: 50%;
+  height: 80%;
+  background-repeat: no-repeat;
+  border: none;
+  outline: none;  /* Add outline none */
+  }
+
+.mvItem h2 {
+  font-family: Noto-Sans, sans-serif;
+  text-align: center;
+  font-style: normal;
+  font-weight: 400;  
+}

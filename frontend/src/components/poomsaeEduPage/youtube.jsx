@@ -27,7 +27,7 @@ const YouTube = ({ videoUrl }) => {
       ) : (
         <iframe
           width="100%"
-          height="300"
+          height="370"
           src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
           title="YouTube video player"
           frameBorder="0"

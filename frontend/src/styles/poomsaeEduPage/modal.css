@@ -28,7 +28,7 @@
 .modalContent {
   display: flex;
   flex-direction: row;
-  gap: 5%;
+
   flex: 1;
   overflow: hidden; /* 모달 콘텐츠 내부에 스크롤이 생기지 않게 */
 }
@@ -59,7 +59,16 @@
   border-radius: 5px;
   
 }
-
+.completeButton {
+  position: absolute;
+  top: 1.4%;
+  right: 5%;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: black;
+}
 .closeButton {
   position: absolute;
   top: 10px;
@@ -72,26 +81,28 @@
 
 .leftSection {
   flex: 1;
-  padding: 20px;
+  padding: 2.5%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 15px 15px;
+  margin: 0.5%;
   overflow: hidden; 
 }
 
 .rightSection {
-  width: 50%;
+  width: 45%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* border: 1px solid black; */
 }
 
 .psInfo {
   overflow-y: auto; /* 스크롤 추가 */
   flex: 1; /* 남은 공간을 모두 차지 */
-  margin-top: 10px; 
+  margin: 2.2% 1.5% 1%; 
+  text-align: left;
 }
 
 .modalContent button {
@@ -108,13 +119,13 @@
 
 .thumbnailImage {
   width: 100%;
-  height: auto;
-  max-height: 300px;
+  max-height: 370px;
   box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4);
 }
 
 .videoThumbnail {
   width: 100%;
+  max-height: 370px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -136,5 +147,13 @@
 .poomsaeName {
   font-family: 'HappinessM';
   font-size: 50px;
-  margin: -10px 0 -15px;
+  margin: -3% 0 -0.5%;
+}
+
+.mvItems {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 85%;
+  height: 70%;
+  gap: 0% 5%;
 }
