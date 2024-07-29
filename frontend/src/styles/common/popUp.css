@@ -1,0 +1,41 @@
+
+.image-container {
+  position: relative;
+  width: fit-content;
+  margin: auto;
+}
+
+.background-image {
+  width: 100%;
+  height: auto;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #000;
+  font-family: 'Arial, sans-serif';
+}
+
+.text-overlay h1 {
+  font-size: 85px;
+  margin: 0px;
+  font-family: HappinessM;
+}
+
+.buttons {
+  display: flex;
+  width: 400px;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.buttons button {
+  font-size: 50px;
+  font-family: HappinessL;
+  border: none;
+  color: black;
+}
