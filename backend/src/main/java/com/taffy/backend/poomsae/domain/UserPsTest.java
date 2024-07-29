@@ -13,14 +13,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "user_ps_test")
 public class UserPsTest extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_ps_test_id;
+    @Column(name = "user_ps_test_id")
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private Member member;
 
     @ManyToOne

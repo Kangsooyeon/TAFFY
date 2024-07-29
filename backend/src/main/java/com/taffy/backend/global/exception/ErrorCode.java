@@ -21,7 +21,11 @@ public enum ErrorCode {
     CANNOT_BELT_UPGRADE(HttpStatus.BAD_REQUEST,"더 이상 승격할 수 없습니다. 이미 최고단계입니다."),
     BELT_NOT_FOUNT(HttpStatus.NOT_FOUND, "없는 벨트 정보 입니다."),
     NICHNAME_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다"),
-    CANNOT_JOIN_ROOM(HttpStatus.CONFLICT,"인원수가 초과되었습니다.");
+    CANNOT_JOIN_ROOM(HttpStatus.CONFLICT,"인원수가 초과되었습니다."),
+
+    PS_NOT_FOUND(HttpStatus.BAD_REQUEST, "없는 품새 ID 입니다");
+
+
 
     private final HttpStatus httpstatus;
     private final String message;

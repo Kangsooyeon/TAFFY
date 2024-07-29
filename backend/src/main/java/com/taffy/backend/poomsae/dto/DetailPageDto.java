@@ -1,15 +1,21 @@
 package com.taffy.backend.poomsae.dto;
 
-import com.taffy.backend.poomsae.domain.Ps;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PoomSaeCompletedDto {
+public class DetailPageDto {
 
     private Integer psId;
-    private Boolean isCompleted;
+    private String psKoName;
+    private String psUrl;
+    private String psKoDesc;
+    private List<MvDto> movements;
+
 }

@@ -20,6 +20,9 @@ public class Mv {
     @Column(name = "mv_id")
     private Integer mvId;
 
+    @Column(name = "mv_thumb")
+    private String mvThumb;
+
     @Column(name = "mv_url", length = 500)
     private String mvUrl;
 

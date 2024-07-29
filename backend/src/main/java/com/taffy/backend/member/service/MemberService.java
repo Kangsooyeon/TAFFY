@@ -15,11 +15,12 @@ import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.repository.BeltRepository;
 import com.taffy.backend.member.repository.CountryRepository;
 import com.taffy.backend.member.repository.MemberRepository;
-import com.taffy.backend.poomsae.domain.UserPsEdu;
+import com.taffy.backend.poomsae.domain.*;
 import com.taffy.backend.poomsae.dto.MyPageDto;
 import com.taffy.backend.poomsae.dto.PoomSaeCompletedDto;
-import com.taffy.backend.poomsae.repostiory.UserPsEduRepository;
+import com.taffy.backend.poomsae.repostiory.*;
 import com.taffy.backend.record.domain.Record;
+import com.taffy.backend.record.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +38,18 @@ public class MemberService {
     private final BeltRepository beltRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+    // 초기 데이터 설정을 위함
     private final UserPsEduRepository userPsEduRepository;
+    private final UserPsMvRepository userPsMvRepository;
+    private final UserPsTestRepository userPsTestRepository;
+    private final RecordRepository recordRepository;
+    private final PsRepository psRepository;
+    private final PsMvRepository psMvRepository;
+
 
     @Transactional
-    public void signUp(SignUpRequestDto signUpRequestDto) {
+    public void signUpWithInitialData(SignUpRequestDto signUpRequestDto) {
 
         boolean existsEmail = memberRepository.existsByEmail(signUpRequestDto.getEmail());
         if (existsEmail) {
@@ -61,6 +69,56 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+
+        // Insert Initial Data
+        // record
+        Record initialRecord = Record.builder()
+                        .member(member)
+                        .win(0)
+                        .lose(0)
+                        .draw(0)
+                        .build();
+
+        recordRepository.save(initialRecord);
+
+        List<Ps> allPs = psRepository.findAll();    // 모든 ps 데이터 가져오기
+        // user_ps_edu : 유저 품새 교육 완료 여부
+        List<UserPsEdu> userPsEduList = new ArrayList<>();
+        for (Ps ps : allPs) {
+            UserPsEdu userPsEdu = UserPsEdu.builder()
+                    .member(member)
+                    .ps(ps)
+                    .userPsEduDone(false)
+                    .build();
+            userPsEduList.add(userPsEdu);
+        }
+        userPsEduRepository.saveAll(userPsEduList);
+
+        // user_ps_test : 유저 품새 심사 통과 여부
+        List<UserPsTest> userPsTestList = new ArrayList<>();
+        for (Ps ps : allPs) {
+            UserPsTest userPsTest = UserPsTest.builder()
+                    .member(member)
+                    .ps(ps)
+                    .isPassed(false)
+                    .build();
+            userPsTestList.add(userPsTest);
+        }
+        userPsTestRepository.saveAll(userPsTestList);
+
+        // user_ps_mv : 유저 품새당 기본동작 완료 여부
+        List<PsMv> allPsMv = psMvRepository.findAll();  // 모든 ps_mv 데이터 가져오기
+        List<UserPsMv> userPsMvList = new ArrayList<>();
+        for (PsMv psMv : allPsMv) {
+            UserPsMv userPsMv = UserPsMv.builder()
+                    .member(member)
+                    .psMv(psMv)
+                    .userPsMvDone(false)
+                    .build();
+            userPsMvList.add(userPsMv);
+        }
+        userPsMvRepository.saveAll(userPsMvList);
+
     }
 
     @Transactional(readOnly = true)
@@ -145,7 +203,7 @@ public class MemberService {
     private static List<PoomSaeCompletedDto> getPoomSaeCompletedDtos(List<UserPsEdu> userAndPoomSaeComplete) {
         List<PoomSaeCompletedDto> poomSaeCompletedDto = new ArrayList<>();
         for(UserPsEdu userPsEdu : userAndPoomSaeComplete){
-            poomSaeCompletedDto.add(new PoomSaeCompletedDto(userPsEdu.getId(), userPsEdu.getUserPsEduDone()));
+            poomSaeCompletedDto.add(new PoomSaeCompletedDto(userPsEdu.getPs().getPsId(), userPsEdu.getUserPsEduDone()));
         }
         return poomSaeCompletedDto;
     }
