@@ -14,4 +14,16 @@
   width: 60%; /* 이미지 너비를 컨테이너에 맞게 설정 */
   height: 60%; /* 이미지 높이를 컨테이너에 맞게 설정 */
   object-fit: cover; /* 이미지가 컨테이너를 완전히 덮도록 설정 */
+
+
+}
+
+.completed-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px; 
+  height: 24px; 
+  transform: translate(-50%, -50%); 
+  z-index: 1; 
 }

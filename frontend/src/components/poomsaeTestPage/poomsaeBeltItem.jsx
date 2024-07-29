@@ -1,17 +1,19 @@
 import PropTypes from 'prop-types';
 import '../../styles/poomsaeTestPage/poomsaeBeltItem.css';
 
-const PoomsaeBeltItem = ({ imageUrl, onClick }) => {
+const PoomsaeBeltItem = ({ imageUrl, onClick, completed }) => {
   return (
     <div className="belt-item" onClick={onClick}>
       <img src={imageUrl} alt="Belt" />
+      {completed && <img src="src/assets/images/common/completed.png" alt="Completed" className="completed-icon" />}
     </div>
   );
 };
 
 PoomsaeBeltItem.propTypes = {
-  imageUrl: PropTypes.string.isRequired, // imageUrl은 문자열이며 필수입니다.
-  onClick: PropTypes.func.isRequired, // 클릭 핸들러 함수
+  imageUrl: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired, 
+  completed: PropTypes.bool.isRequired,
 };
 
 export default PoomsaeBeltItem;

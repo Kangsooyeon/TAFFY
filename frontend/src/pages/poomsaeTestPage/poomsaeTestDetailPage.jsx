@@ -4,11 +4,12 @@ import PopUp from '../../components/common/popUp';
 
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
-    const [gameStatus, setGameStatus] = useState(null); // 'pass' or 'fail'
+    const [gameStatus, setGameStatus] = useState(null); 
 
     const handleProgressUpdate = (success) => {
         if (success) {
-            const newProgress = progress + 20; // Example: each stage increases progress by 20%
+            // 임시 progress update
+            const newProgress = progress + 20; 
             console.log(`Progress updated to: ${newProgress}%`);
             setProgress(newProgress);
             if (newProgress >= 100) {
@@ -44,8 +45,8 @@ const PoomsaeTestDetailPage = () => {
                         title="합격"
                         btnText1="촬영하기"
                         btnHref1="/photo"
-                        btnText2="메인으로"
-                        btnHref2="/main"
+                        btnText2="목록으로"
+                        btnHref2="/ps_test"
                     />
                 )}
                 {gameStatus === 'fail' && (

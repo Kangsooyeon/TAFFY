@@ -7,6 +7,9 @@ import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal'
 
 const PoomsaeTestPage = () => {
     const [selectedImage, setSelectedImage] = useState(null);
+    //임시 data
+    const [completedStages] = useState([true, false, false, false, false, false, false, false]); 
+
 
     const belt_images = [
         'src/assets/images/common/belt/yellowBelt.png',
@@ -20,7 +23,8 @@ const PoomsaeTestPage = () => {
     ];
 
     const handleItemClick = (imageUrl) => {
-        setSelectedImage(imageUrl); 
+        setSelectedImage(imageUrl);
+
     };
     
     const handleCloseModal = () => {
@@ -32,7 +36,12 @@ const PoomsaeTestPage = () => {
         <div className="poomsae-test-page">
             <div className="belt-box">
             {belt_images.map((url, index) => (
-                <PoomsaeBeltItem key={index} imageUrl={url} onClick={() => handleItemClick(url)} />
+                <PoomsaeBeltItem 
+                key={index} 
+                imageUrl={url} 
+                onClick={() => handleItemClick(url, index)}
+                completed={completedStages[index]}
+                />
             ))}
             </div>
             {selectedImage && <PoomsaeTestModal imageUrl={selectedImage} onClose={handleCloseModal} />}
