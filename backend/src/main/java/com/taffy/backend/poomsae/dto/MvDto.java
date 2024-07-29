@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MvDto {
+    private Integer psMvId;
     private Integer mvId;
     private Integer mvSeq;
     private String mvKoName;
