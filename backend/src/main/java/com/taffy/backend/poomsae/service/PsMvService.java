@@ -1,6 +1,9 @@
 package com.taffy.backend.poomsae.service;
 
+import com.taffy.backend.global.exception.ErrorCode;
+import com.taffy.backend.global.exception.TaffyException;
 import com.taffy.backend.poomsae.domain.Ps;
+import com.taffy.backend.poomsae.domain.UserPsMv;
 import com.taffy.backend.poomsae.dto.DetailPageDto;
 import com.taffy.backend.poomsae.dto.MvDetailDto;
 import com.taffy.backend.poomsae.dto.MvDto;
@@ -8,8 +11,10 @@ import com.taffy.backend.poomsae.dto.PsWholeDto;
 import com.taffy.backend.poomsae.repository.PsMvRepository;
 import com.taffy.backend.poomsae.repository.PsRepository;
 
+import com.taffy.backend.poomsae.repository.UserPsEduRepository;
 import com.taffy.backend.poomsae.repository.UserPsMvRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,7 @@ public class PsMvService {
     private final PsMvRepository psMvRepository;
     private final PsRepository psRepository;
     private final UserPsMvRepository userPsMvRepository;
+    private final UserPsEduRepository userPsEduRepository;
 
     @Transactional(readOnly = true)
     public DetailPageDto getPsDetail(Integer psId, Long userId) {
@@ -51,6 +57,14 @@ public class PsMvService {
 
     public MvDetailDto getUsPsMvDetailByPsMvId(Long userId, Integer psMvId) {
         return userPsMvRepository.findMvDetail(userId, psMvId);
+    }
+
+    @Transactional
+    public void mvDone(Long userId, Integer psMvId) {
+        Optional<UserPsMv> userPsMvOpt = userPsMvRepository.findByUserIdAndPsMvId(userId, psMvId);
+        UserPsMv userPsMv = userPsMvOpt.orElseThrow(() -> new TaffyException(ErrorCode.USER_PS_MV_NOT_FOUND));
+        userPsMv.userPsMvDone();
+        userPsMvRepository.save(userPsMv);
     }
 
 

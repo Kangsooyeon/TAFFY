@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserPsMvRepository extends JpaRepository<UserPsMv, Long> {
 
@@ -31,6 +32,10 @@ public interface UserPsMvRepository extends JpaRepository<UserPsMv, Long> {
             "LEFT JOIN UserPsMv upm ON upm.psMv.psMvId = pm.psMvId AND upm.member.id = :userId " +
             "WHERE pm.psMvId = :psId")
     MvDetailDto findMvDetail(@Param("userId") Long userId, @Param("psId") Integer psId);
+
+    @Query("SELECT upm FROM UserPsMv upm WHERE upm.member.id = :userId AND upm.psMv.psMvId = :psMvId")
+    Optional<UserPsMv> findByUserIdAndPsMvId(@Param("userId") Long userId, @Param("psMvId") Integer psMvId);
+
 
 
 }

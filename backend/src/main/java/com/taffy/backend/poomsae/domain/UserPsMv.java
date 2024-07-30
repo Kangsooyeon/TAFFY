@@ -37,7 +37,7 @@ public class UserPsMv extends BaseTime {
     private Boolean userPsMvDone;
 
     // 동작완료 메서드
-    public void setUserPsMvDone() {
+    public void userPsMvDone() {
         this.userPsMvDone = true;
     }
 

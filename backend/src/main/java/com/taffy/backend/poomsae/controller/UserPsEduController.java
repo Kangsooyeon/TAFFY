@@ -60,4 +60,11 @@ public class UserPsEduController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 품새의 강의를 완료했습니다."));
     }
 
+    // 유저 기본동작 완료
+    @PutMapping("/mv/{psMvId}")
+    public ResponseEntity<ResponseDto> mvDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psMvId) {
+        psMvService.mvDone(userId, psMvId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 동작을 완료했습니다."));
+    }
+
 }
