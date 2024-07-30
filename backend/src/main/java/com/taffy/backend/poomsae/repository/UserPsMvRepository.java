@@ -23,4 +23,14 @@ public interface UserPsMvRepository extends JpaRepository<UserPsMv, Long> {
             "ORDER BY pm.psMvSeq")
     List<MvDetailDto> findMvDetails(@Param("userId") Long userId, @Param("psId") Integer psId);
 
+    @Query("SELECT new com.taffy.backend.poomsae.dto.MvDetailDto(pm.psMvId, m.mvId, pm.psMvSeq, " +
+            "m.mvUrl, m.mvKoName, m.mvKoDesc, m.mvKoVo, m.mvEnName, " +
+            "m.mvEnDesc, m.mvEnVo, m.mvType, upm.userPsMvDone) " +
+            "FROM PsMv pm " +
+            "JOIN pm.mv m " +
+            "LEFT JOIN UserPsMv upm ON upm.psMv.psMvId = pm.psMvId AND upm.member.id = :userId " +
+            "WHERE pm.psMvId = :psId")
+    MvDetailDto findMvDetail(@Param("userId") Long userId, @Param("psId") Integer psId);
+
+
 }
