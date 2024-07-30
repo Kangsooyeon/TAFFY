@@ -4,7 +4,7 @@ import '../../styles/common/popUp.css';
 const PopUp = ({title, btnText1, btnHref1, btnText2, btnHref2}) => {
   return (
     <div className="image-container">
-      <img src="src/assets/images/common/popUP.png" alt="Background" className="background-image" />
+      <img src="/src/assets/images/common/popUp.png" alt="Background" className="background-image" />
       <div className="text-overlay">
         <h1>{title}</h1>
         <div className="buttons">
