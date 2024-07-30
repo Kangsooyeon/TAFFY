@@ -18,6 +18,6 @@ public class MvDetailDto {
     private String mvEnName;
     private String mvEnDesc;
     private String mvEnVo;
-    private String mvType;
+    private Enum mvType;
     private Boolean userPsMvDone;
 }

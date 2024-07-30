@@ -13,7 +13,9 @@ public interface UserPsMvRepository extends JpaRepository<UserPsMv, Long> {
     @Query("SELECT upm FROM UserPsMv upm WHERE upm.member.id = :userId AND upm.psMv.psMvId = :psMvId")
     List<UserPsMv> findByUserIdAndPsMvId(@Param("userId") Integer userId, @Param("psMvId") Integer psMvId);
 
-    @Query("SELECT new com.taffy.backend.poomsae.dto.MvDetailDto(pm.psMvId, m.mvId, pm.psMvSeq, m.mvUrl, m.mvKoName, m.mvKoDesc, m.mvKoVo, m.mvEnName, m.mvEnDesc, m.mvEnVo, m.mvType, upm.userPsMvDone) " +
+    @Query("SELECT new com.taffy.backend.poomsae.dto.MvDetailDto(pm.psMvId, m.mvId, pm.psMvSeq, " +
+            "m.mvUrl, m.mvKoName, m.mvKoDesc, m.mvKoVo, m.mvEnName, " +
+            "m.mvEnDesc, m.mvEnVo, m.mvType, upm.userPsMvDone) " +
             "FROM PsMv pm " +
             "JOIN pm.mv m " +
             "LEFT JOIN UserPsMv upm ON upm.psMv.psMvId = pm.psMvId AND upm.member.id = :userId " +
