@@ -5,8 +5,10 @@ import com.taffy.backend.global.exception.TaffyException;
 import com.taffy.backend.member.domain.Member;
 import com.taffy.backend.member.repository.MemberRepository;
 import com.taffy.backend.poomsae.domain.UserPsEdu;
+import com.taffy.backend.poomsae.domain.UserPsMv;
 import com.taffy.backend.poomsae.dto.MainPageDto;
 import com.taffy.backend.poomsae.repository.UserPsEduRepository;
+import com.taffy.backend.poomsae.repository.UserPsMvRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class UserPsEduService {
 
     private final UserPsEduRepository userPsEduRepository;
     private final MemberRepository memberRepository;
+    private final UserPsMvRepository userPsMvRepository;
 
     @Transactional(readOnly = true)
     public List<MainPageDto> poomSaeEduMain(Long userId) {
@@ -39,5 +42,11 @@ public class UserPsEduService {
         }
         userPsEdu.setUserPsEduDone(true);
         userPsEduRepository.save(userPsEdu);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isPsDone(Long userId, Integer psId) {
+        List<UserPsMv> userPsMvList = userPsMvRepository.findAllByUserIdAndPsId(userId, psId);
+        return userPsMvList.stream().allMatch(UserPsMv::getUserPsMvDone);
     }
 }

@@ -1,5 +1,6 @@
 package com.taffy.backend.poomsae.repository;
 
+import com.taffy.backend.poomsae.domain.UserPsEdu;
 import com.taffy.backend.poomsae.domain.UserPsMv;
 import com.taffy.backend.poomsae.dto.MvDetailDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,6 +37,9 @@ public interface UserPsMvRepository extends JpaRepository<UserPsMv, Long> {
     @Query("SELECT upm FROM UserPsMv upm WHERE upm.member.id = :userId AND upm.psMv.psMvId = :psMvId")
     Optional<UserPsMv> findByUserIdAndPsMvId(@Param("userId") Long userId, @Param("psMvId") Integer psMvId);
 
+    @Query("SELECT upe FROM UserPsEdu upe WHERE upe.member.id = :userId AND upe.ps.psId = :psId")
+    Optional<UserPsEdu> findByUserIdAndPsId(@Param("userId") Long userId, @Param("psId") Integer psId);
 
-
+    @Query("SELECT upm FROM UserPsMv upm WHERE upm.member.id = :userId AND upm.psMv.ps.psId = :psId")
+    List<UserPsMv> findAllByUserIdAndPsId(@Param("userId") Long userId, @Param("psId") Integer psId);
 }

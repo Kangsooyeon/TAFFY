@@ -41,4 +41,8 @@ public class UserPsMv extends BaseTime {
         this.userPsMvDone = true;
     }
 
+    // getter 로 생성되지만 명시적으로 생성
+    public Boolean getUserPsMvDone() {
+        return userPsMvDone;
+    }
 }

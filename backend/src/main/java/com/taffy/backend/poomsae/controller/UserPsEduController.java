@@ -67,4 +67,14 @@ public class UserPsEduController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 동작을 완료했습니다."));
     }
 
+    // 해당 품새의 모든 기본동작 완료 여부
+    @GetMapping("/users/{psId}")
+    public ResponseEntity<ResponseDto> isPsDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psId) {
+        boolean isDone = userPsEduService.isPsDone(userId, psId);
+        if (isDone) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "모든 기본동작이 완료되었습니다."));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(false, HttpStatus.OK.value(), "기본동작 중 완료되지 않은 동작이 있습니다."));
+        }
+    }
 }
