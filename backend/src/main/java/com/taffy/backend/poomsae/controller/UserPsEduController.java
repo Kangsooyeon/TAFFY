@@ -1,8 +1,10 @@
 package com.taffy.backend.poomsae.controller;
 
 import com.taffy.backend.poomsae.dto.*;
+import com.taffy.backend.poomsae.repository.UserPsMvRepository;
 import com.taffy.backend.poomsae.service.PsMvService;
 import com.taffy.backend.poomsae.service.UserPsEduService;
+import com.taffy.backend.poomsae.service.UserPsMvService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ public class UserPsEduController {
 
     private final UserPsEduService userPsEduService;
     private final PsMvService psMvService;
+    private final UserPsMvRepository userPsMvRepository;
+    private final UserPsMvService userPsMvService;
 
     // 품새교육 메인페이지
     @GetMapping("/main")
@@ -77,4 +81,16 @@ public class UserPsEduController {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(false, HttpStatus.OK.value(), "기본동작 중 완료되지 않은 동작이 있습니다."));
         }
     }
+
+    // 동작별 완료 여부
+    @GetMapping("/mv/users/{psMvId}")
+    public ResponseEntity<ResponseDto> isMvDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psMvId) {
+        boolean isDone = userPsMvService.isMvDone(userId, psMvId);
+        if (isDone) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 기본동작은 완료되었습니다."));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(false, HttpStatus.OK.value(), "해당 기본동작은 아직 완료되지 않았습니다."));
+        }
+    }
+
 }
