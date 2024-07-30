@@ -30,4 +30,14 @@ public class UserPsEduService {
         return userPsEduList.stream().map(u ->
                         new MainPageDto(u.getMember().getId(), u.getPs().getPsThumb(), u.getPs().getPsKoName(), u.getUserPsEduDone())).collect(toList());
     }
+
+    @Transactional
+    public void psDone(Long userId, Integer psId) {
+        UserPsEdu userPsEdu = userPsEduRepository.findByUserIdAndPsId(userId, psId);
+        if (userPsEdu == null) {
+            throw new TaffyException(ErrorCode.USER_PS_EDU_NOT_FOUND);
+        }
+        userPsEdu.setUserPsEduDone(true);
+        userPsEduRepository.save(userPsEdu);
+    }
 }

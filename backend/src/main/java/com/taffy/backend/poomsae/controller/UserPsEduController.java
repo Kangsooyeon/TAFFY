@@ -3,15 +3,13 @@ package com.taffy.backend.poomsae.controller;
 import com.taffy.backend.poomsae.dto.*;
 import com.taffy.backend.poomsae.service.PsMvService;
 import com.taffy.backend.poomsae.service.UserPsEduService;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -50,4 +48,16 @@ public class UserPsEduController {
         MvDetailDto mvDetailDto = psMvService.getUsPsMvDetailByPsMvId(userId, psMvId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), mvDetailDto));
     }
+
+    //
+    //
+    //
+
+    // 유저 품새교육 완료
+    @PutMapping("{psId}")
+    public ResponseEntity<ResponseDto> psDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psId) {
+        userPsEduService.psDone(userId, psId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 품새의 강의를 완료했습니다."));
+    }
+
 }

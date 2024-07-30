@@ -34,4 +34,7 @@ public class UserPsEdu extends BaseTime {
     @Column(name = "user_ps_edu_done", columnDefinition = "TINYINT(1)")
     private Boolean userPsEduDone;
 
+    public void setUserPsEduDone(Boolean userPsEduDone) {
+        this.userPsEduDone = userPsEduDone;
+    }
 }

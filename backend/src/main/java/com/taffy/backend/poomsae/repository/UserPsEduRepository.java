@@ -12,4 +12,7 @@ public interface UserPsEduRepository extends JpaRepository<UserPsEdu, Integer> {
 
     @Query("select upe from UserPsEdu upe join fetch upe.ps p where upe.member = :mid")
     List<UserPsEdu> findUserAndPoomSaeComplete(@Param("mid") Member member);
+
+    @Query("SELECT upe FROM UserPsEdu upe WHERE upe.member.id = :userId AND upe.ps.psId = :psId")
+    UserPsEdu findByUserIdAndPsId(@Param("userId") Long userId, @Param("psId") Integer psId);
 }
