@@ -40,7 +40,7 @@ const PoomsaeEduAllPage = ({language}) => {
 
         <div className='mvDescription'>
           {/* 스피커 이미지 */}
-          <img src="../../assets/images/common/audio.png" alt="audio" />
+          <img src="/src/assets/images/common/audio.png" alt="audio" />
           {/* 동작 이름 */}
           {/* 동작 설명 */}
         </div>
