@@ -27,7 +27,7 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, onLearnCompl
 
   const handleClick = () => {
     console.log(`Navigating to /ps_edu/${stageNum}?lang=${language}`);
-    navigate(`/ps_edu/${stageNum}?lang=${language}`);
+    navigate(`/ps_edu/${stageNum}`);
   }
 
   return (
