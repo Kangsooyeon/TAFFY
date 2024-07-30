@@ -2,7 +2,9 @@
     position: relative; /* ::before 가상 요소를 위한 상대 위치 설정 */
     width: 100%;
     height: 100vh; /* 페이지 전체 높이 */
-    padding: 30px 30px;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
   }
   
 .poomsae-test-detail-page::before {
@@ -19,27 +21,54 @@
     opacity: 0.8; /* 투명도 설정 (0.0 - 1.0) */
     z-index: -1; /* 배경 이미지가 콘텐츠 뒤에 오도록 설정 */
 }
+.detail-title {
+    display: flex; 
+    justify-content: space-between;
+    width: 90%;
+    margin-top: 20px;
+
+}
 
 .detail-title p {
-    margin: 0;
-    font-size: 20px;
+    margin: 0px;
+    font-size: 50px;
     font-family: 'HappinessM';
     color: white;
 
 }
 
 .detail-content {
-    width: 1500px;
-    height: 900px;
+    width:90%;
+    height: 85%;
     background-color: #fff;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
-.detail-content button {
+.detail-content p{
+    margin-top:10px;
+    margin-bottom: 0px;
+    font-size: 80px;
+    font-family: 'HappinessM';
+    color: black;
+}
+
+.webcam {
+    width: 70%;
+    height: 70%;
+    border: 1px solid black;
+
+}
+
+.temp {
+    display: flex;
+    justify-content: space-between;
+    color: black;
+}
+
+.temp button {
     color: black;
 }
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 
+
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null); 
@@ -27,15 +28,26 @@ const PoomsaeTestDetailPage = () => {
         console.log('Progress reset to 0%. Game status reset.');
     };
 
+    const handleExit = () => {
+        window.location.href = '/ps_test'; 
+    };
+
     return (
         <div className="poomsae-test-detail-page">
             <div className="detail-title">
                 <p>태극 1장</p>
+                <p className="exit" onClick={handleExit}>나가기</p>
             </div>
             <div className="detail-content">
-                <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
-                <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
-                <button onClick={handleReset}>Reset</button>
+                <p>영역 안에 몸 전체가 보이도록 위치를 조정해주세요.</p>
+                <div className='webcam'>
+
+                </div>
+                <div className="temp">
+                    <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
+                    <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
+                    <button onClick={handleReset}>Reset</button>
+                </div>
             </div>
             {gameStatus && (
                 <div className="pop-up-container">
