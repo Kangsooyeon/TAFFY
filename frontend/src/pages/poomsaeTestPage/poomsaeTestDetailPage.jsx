@@ -8,7 +8,6 @@ const PoomsaeTestDetailPage = () => {
 
     const handleProgressUpdate = (success) => {
         if (success) {
-            // 임시 progress update
             const newProgress = progress + 20; 
             console.log(`Progress updated to: ${newProgress}%`);
             setProgress(newProgress);
@@ -37,28 +36,29 @@ const PoomsaeTestDetailPage = () => {
                 <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                 <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
                 <button onClick={handleReset}>Reset</button>
-
             </div>
-            <div className="pop-up-container">
-                {gameStatus === 'pass' && (
-                    <PopUp
-                        title="합격"
-                        btnText1="촬영하기"
-                        btnHref1="/photo"
-                        btnText2="목록으로"
-                        btnHref2="/ps_test"
-                    />
-                )}
-                {gameStatus === 'fail' && (
-                    <PopUp
-                        title="불합격"
-                        btnText1="재도전하기"
-                        btnHref1="/ps_test/detail"
-                        btnText2="교육하기"
-                        btnHref2="/ps_edu"
-                    />
-                )}
-            </div>
+            {gameStatus && (
+                <div className="pop-up-container">
+                    {gameStatus === 'pass' && (
+                        <PopUp
+                            title="합격"
+                            btnText1="촬영하기"
+                            btnHref1="/photo"
+                            btnText2="목록으로"
+                            btnHref2="/ps_test"
+                        />
+                    )}
+                    {gameStatus === 'fail' && (
+                        <PopUp
+                            title="불합격"
+                            btnText1="재도전하기"
+                            btnHref1="/ps_test/detail"
+                            btnText2="교육하기"
+                            btnHref2="/ps_edu"
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 };
