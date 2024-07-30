@@ -31,4 +31,8 @@ public class UserPsTest extends BaseTime {
 
     @Column(name = "user_ps_test_pass")
     private boolean isPassed;
+
+    public void passPsTest() {
+        isPassed = true;
+    }
 }
