@@ -25,6 +25,12 @@ public class UserPsEduController {
     private final UserPsMvRepository userPsMvRepository;
     private final UserPsMvService userPsMvService;
 
+
+    //
+    //
+    //
+    // PS EDU PAGE
+
     // 품새교육 메인페이지
     @GetMapping("/main")
     public ResponseEntity<ResponseDto> poomSaeEduMain(@AuthenticationPrincipal Long userId){
@@ -56,6 +62,7 @@ public class UserPsEduController {
     //
     //
     //
+    // PS EDU
 
     // 유저 품새교육 완료
     @PutMapping("{psId}")
@@ -92,5 +99,4 @@ public class UserPsEduController {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(false, HttpStatus.OK.value(), "해당 기본동작은 아직 완료되지 않았습니다."));
         }
     }
-
 }

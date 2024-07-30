@@ -19,7 +19,7 @@ public class UserPsTest extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_ps_test_id")
-    private Integer id;
+    private Integer userPsTestId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
