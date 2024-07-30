@@ -1,6 +1,8 @@
 .modal-overlay {
-    position: relative;
-    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* 반투명 배경 */
     z-index: 1000; /* 모달이 다른 콘텐츠 위에 오도록 설정 */
   }
   
@@ -10,8 +12,8 @@
     left: 50%; /* 너비의 절반만큼 왼쪽으로 이동하여 중앙 정렬 */
     transform: translateX(-50%);
     padding: 30px;
-    width: 1300px; /* 너비 설정 */
-    height: 580px; /* 높이 설정 */
+    width: 70%; /* 너비 설정 */
+    height: 70%; /* 높이 설정 */
     border-radius: 8px;
     /* text-align: center; */
     position: relative;
@@ -21,7 +23,8 @@
     position: relative;
     color: black;
     font-size: 80px;
-    height: 80px;
+    width: 100%;
+    height: 15%;
     left: 30px;
     margin: 0;
     font-family: 'HappinessM';
@@ -31,6 +34,7 @@
     display: flex; /* 내부 요소를 정렬하기 위한 flexbox 사용 */
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: space-between; /*가로 중앙 정렬*/
+    height: 80%;
 }
 
 .modal-image-box{
@@ -38,11 +42,12 @@
     top: 10px;
     left: 30px;
     background: black;
-    width: 400px;
-    height: 480px;
+    width: 30%;
+    height: 90%;
     display: flex; /* 내부 요소를 정렬하기 위한 flexbox 사용 */
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
+    border-radius: 5px;
 }
 
 .modal-image{
@@ -51,27 +56,44 @@
 }
 
 .modal-desc{
-    width: 480px;
-
+    width: 50%;
+    height: 90%;
+    margin-right: 80px;
 }
 
 .modal-ps-description{
     position: relative;
-    width: 500px;
-    font-size: 20px;
+    font-size: 35px;
     font-family: 'HappinessM';
 
 }
 
+.modal-btn {
+    display: flex;
+    justify-content: end; 
+}
+
+.modal-btn button {
+    width: 140px;
+    height: 50px;
+    background-color: #163665; /* 버튼 배경 색상 */
+    color: white; /* 버튼 텍스트 색상 */
+    font-family: 'HappinessM';
+    font-size: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+
+}
   
 .modal-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #ff0000;
-    color: #fff;
+    top: 20px;
+    right: 30px;
+    font-size: 20px;
+    color: grey;
     border: none;
-    border-radius: 50%;
     padding: 10px;
     cursor: pointer;
 }
