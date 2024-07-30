@@ -19,5 +19,5 @@ public class MvDetailDto {
     private String mvEnDesc;
     private String mvEnVo;
     private Enum mvType;
-    private Boolean userPsMvDone;
+    private Boolean isDone;
 }
