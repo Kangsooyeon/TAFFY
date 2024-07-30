@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import PoomsaeEduPage from "./pages/poomsaeEduPage/poomsaeEduPage";
+import PoomsaeEduOnePage from "./pages/poomsaeEduPage/poomsaeEduOnePage.jsx";
+import PoomsaeEduAllPage from "./pages/poomsaeEduPage/poomsaeEduAllPage.jsx";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import store from './actions/store';
@@ -36,6 +38,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
+        <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
       </Routes>
     </Provider>
   );

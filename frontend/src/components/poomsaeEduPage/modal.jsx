@@ -4,13 +4,31 @@ import Youtube from './youtube';
 import PsDescription from './psDescription';
 import { useEffect, useState } from 'react';
 import MvItem from './mvItem';
+import { useNavigate } from 'react-router-dom';
 
-const Modal = ({ text, videoUrl, description, modalClose, onLearnComplete, language }) => {
+const Modal = ({ stageNum, text, videoUrl, description, modalClose, onLearnComplete, language, moves }) => {
   const [buttonText, setButtonText] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '전체 학습' : 'All Learning');
   }, [language]);
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    console.log(`Navigating to /ps_edu/${stageNum}?lang=${language}`);
+    navigate(`/ps_edu/${stageNum}?lang=${language}`);
+  }
 
   return (
     <div className='modal'>
@@ -25,18 +43,24 @@ const Modal = ({ text, videoUrl, description, modalClose, onLearnComplete, langu
           </div>
           <div className='rightSection'>
               <div className='mvItems'>
-                <MvItem/>
-                <MvItem/>
-                <MvItem/>
-                <MvItem/>
-                <MvItem/>
-                <MvItem/>
+                {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => (
+                  <MvItem
+                    key={index}
+                    title={language === 'ko' ? move.mv_ko_name : move.mv_en_name}
+                    image={move.mv_thumb}
+                    language={language}
+                    moveId={move.mv_id}
+                    stageNum={stageNum}
+                  />
+                ))}
               </div>
+              {currentPage > 0 && <button onClick={handlePrevPage}>Previous</button>}
+              {(currentPage + 1) * itemsPerPage < moves.length && <button onClick={handleNextPage}>Next</button>}
           </div>
         </div>
         <div className='modalFooter'>
           <div className='line'></div>
-          <button className='completeAllButton' onClick={onLearnComplete}>
+          <button className='completeAllButton' onClick={handleClick}>
             {buttonText}
           </button>
         </div>
@@ -46,12 +70,19 @@ const Modal = ({ text, videoUrl, description, modalClose, onLearnComplete, langu
 };
 
 Modal.propTypes = {
+  stageNum: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   videoUrl: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   modalClose: PropTypes.func.isRequired,
   onLearnComplete: PropTypes.func.isRequired,
   language: PropTypes.string.isRequired,
+  moves: PropTypes.arrayOf(PropTypes.shape({
+    mv_id: PropTypes.number.isRequired,
+    mv_thumb: PropTypes.string.isRequired,
+    mv_ko_name: PropTypes.string.isRequired,
+    mv_en_name: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default Modal;

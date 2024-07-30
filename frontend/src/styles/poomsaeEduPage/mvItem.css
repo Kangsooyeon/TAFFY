@@ -1,28 +1,35 @@
 .mvItem {
-  width: 90%;
-  height: 80%;
+  width: 140px;
+  height: 200px;
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
   padding: 2%;
   /* margin: 5% 10%; */
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: transform 0.3s ease; /* 크기 변경 시 부드럽게 */
+}
+
+.mvName {
+  font-size: 13px;
+  margin-top: 10%;
 }
 
 .mvItem:hover {
-  width: 92%;
-  height: 85%;
+  transform: scale(1.05); /* 크기 5% 증가 */
   cursor: pointer;
 }
 
 div.mvItem img {
-  width: 50%;
-  height: 80%;
+  width: auto; /* 가로/세로 비율 유지 */
+  height: 68%; 
+  object-fit: contain; /* 이미지 비율 유지 */
   background-repeat: no-repeat;
   border: none;
-  outline: none;  /* Add outline none */
+  outline: none;  
   }
 
 .mvItem h2 {
