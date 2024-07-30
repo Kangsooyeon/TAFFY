@@ -1,0 +1,9 @@
+.mypage {
+  background-image: url('/src/assets/images/myPage/background-layer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: calc(100vh);
+  position: relative;
+}

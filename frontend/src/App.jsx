@@ -5,6 +5,7 @@ import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
+import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
@@ -36,6 +37,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
+        <Route path="/mypage" element={<MyPage/>} />
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
