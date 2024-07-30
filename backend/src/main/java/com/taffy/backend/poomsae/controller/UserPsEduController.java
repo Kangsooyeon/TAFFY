@@ -2,6 +2,7 @@ package com.taffy.backend.poomsae.controller;
 
 import com.taffy.backend.poomsae.dto.DetailPageDto;
 import com.taffy.backend.poomsae.dto.MainPageDto;
+import com.taffy.backend.poomsae.dto.PsWholeDto;
 import com.taffy.backend.poomsae.dto.ResponseDto;
 import com.taffy.backend.poomsae.service.PsMvService;
 import com.taffy.backend.poomsae.service.UserPsEduService;
@@ -36,5 +37,12 @@ public class UserPsEduController {
     public ResponseEntity<ResponseDto> poomSaeEduDetail(@AuthenticationPrincipal Long userId, @PathVariable Integer psId){
         DetailPageDto detailPageDto = psMvService.getPsDetail(psId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), detailPageDto));
+    }
+    
+    // 품새 전체학습
+    @GetMapping("/ps/{psId}")
+    public ResponseEntity<ResponseDto> psEduWhole(@AuthenticationPrincipal Long userId, @PathVariable Integer psId) {
+        PsWholeDto psWhole = psMvService.getOneWholePs(userId, psId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), psWhole));
     }
 }
