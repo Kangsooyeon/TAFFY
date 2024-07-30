@@ -5,6 +5,6 @@ services:
     container_name: taffy_fe
     image: taffy_fe:0.1
     build:
-      context: ../frontend
+      context: ../
     ports:
       - 3000:80
