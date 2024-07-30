@@ -7,8 +7,15 @@ import CharacterFace from '../../components/sparingPage/sparingresult/characterF
 import VicOrLose from '../../components/sparingPage/sparingresult/vicOrLose.jsx'
 import VicRateAfter from '../../components/sparingPage/sparingresult/vicRateAfter.jsx'
 
+import { useNavigate } from 'react-router-dom';
+
 
 const sparingResultPage = () => {
+  const navigate = useNavigate();
+
+  const goToSparingMain = () => {
+    navigate("/sp")
+  }
   return (
     <div className="sparingresultpage">
       <div className="resultbox">
@@ -25,7 +32,7 @@ const sparingResultPage = () => {
       <VicRateAfter className="vicrateafterright"/>
       <p className="me">ME</p>
       <p className="you">YOU</p>
-      <button className="exitbutton">나가기</button>
+      <button className="exitbutton" onClick={goToSparingMain}>나가기</button>
       <p className="exitp">5초 후 자동으로 닫힙니다.</p>
     </div>
   )
