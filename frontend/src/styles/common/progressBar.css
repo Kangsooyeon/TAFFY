@@ -1,8 +1,9 @@
 .pgsDiv {
   position: relative;
-  width: 120px; /* 부모 요소의 너비 */
-  height: 150px; /* 부모 요소의 높이 */
-  margin-top: 30px;
+  width: 100%; /* 부모 요소의 너비 */
+  height: 100%; /* 부모 요소의 높이 */
+  margin-top: -150px;
+  margin-bottom: -240px;
   text-align: center;
   font-family: 'HappinessM';
   display: flex;
@@ -12,19 +13,19 @@
 }
 
 .pgsTitle {
-  margin-bottom: 5px; /* 텍스트와 원 사이의 간격 */
-  font-size: 20px; /* 텍스트 크기 */
+  margin-bottom: -20px; /* 텍스트와 원 사이의 간격 */
+  font-size: 40px; /* 텍스트 크기 */
 }
 
 .CircularProgressbar {
-  width: 100px; /* 원의 너비 */
-  height: 100px; /* 원의 높이 */
+  width: 145px; /* 원의 너비 */
+  height: 145px; /* 원의 높이 */
 }
 
 .CircularProgressbar-path {
-  stroke-width: 10px; /* pathWidth 설정 */
+  stroke-width: 8px; /* pathWidth 설정 */
 }
 
 .CircularProgressbar-trail {
-  stroke-width: 10px; /* trailWidth 설정 */
+  stroke-width: 8px; /* trailWidth 설정 */
 }
