@@ -1,0 +1,19 @@
+.quickbutton {
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 3.5px solid #000;
+  opacity: 0.8;
+  background: #E22829;
+  margin: 20px;
+  width: 100%;
+  font-family: "Lee", Helvetica;
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+  box-shadow: 3px 2px 0px 0px rgba(0, 0, 0, 0.50);
+  cursor: pointer;
+}
+
+.quicktitle {
+  margin: 10px;
+}

@@ -1,0 +1,122 @@
+.stageContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 30px;
+}
+
+.stage {
+  text-align: center;
+  position: relative;
+  width: 100%;
+}
+
+.stageImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  display: block;
+  cursor: pointer;
+  transition: filter 0.2s ease-in-out;
+}
+
+/* 열려있는 stage의 경우 */
+.stage.unlocked::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.stage.unlocked:hover::after {
+  opacity: 1;
+}
+
+.viewDetails {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 20%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1em;
+  color: black;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  z-index: 1; /* 위에 위치 */
+}
+
+.stage.unlocked:hover .viewDetails {
+  opacity: 1;
+}
+
+.viewDetails:hover {
+  background-color: rgba(184, 184, 184, 0.9);
+  color: rgb(0, 0, 0);
+}
+
+.stageInfo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  z-index: 1; /* 검은 막 위에 위치 */
+}
+
+.stage img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+hr {
+  margin: -50px 0 20px;
+  width: 70%;
+}
+
+.lock {
+  width: 15%;
+  height: 15%;
+  display: block;
+  max-width: 15%;
+  max-height: 15%;
+  object-fit: contain;
+}
+
+.stageState {
+  font-size: 2.5em;
+  font-family: 'HappinessM';
+  color: white;
+  margin-top: -3px;
+}
+
+.stageText {
+  position: absolute;
+  bottom: 33%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.8em;
+  font-family: 'HappinessM';
+  color: rgba(255, 255, 255, 0.863);
+  z-index: 1; /* 검은 막 위에 위치 */
+  transition: bottom 0.2s ease-in-out; /* 위치 변경 애니메이션 */
+  width: 100%;
+}
+
+.stage.unlocked:hover .stageText {
+  bottom: 40%; /* hover 시 이름을 위로 */
+}

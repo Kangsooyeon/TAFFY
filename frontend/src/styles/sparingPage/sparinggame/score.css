@@ -1,0 +1,13 @@
+.scorebox {
+  box-sizing: border-box;
+  position: absolute;
+  top: 7.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Su';
+  font-size: 45px;
+}
+
+.scorebox p {
+  margin: 0
+}
