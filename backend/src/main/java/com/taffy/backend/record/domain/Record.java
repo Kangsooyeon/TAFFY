@@ -32,4 +32,16 @@ public class Record extends BaseTime {
     @Column(name="draw")
     private Integer draw;
 
+    public void incrementWin() {
+        this.win = this.win + 1;
+    }
+
+    public void incrementLose() {
+        this.lose = this.lose + 1;
+    }
+
+    public void incrementDraw() {
+        this.draw = this.draw + 1;
+    }
+
 }

@@ -30,4 +30,26 @@ public class RecordService {
                 .modifiedDate(record.getModifiedDate())
                 .build();
     }
+
+    @Transactional
+    public void updateRecord(long userId, String result) {
+        Optional<Record> recordOpt = recordRepository.findByMemberId(userId);
+        Record record = recordOpt.orElseThrow(() -> new TaffyException(ErrorCode.USER_RECORD_NOT_FOUND));
+
+        switch (result.toLowerCase()) {
+            case "win":
+                record.incrementWin();
+                break;
+            case "lose":
+                record.incrementLose();
+                break;
+            case "draw":
+                record.incrementDraw();
+                break;
+            default:
+                throw new TaffyException(ErrorCode.INVALID_RESULT);
+        }
+
+        recordRepository.save(record);
+    }
 }

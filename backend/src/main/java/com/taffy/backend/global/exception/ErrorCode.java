@@ -29,7 +29,9 @@ public enum ErrorCode {
 
     USER_PS_TEST_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 심사 정보입니다."),
 
-    USER_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "유저의 전적 데이터가 없습니다.");
+    USER_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "유저의 전적 데이터가 없습니다."),
+
+    INVALID_RESULT(HttpStatus.BAD_REQUEST, "잘못된 결과 값입니다.");
 
     private final HttpStatus httpstatus;
     private final String message;
