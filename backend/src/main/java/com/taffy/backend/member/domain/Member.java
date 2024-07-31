@@ -5,6 +5,7 @@ import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
 import com.taffy.backend.record.domain.Record;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -31,6 +32,7 @@ public class Member extends BaseTime {
     private Country country;
 
     @Column(name = "profile_img")
+    @ColumnDefault("'Tiger'")
     private String profile_img;
 
     @ManyToOne(fetch = LAZY)

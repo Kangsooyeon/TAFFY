@@ -63,7 +63,7 @@ public class MemberService {
                 .email(signUpRequestDto.getEmail())
                 .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
                 .nickname(signUpRequestDto.getNickName())
-                .profile_img("https://seojihyeon.s3.ap-northeast-2.amazonaws.com/basicprofile.png")
+                .profile_img("Tiger")
                 .belt(belt)
                 .country(country)
                 .build();
