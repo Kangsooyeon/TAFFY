@@ -5,9 +5,14 @@ import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import PoomsaeTestPage from "./pages/poomsaeTestPage/poomsaeTestPage";
 import PoomsaeTestDetailPage from "./pages/poomsaeTestPage/poomsaeTestDetailPage";
+import SparingPage from "./pages/sparingPage/sparingPage";
+import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage"
+import SparingResultPage from "./pages/sparingResultPage/sparingResultPage"
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
+
 import './styles/fonts/font.css';
+// import { Navbar, Navbar2 } from './components/common/navbar';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
 import store from './actions/store';
@@ -43,6 +48,10 @@ function App() {
         )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/main" element={<MainPage />} /> */}
+        <Route path="/sp" element={<SparingPage />} />
+        <Route path="/sp/game" element={<SparingDetailPage/>}/>
+        <Route path="/sp/game/result" element={<SparingResultPage/>}/>
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />

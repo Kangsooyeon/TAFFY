@@ -1,0 +1,90 @@
+.missionbox {
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  transform: translate(-50%);
+  z-index: 9999;
+  width: 50%;
+  height: 27%;
+}
+
+.missionme {
+  position: absolute;
+  border-radius: 5px;
+  border: 3px solid #000;
+  background: #E22829;
+  width: 20%;
+  height: 30%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Jo';
+  font-size: 40px;
+  top: 20%;
+  z-index: 9999
+}
+
+.missionyou {
+  border-radius: 5px;
+  border: 3px solid #000;
+  background: #163665;
+  width: 11%;
+  height: 21%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Jo';
+  font-size:  20px;
+  position: absolute;
+  right: 20%;
+  top: 77%;
+  z-index: 7000
+}
+
+.missionyou p, .missionme p {
+  margin: 8px auto;
+}
+
+.missionboxme {
+  width: 85%;
+  height: 70%;
+  position: absolute;
+  left: 10%;;
+  z-index: 8000
+
+}
+
+.missionboxyou {
+  width: 50%;
+  height: 50%;
+  position: absolute;
+  left: 25%;
+  top: 60%;
+  z-index: 5000;
+}
+
+.missionmename {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  z-index: 8500;
+  font-size: 70px;
+  font-family: 'Jo';
+  margin: 0;
+  transform: translate(-40%);
+
+}
+
+.missionyouname {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  font-size: 35px;
+  font-family: 'Jo';
+  margin: 0;
+  z-index: 7500;
+  transform: translate(-50%);
+
+}
