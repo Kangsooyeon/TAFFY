@@ -57,14 +57,11 @@ function App() {
         <Route path="/sp/game" element={<SparingDetailPage/>}/>
         <Route path="/sp/game/result" element={<SparingResultPage/>}/>
         <Route path="/main" element={<MainPage language={language}/>} />
-<<<<<<< frontend/src/App.jsx
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
         <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
-=======
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
->>>>>>> frontend/src/App.jsx
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
