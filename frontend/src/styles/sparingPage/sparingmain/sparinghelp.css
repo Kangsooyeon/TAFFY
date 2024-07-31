@@ -1,7 +1,4 @@
 .helpbox {
-  /* border-radius: 10px;
-  border: 4px solid #000;
-  background: #FFF; */
   width: 70%;
   height: 100%;
   position: absolute;
@@ -15,5 +12,20 @@
 }
 
 .helpclosebutton {
-
+  border-radius: 5px;
+  border: 3px solid #000;
+  background: #E22829;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  position: absolute;
+  right: 50%;
+  bottom: 28%;
+  transform: translate(50%, 50%);
+  width: 10%;
+  height: 6%;
+  font-family: 'Su';
+  font-size: 20px;
+  padding: 3px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
