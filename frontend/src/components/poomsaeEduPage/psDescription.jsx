@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
-const PsDescription = ({ description }) => {
+const PsDescription = ({ description, className }) => {
   return (
-    <div className="psInfo">
+    <div className={className}>
       <p>{description}</p>
     </div>
   );
@@ -10,6 +10,7 @@ const PsDescription = ({ description }) => {
 
 PsDescription.propTypes = {
   description: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default PsDescription;

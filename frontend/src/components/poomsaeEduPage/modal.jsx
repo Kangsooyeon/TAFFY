@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import MvItem from './mvItem';
 import { useNavigate } from 'react-router-dom';
 
-const Modal = ({ stageNum, text, videoUrl, description, modalClose, onLearnComplete, language, moves }) => {
+const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, moves }) => {
   const [buttonText, setButtonText] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
@@ -33,13 +33,15 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, onLearnCompl
   return (
     <div className='modal'>
       <div className='modalWrapper'>
-        <button className='completeButton' onClick={onLearnComplete}>학습 완료!</button>
+        {/* <button className='completeButton' onClick={onLearnComplete}>학습 완료!</button> */}
         <button className='closeButton' onClick={modalClose}>X</button>
         <div className='modalContent'>
           <div className='leftSection'>
             <h2 className='poomsaeName'>{text}</h2>
             <Youtube videoUrl={videoUrl} />
-            <PsDescription description={description} />
+            <PsDescription 
+              className="psInfo"
+              description={description} />
           </div>
           <div className='rightSection'>
               <div className='mvItems'>
