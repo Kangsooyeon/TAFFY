@@ -35,7 +35,7 @@ public class UserPsEduController {
     @GetMapping("/main")
     public ResponseEntity<ResponseDto> poomSaeEduMain(@AuthenticationPrincipal Long userId){
         List<MainPageDto> mainPageDtos = userPsEduService.poomSaeEduMain(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), mainPageDtos));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), mainPageDtos));
     }
 
     // 품새교육 상세페이지

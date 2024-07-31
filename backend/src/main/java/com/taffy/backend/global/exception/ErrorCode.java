@@ -26,12 +26,15 @@ public enum ErrorCode {
     PS_NOT_FOUND(HttpStatus.BAD_REQUEST, "없는 품새 ID 입니다"),
     USER_PS_EDU_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 품새 교육 정보입니다"),
     USER_PS_MV_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 기본동작 교육 정보입니다."),
+    INVALID_MOVEMENT_TYPE(HttpStatus.NOT_FOUND, "없는 기본동작 타입입니다."),
+    MOVEMENTS_NOT_FOUND(HttpStatus.NOT_FOUND, "동작을 찾을 수 없습니다.."),
 
     USER_PS_TEST_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 심사 정보입니다."),
 
     USER_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "유저의 전적 데이터가 없습니다."),
 
     INVALID_RESULT(HttpStatus.BAD_REQUEST, "잘못된 결과 값입니다.");
+
 
     private final HttpStatus httpstatus;
     private final String message;

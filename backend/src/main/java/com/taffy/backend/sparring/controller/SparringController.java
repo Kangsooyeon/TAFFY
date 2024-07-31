@@ -1,10 +1,14 @@
 package com.taffy.backend.sparring.controller;
 
+import com.taffy.backend.poomsae.dto.MvDto;
+import com.taffy.backend.record.dto.ResponseDto;
+import com.taffy.backend.sparring.dto.MissionDto;
 import com.taffy.backend.sparring.model.UserModel;
 import com.taffy.backend.sparring.service.SparringService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +41,12 @@ public class SparringController {
     public ResponseEntity<List<Object>> getQueue() {
         List<Object> userQueue = sparringService.getQueue();
         return new ResponseEntity<>(userQueue, HttpStatus.OK);
+    }
+
+    /// 겨루기 미션 제공
+    @GetMapping("/mission")
+    public ResponseEntity<ResponseDto> getMission(@RequestParam String type) {
+        List<MissionDto> missionDtos = sparringService.getMission(type);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), missionDtos));
     }
 }

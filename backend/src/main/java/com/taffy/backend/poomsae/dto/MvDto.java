@@ -1,5 +1,6 @@
 package com.taffy.backend.poomsae.dto;
 
+import com.taffy.backend.poomsae.domain.Mv;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,7 @@ public class MvDto {
     private String mvKoName;
     private String mvThumb;
     private Boolean isDone;
+
+    public MvDto(Mv mv) {
+    }
 }
