@@ -1,4 +1,4 @@
-.modal {
+.detailModal {
   position: fixed;
   top: 0;
   left: 0;
@@ -80,7 +80,7 @@
   cursor: pointer;
 }
 
-.leftSection {
+.sectionLeft {
   flex: 1;
   padding: 2.5%;
   display: flex;
@@ -90,7 +90,7 @@
   overflow: hidden; 
 }
 
-.rightSection {
+.sectionRight {
   width: 45%;
   display: flex;
   flex-direction: column;
@@ -159,7 +159,7 @@
   gap: 0% 5%;
 }
 
-.rightSection button {
+.sectionRight button {
   margin: 10px;
   padding: 5px 10px;
   cursor: pointer;
@@ -169,6 +169,6 @@
   transition: background-color 0.3s;
 }
 
-.rightSection button:hover {
+.sectionRight button:hover {
   background-color: #ccc;
 }

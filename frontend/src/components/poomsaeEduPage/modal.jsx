@@ -31,19 +31,19 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
   }
 
   return (
-    <div className='modal'>
+    <div className='detailModal'>
       <div className='modalWrapper'>
         {/* <button className='completeButton' onClick={onLearnComplete}>학습 완료!</button> */}
         <button className='closeButton' onClick={modalClose}>X</button>
         <div className='modalContent'>
-          <div className='leftSection'>
+          <div className='sectionLeft'>
             <h2 className='poomsaeName'>{text}</h2>
             <Youtube videoUrl={videoUrl} />
             <PsDescription 
               className="psInfo"
               description={description} />
           </div>
-          <div className='rightSection'>
+          <div className='sectionRight'>
               <div className='mvItems'>
                 {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => (
                   <MvItem
