@@ -1,0 +1,35 @@
+.sparingPage {
+  padding-top: 55px;
+  padding-bottom: 55px;
+  background-image: url('/src/assets/images/sparingPage/background-layer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  height: calc(100vh);
+}
+
+.leftSection, .centerSection, .rightSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 33.33%;
+}
+
+.leftSection > div:first-child {
+  flex: 1;
+}
+
+.leftSection > div:last-child {
+  flex: 2;
+}
+
+.rightSection > div:first-child {
+  flex: 5;
+}
+
+.rightSection > div:last-child {
+  flex: 2;
+}

@@ -1,0 +1,89 @@
+/* *{
+  box-sizing: border-box;
+  } */
+
+.recordbox {
+  border-radius: 10px;
+  border: 3.5px solid #000;
+  opacity: 0.8;
+  background: #F5E8D7;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  position: relative;
+  box-shadow: 3px 2px 0px 0px rgba(0, 0, 0, 0.50);
+  
+}
+
+.recordimgbottom {
+  width: 100%;
+  height: auto; 
+  margin-top: 0px;
+}
+
+.recordimgtop {
+
+  width: 100%;
+  height: auto;
+}
+
+.totalcount {
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: rgba(231, 37, 38, 0.20);
+  box-shadow: 4px 4px 4px 3px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  margin: 10px;
+  font-family: "Lee", Helvetica;
+}
+
+.wincount {
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: rgba(113, 174, 204, 0.40);
+  box-shadow: 4px 4px 4px 3px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  margin: 10px;
+  font-family: "Lee", Helvetica;
+}
+
+.winscore {
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: rgba(235, 205, 40, 0.30);
+  box-shadow: 4px 4px 4px 3px rgba(0, 0, 0, 0.25);
+  margin: 10px;
+  max-width: 100%;
+  font-family: "Lee", Helvetica;
+}
+
+.countdiv {
+  display: flex;
+}
+
+.countbox {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  padding: 30px;
+  padding-top:0px;
+  padding-bottom: 0px;
+  margin: 0px;
+}
+
+.custom-hr {
+  margin-top: 1px;
+  border: none;
+  border-top: 1px solid #985A30;
+}
+
+.custom-title {
+  padding: 4px;
+  margin: 1px;
+  font-size: 16px;
+}

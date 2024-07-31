@@ -1,0 +1,15 @@
+.timerbox {
+  z-index: 9999;
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+  height: 13%;
+  font-family: 'Su';
+  font-size: 90px;
+}
+
+.timerbox p {
+  margin: 0
+}

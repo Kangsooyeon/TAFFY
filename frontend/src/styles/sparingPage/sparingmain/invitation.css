@@ -1,0 +1,88 @@
+.invitation {
+    margin: 20px;
+    border-radius: 10px;
+    border: 3.5px solid #000;
+    opacity: 0.8;
+    background: #F5E8D7;
+    width: 90%;
+    height: 50%;
+    font-family: "Lee", Helvetica;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 3px 2px 0px 0px rgba(0, 0, 0, 0.50);
+}
+
+.invitationcard {
+    font-size: 50px;;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 80px;
+    transform: translateY(10px);
+}
+
+.inputcontainer {
+    position: relative;
+    display: flex;
+    align-items: center
+}
+
+.nicknameinput {
+    border-radius: 10px;
+    background: white;
+    height: 100%;
+    padding-left: 40px; /* Adjust the padding to make room for the icon */
+    transform: translateY(-12px);
+    width: 200px; /* Set a width for the input field */
+    font-size: 18px; /* Adjust font size if needed */
+    border: 2px solid #ccc;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.inputicon {
+    position: absolute;
+    left: 10px;
+    width: 20px; /* Adjust the size as needed */
+    height: auto;
+    pointer-events: none; /* Make sure the icon doesn't block clicks */ 
+    z-index: 10;
+    transform: translateY(-12px);
+}
+
+.invitationcardbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.waitingtitle {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 22px;
+    justify-content: center;
+}
+
+.waitingtitle h3 {
+    margin: 0px;
+}
+
+.timer {
+    font-size: 40px;
+    height: 100px;
+    display: flex;
+    align-items: center; /* Center the content vertically */
+    justify-content: center; /* Center the content horizontally */
+    margin: 10px 0;
+    height: 50px
+}
+
+.waitingbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
