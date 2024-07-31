@@ -7,3 +7,20 @@
   height: calc(100vh);
   position: relative;
 }
+
+.mypageupdatebutton {
+  border-radius: 10px;
+  border: 3px solid #F9E225;
+  background: #F9E225;
+  color: black;
+  font-family: 'Lee';
+  font-size: 13.9px;
+  position: absolute;
+  left: 37.5%;
+  bottom: 9.5%;
+  width: 5%;
+  height: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

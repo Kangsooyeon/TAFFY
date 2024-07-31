@@ -9,21 +9,7 @@
   top: 13%;
 }
 
-.userinfobox button {
-  border-radius: 10px;
-  border: 3px solid #F9E225;
-  background: #F9E225;
-  color: black;
-  font-family: 'Lee';
-  font-size: 13.9px;
-  position: absolute;
-  right: 3%;
-  bottom: 2%;
-  width: 17%;
-  height: 4%;
-  display: flex;
-  align-items: center;
-}
+
 
 .characterphoto {
   width: 28%;
