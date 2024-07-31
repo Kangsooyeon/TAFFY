@@ -20,7 +20,14 @@
     border: 1px solid gray;
     border-radius: 10px;
     padding: 0px 20px;
+    display: flex;
+    flex-direction: column;
 
+}
+
+.login-box hr {
+    width: 100%;
+    margin-top: 5px;
 }
 
 .login-title {
