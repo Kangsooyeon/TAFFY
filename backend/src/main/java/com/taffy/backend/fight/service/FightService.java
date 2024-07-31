@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class FightService {
     }
 
     @Transactional(readOnly = true)
-    public void enterRoom(Long memberId, String sessionId) {
+    public void enterRoom(Long memberId, @RequestParam String sessionId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
         //String roomId = getRoomForInvitee(member.getNickname());
 
@@ -72,6 +73,9 @@ public class FightService {
 //            redisTemplate.delete(INVITE_PREFIX + member.getNickname());
 //            return;
 //        }
+
+        System.out.println(sessionId);
+        System.out.println(redisTemplate.opsForList().size(sessionId));
         if(sessionId != null && redisTemplate.opsForList().size(sessionId) <= 2 ){
             redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
             System.out.println("방 입장 완료 ");
