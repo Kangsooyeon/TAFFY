@@ -27,9 +27,9 @@ public enum ErrorCode {
     USER_PS_EDU_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 품새 교육 정보입니다"),
     USER_PS_MV_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 기본동작 교육 정보입니다."),
 
-    USER_PS_TEST_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 심사 정보입니다.");
+    USER_PS_TEST_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 유저 심사 정보입니다."),
 
-
+    USER_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "유저의 전적 데이터가 없습니다.");
 
     private final HttpStatus httpstatus;
     private final String message;
