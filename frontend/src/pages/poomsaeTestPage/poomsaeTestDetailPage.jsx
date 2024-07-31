@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState  } from 'react';
+import { useParams, useNavigate  } from 'react-router-dom';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 
@@ -6,6 +7,8 @@ import PopUp from '../../components/common/popUp';
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null); 
+    const { poomsaeId } = useParams();
+    const navigate = useNavigate();
 
     const handleProgressUpdate = (success) => {
         if (success) {
@@ -29,13 +32,13 @@ const PoomsaeTestDetailPage = () => {
     };
 
     const handleExit = () => {
-        window.location.href = '/ps_test'; 
+        navigate('/ps_test');
     };
 
     return (
         <div className="poomsae-test-detail-page">
             <div className="detail-title">
-                <p>태극 1장</p>
+                <p>태극 {poomsaeId }장</p>
                 <p className="exit" onClick={handleExit}>나가기</p>
             </div>
             <div className="detail-content">
@@ -64,7 +67,7 @@ const PoomsaeTestDetailPage = () => {
                         <PopUp
                             title="불합격"
                             btnText1="재도전하기"
-                            btnHref1="/ps_test/detail"
+                            btnHref1={`/ps_test/detail/${poomsaeId}`}
                             btnText2="교육하기"
                             btnHref2="/ps_edu"
                         />

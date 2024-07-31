@@ -15,7 +15,7 @@ import store from './actions/store';
 function App() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isDetailPage = location.pathname === '/ps_test/detail';
+  const isDetailPage = location.pathname.startsWith('/ps_test/detail');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
 
@@ -26,6 +26,8 @@ function App() {
   const handleLogout = () => {
     setShowPopUp(true); 
   };
+
+  
 
   return (
 
@@ -43,7 +45,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
-        <Route path="/ps_test/detail" element={<PoomsaeTestDetailPage />} />
+        <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
