@@ -1,4 +1,5 @@
 .missionbox {
+  box-sizing: border-box;
   position: absolute;
   left: 50%;
   bottom: 5%;

@@ -1,4 +1,5 @@
 .webcambox {
+  box-sizing: border-box;
   width: 23%;
   height: 55%;
   border-radius: 10px;

@@ -1,4 +1,5 @@
 .sparinggame {
+  box-sizing: border-box;
   background-image: url('/src/assets/images/sparingPage/background-layer.png');
   background-size: cover;
   background-position: center;

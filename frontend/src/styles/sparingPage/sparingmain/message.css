@@ -1,4 +1,5 @@
 .letterbox {
+  box-sizing: border-box;
   border-radius: 10px;
   border: 2px solid #000;
   background: #FFFFFF;

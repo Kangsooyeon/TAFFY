@@ -3,6 +3,7 @@
   } */
 
 .recordbox {
+  box-sizing: border-box;
   border-radius: 10px;
   border: 3.5px solid #000;
   opacity: 0.8;

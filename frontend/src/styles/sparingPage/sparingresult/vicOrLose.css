@@ -1,4 +1,5 @@
 .vicorlosebox {
+  box-sizing: border-box;
   height: 25%;
   position: absolute;
   z-index: 9999

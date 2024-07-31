@@ -1,4 +1,5 @@
 .timerbox {
+  box-sizing: border-box;
   z-index: 9999;
   position: absolute;
   top: 13%;

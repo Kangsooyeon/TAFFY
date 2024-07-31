@@ -1,4 +1,6 @@
-
+.box{
+  box-sizing: border-box;
+}
 
 .overlap-group {
   height: 254px;
