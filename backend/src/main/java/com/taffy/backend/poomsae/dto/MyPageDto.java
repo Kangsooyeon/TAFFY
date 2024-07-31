@@ -18,5 +18,7 @@ public class MyPageDto {
     private String beltName;
     private List<PoomSaeCompletedDto> poomSaeCompletedList;
     private int winScore;
+    private String country;
+    private String profileImg;
 
 }

@@ -175,6 +175,7 @@ public class MemberService {
     public MyPageDto myPage(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
         Record userRecord = memberRepository.findUserAndRecord(member);
+        Country country = memberRepository.findMemberWithCountryById(member.getId());
         List<UserPsEdu> userAndPoomSaeComplete = userPsEduRepository.findUserAndPoomSaeComplete(member);
 
         int winPercentage = getWinPercentage(userRecord);
@@ -186,6 +187,8 @@ public class MemberService {
                 .beltName(userRecord.getMember().getBelt().getBelt_name())
                 .poomSaeCompletedList(poomSaeCompletedDto)
                 .winScore(winPercentage)
+                .profileImg((userRecord.getMember().getProfile_img()))
+                .country(country.getCountryName())
                 .build();
 
         return myPageDto;
