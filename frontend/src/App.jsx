@@ -20,7 +20,8 @@ import store from './actions/store';
 function App() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isDetailPage = location.pathname.startsWith('/ps_test/detail');
+  const isTestPage = location.pathname.startsWith('/ps_test/detail');
+  const isSparPage = location.pathname.startsWith('/sp/game');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
 
@@ -37,7 +38,7 @@ function App() {
   return (
 
     <Provider store={store}>
-      {!isDetailPage && (
+      {(!isTestPage && !isSparPage) && (
           <Navbar 
             isLoggedIn={isLoggedIn} 
             handleLogin={handleLogin} 
