@@ -23,16 +23,16 @@
 }
 
 @font-face {
-  font-family: 'Antonio';
-  src: url('/src/styles/fonts/Antonio.woff') format('woff');
+  font-family: 'Su';
+  src: url('/src/styles/fonts/SuseongHyejeong.woff') format('woff');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Antonior';
-  src: url('/src/styles/fonts/Antonior.woff') format('woff');
+  font-family: 'Jo';
+  src: url('/src/styles/fonts/JoJongSuk.woff') format('woff');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
