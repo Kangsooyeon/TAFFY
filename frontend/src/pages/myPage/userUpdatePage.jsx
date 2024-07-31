@@ -71,9 +71,14 @@ const UserUpdatePage = ({closeUpdate}) => {
         <select className="nationselect">
           <option value="1">한국</option>
           <option value="2">미국</option>
-          <option value="3">호주</option>
-          <option value="3">영국</option>
-          <option value="3">뉴질랜드</option>
+          <option value="3">중국</option>
+          <option value="4">인도</option>
+          <option value="5">캐나다</option>
+          <option value="6">호주</option>
+          <option value="7">인도네시아</option>
+          <option value="8">베트남</option>
+          <option value="9">모로코</option>
+          <option value="10">말레이시아</option>
         </select>
       </div>
       <button className="userdeletebutton">회원 탈퇴</button>
