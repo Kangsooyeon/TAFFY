@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
+import PoomsaeTestPage from "./pages/poomsaeTestPage/poomsaeTestPage";
+import PoomsaeTestDetailPage from "./pages/poomsaeTestPage/poomsaeTestDetailPage";
 import SparingPage from "./pages/sparingPage/sparingPage";
 import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage"
 import SparingResultPage from "./pages/sparingResultPage/sparingResultPage"
@@ -18,6 +20,7 @@ import store from './actions/store';
 function App() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isDetailPage = location.pathname.startsWith('/ps_test/detail');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
 
@@ -29,15 +32,20 @@ function App() {
     setShowPopUp(true); 
   };
 
+  
+
   return (
+
     <Provider store={store}>
-      <Navbar 
-        isLoggedIn={isLoggedIn} 
-        handleLogin={handleLogin} 
-        handleLogout={handleLogout} 
-        language={language} 
-        setLanguage={setLanguage} 
-      />
+      {!isDetailPage && (
+          <Navbar 
+            isLoggedIn={isLoggedIn} 
+            handleLogin={handleLogin} 
+            handleLogout={handleLogout} 
+            language={language} 
+            setLanguage={setLanguage} 
+          />
+        )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         {/* <Route path="/main" element={<MainPage />} /> */}
@@ -45,6 +53,8 @@ function App() {
         <Route path="/sp/game" element={<SparingDetailPage/>}/>
         <Route path="/sp/game/result" element={<SparingResultPage/>}/>
         <Route path="/main" element={<MainPage language={language}/>} />
+        <Route path="/ps_test" element={<PoomsaeTestPage />} />
+        <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
