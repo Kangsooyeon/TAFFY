@@ -4,10 +4,7 @@ import com.taffy.backend.global.exception.ErrorCode;
 import com.taffy.backend.global.exception.TaffyException;
 import com.taffy.backend.poomsae.domain.Ps;
 import com.taffy.backend.poomsae.domain.UserPsMv;
-import com.taffy.backend.poomsae.dto.DetailPageDto;
-import com.taffy.backend.poomsae.dto.MvDetailDto;
-import com.taffy.backend.poomsae.dto.MvDto;
-import com.taffy.backend.poomsae.dto.PsWholeDto;
+import com.taffy.backend.poomsae.dto.*;
 import com.taffy.backend.poomsae.repository.PsMvRepository;
 import com.taffy.backend.poomsae.repository.PsRepository;
 
@@ -46,13 +43,18 @@ public class PsMvService {
     }
 
     public PsWholeDto getOneWholePs(Long userId, Integer psId) {
-        Optional<Ps> ps = psRepository.findById(psId);
-        if (!ps.isPresent()) {
+        Optional<Ps> psOpt = psRepository.findById(psId);
+        if (!psOpt.isPresent()) {
             return null;
         }
+        Ps ps = psOpt.get();
+
+        PsDto psDto = PsDto.builder().psId(ps.getPsId()).psKoName(ps.getPsKoName()).psEnName(ps.getPsEnName()).psUrl(ps.getPsUrl()).psKoDesc(ps.getPsKoDesc())
+        .psEnDesc(ps.getPsEnDesc()).build();
+
         List<MvDetailDto> mvDetails = userPsMvRepository.findMvDetails(userId, psId);
 
-        return new PsWholeDto(mvDetails.size(), mvDetails);
+        return new PsWholeDto(psDto ,mvDetails.size(), mvDetails);
     }
 
     public MvDetailDto getUsPsMvDetailByPsMvId(Long userId, Integer psMvId) {

@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PsWholeDto {
+    private PsDto ps;
     private Integer size;
     private List<MvDetailDto> mvDetails;
 }
