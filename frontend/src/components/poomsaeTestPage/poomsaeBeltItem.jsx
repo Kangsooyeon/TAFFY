@@ -5,7 +5,7 @@ const PoomsaeBeltItem = ({ imageUrl, onClick, completed }) => {
   return (
     <div className="belt-item" onClick={onClick}>
       <img src={imageUrl} alt="Belt" />
-      {completed && <img src="src/assets/images/common/completed.png" alt="Completed" className="completed-icon" />}
+      {completed && <img src="/src/assets/images/common/completed.png" alt="Completed" className="completed-icon" />}
     </div>
   );
 };
