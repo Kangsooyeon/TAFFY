@@ -68,7 +68,7 @@ const Navbar = ({ isLoggedIn, handleLogin, handleLogout, language, setLanguage }
             <a onClick={handleLogout}>
               <img src={logout} alt="logout" className="iconImage" />
             </a>
-            <Link to="/my">
+            <Link to="/mypage">
               <img src={my} alt="mypage" className="iconImage" />
             </Link>
           </>
