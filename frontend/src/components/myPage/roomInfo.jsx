@@ -7,7 +7,6 @@ const RoomInfo = () => {
   return (
     <div className="roominfobox">
       <img src={Room} alt="" />
-      <button></button>
       <div className="flag">
         <img src={NewZealand} alt="" />
       </div>
