@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
+import PoomsaeEduPage from "./pages/poomsaeEduPage/poomsaeEduPage";
+import PoomsaeEduOnePage from "./pages/poomsaeEduPage/poomsaeEduOnePage.jsx";
+import PoomsaeEduAllPage from "./pages/poomsaeEduPage/poomsaeEduAllPage.jsx";
 import PoomsaeTestPage from "./pages/poomsaeTestPage/poomsaeTestPage";
 import PoomsaeTestDetailPage from "./pages/poomsaeTestPage/poomsaeTestDetailPage";
 import SparingPage from "./pages/sparingPage/sparingPage";
@@ -54,8 +57,14 @@ function App() {
         <Route path="/sp/game" element={<SparingDetailPage/>}/>
         <Route path="/sp/game/result" element={<SparingResultPage/>}/>
         <Route path="/main" element={<MainPage language={language}/>} />
+<<<<<<< frontend/src/App.jsx
+        <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
+        <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
+=======
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
+>>>>>>> frontend/src/App.jsx
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
