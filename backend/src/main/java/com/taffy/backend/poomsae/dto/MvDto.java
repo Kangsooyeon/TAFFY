@@ -13,6 +13,7 @@ public class MvDto {
     private Integer mvId;
     private Integer mvSeq;
     private String mvKoName;
+    private String mvEnName;
     private String mvThumb;
     private Boolean isDone;
 

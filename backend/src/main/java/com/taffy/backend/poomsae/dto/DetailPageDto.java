@@ -14,6 +14,7 @@ public class DetailPageDto {
 
     private Integer psId;
     private String psKoName;
+    private String psEnName;
     private String psUrl;
     private String psKoDesc;
     private Integer size;

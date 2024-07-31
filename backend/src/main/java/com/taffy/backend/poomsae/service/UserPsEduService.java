@@ -31,7 +31,16 @@ public class UserPsEduService {
         Member member = memberRepository.findById(userId).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
         List<UserPsEdu> userPsEduList = userPsEduRepository.findUserAndPoomSaeComplete(member);
         return userPsEduList.stream().map(u ->
-                        new MainPageDto(u.getMember().getId(), u.getPs().getPsThumb(), u.getPs().getPsKoName(), u.getUserPsEduDone())).collect(toList());
+                        new MainPageDto(
+                                u.getPs().getPsId(),
+                                u.getPs().getPsKoName(),
+                                u.getPs().getPsEnName(),
+                                u.getPs().getPsThumb(),
+                                u.getPs().getPsUrl(),
+                                u.getPs().getPsKoDesc(),
+                                u.getPs().getPsEnDesc(),
+                                u.getUserPsEduDone(),
+                                u.getMember().getId())).collect(toList());
     }
 
     @Transactional

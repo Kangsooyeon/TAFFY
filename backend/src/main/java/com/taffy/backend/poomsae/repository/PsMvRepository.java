@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PsMvRepository extends JpaRepository<PsMv, Integer> {
 
-    @Query("SELECT new com.taffy.backend.poomsae.dto.MvDto(pm.psMvId, m.mvId, pm.psMvSeq, m.mvKoName, m.mvThumb, upm.userPsMvDone) " +
+    @Query("SELECT new com.taffy.backend.poomsae.dto.MvDto(pm.psMvId, m.mvId, pm.psMvSeq, m.mvKoName, m.mvEnName, m.mvThumb, upm.userPsMvDone) " +
             "FROM PsMv pm " +
             "JOIN pm.mv m " +
             "LEFT JOIN UserPsMv upm ON upm.psMv.id = pm.id AND upm.member.id = :userId " +

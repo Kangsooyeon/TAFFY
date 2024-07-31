@@ -42,7 +42,7 @@ public class PsMvService {
         // 해당 품새의 기본동작 리스트
         List<MvDto> mvDtos = psMvRepository.findMvByPsIdAndUserId(psId, userId);
 
-        return new DetailPageDto(ps.get().getPsId(), ps.get().getPsKoName(), ps.get().getPsUrl(), ps.get().getPsKoDesc(), mvDtos.size(), mvDtos);
+        return new DetailPageDto(ps.get().getPsId(), ps.get().getPsKoName(), ps.get().getPsEnName() , ps.get().getPsUrl(), ps.get().getPsKoDesc(), mvDtos.size(), mvDtos);
     }
 
     public PsWholeDto getOneWholePs(Long userId, Integer psId) {
