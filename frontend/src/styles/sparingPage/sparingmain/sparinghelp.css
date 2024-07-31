@@ -1,0 +1,19 @@
+.helpbox {
+  /* border-radius: 10px;
+  border: 4px solid #000;
+  background: #FFF; */
+  width: 70%;
+  height: 100%;
+  position: absolute;
+  left: 15%;
+  bottom: -8%;
+  z-index: 9999
+}
+
+.helpbox img {
+  width: 100%
+}
+
+.helpclosebutton {
+
+}

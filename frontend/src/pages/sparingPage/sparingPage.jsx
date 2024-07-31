@@ -5,11 +5,23 @@ import UserInfo from '../../components/sparingPage/sparingmain/userInfo';
 import UserCharacter from '../../components/sparingPage/sparingmain/userCharacter';
 import UserRecord from '../../components/sparingPage/sparingmain/userRecord';
 import QuickButton from '../../components/sparingPage/sparingmain/quickButton';
-import HelpButton from '../../components/sparingPage/sparingmain/helpButton'
+import Help from '../../components/sparingPage/sparingmain/sparinghelp.jsx'
+import {useState} from 'react'
+
 
 const sparingPage = () => {
+  const [isOpenHelp, setIsOpenHelp] = useState(false)
+
+  const openHelp = () => {
+    setIsOpenHelp(true)
+  }
+
+  const closeHelp = () => {
+    setIsOpenHelp(false)
+  }
+
   return (
-    <div>
+    <div className="sparingtoppage">
       <div className="sparingPage">
           <div className="leftSection">
             <UserInfo />
@@ -24,9 +36,8 @@ const sparingPage = () => {
             <Invitation />
           </div>
       </div>
-      <div>
-        <HelpButton />
-      </div>
+      <button className="helpbutton" onClick={openHelp}>?</button>
+      {isOpenHelp && <Help closeHelp={closeHelp}/>}
     </div>
   )
 }

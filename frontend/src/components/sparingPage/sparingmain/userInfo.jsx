@@ -2,7 +2,7 @@ import '../../../styles/sparingPage/sparingmain/userInfo.css'
 
 const userInfo = () => {
   return (
-  <div className="box">
+  // <div className="box">
     <div className="overlap-group">
       <div className="userInfoBox">
         <div className="nickname">banana</div>
@@ -13,7 +13,7 @@ const userInfo = () => {
       </div>
       <img className="vector" alt="Vector" src="..\src\assets\images\sparingPage\main-userinfo-vector.png" />
     </div>
-  </div>
+  // </div>
   )
 }
 
