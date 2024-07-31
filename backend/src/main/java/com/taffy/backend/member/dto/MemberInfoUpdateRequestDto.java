@@ -6,6 +6,6 @@ import lombok.Getter;
 public class MemberInfoUpdateRequestDto {
 
     private String nickName;
-    private String photoUrl;
+    private String profileImg;
     private String countryName;
 }

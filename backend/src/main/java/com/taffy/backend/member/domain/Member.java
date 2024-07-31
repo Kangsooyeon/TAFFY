@@ -47,7 +47,7 @@ public class Member extends BaseTime {
 
     public void updateInfo(MemberInfoUpdateRequestDto memberInfoUpdateRequestDto, Country country){
         this.nickname = memberInfoUpdateRequestDto.getNickName();
-        this.profile_img = memberInfoUpdateRequestDto.getPhotoUrl();
+        this.profile_img = memberInfoUpdateRequestDto.getProfileImg();
         if (country != null) {
             this.country = country;
         }
