@@ -21,6 +21,7 @@ const Signup = () => {
             <div className='signup-box'>
                 <div className='signup-title'>
                     <p>Sign Up</p>
+                    
                 </div>
                 <hr/>
                 <div className='signup-form'>
