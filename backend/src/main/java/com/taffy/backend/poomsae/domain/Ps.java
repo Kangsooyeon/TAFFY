@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class Ps {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belt_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Belt belt;
 
     @OneToMany(mappedBy = "ps", cascade = CascadeType.ALL, orphanRemoval = true)
