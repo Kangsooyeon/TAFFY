@@ -8,7 +8,9 @@ public class CustomCorsConfigurationSource extends UrlBasedCorsConfigurationSour
 
     public CustomCorsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://i11e104.p.ssafy.io:3000"));
+        config.setAllowedOrigins(Arrays.asList("http://i11e104.p.ssafy.io:3000",
+                "http://localhost:5173"));
+
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(false);
