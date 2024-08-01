@@ -6,7 +6,6 @@ import com.taffy.backend.global.exception.ErrorCode;
 import com.taffy.backend.global.exception.TaffyException;
 import com.taffy.backend.member.domain.Member;
 import com.taffy.backend.member.repository.MemberRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class FightService {
     public String createRoom(Long memberId, String sessionId) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
-        LocalDateTime now = LocalDateTime.now();
+
         RedisHashUser redisHashUser = RedisHashUser.builder()
                 .id(member.getId())
                 .email(member.getEmail())
@@ -47,16 +45,14 @@ public class FightService {
 
     @Transactional(readOnly = true)
     public void invite(InviteRoomRequestDto inviteRoomRequestDto) {
-
         Member member = memberRepository.findByNickname(inviteRoomRequestDto.getNickName()).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
         String inviteKey = INVITE_PREFIX + member.getNickname();
         redisTemplate.opsForValue().set(inviteKey, inviteRoomRequestDto.getRoomId(), 3, TimeUnit.MINUTES);
     }
 
     @Transactional(readOnly = true)
-    public void enterRoom(Long memberId, @RequestParam String sessionId) {
+    public void enterRoom(Long memberId, String roomId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
-        //String roomId = getRoomForInvitee(member.getNickname());
 
         RedisHashUser redisHashUser = RedisHashUser.builder()
                 .id(member.getId())
@@ -73,20 +69,18 @@ public class FightService {
 //            redisTemplate.delete(INVITE_PREFIX + member.getNickname());
 //            return;
 //        }
-
-        System.out.println(sessionId);
-        System.out.println(redisTemplate.opsForList().size(sessionId));
-        if(sessionId != null && redisTemplate.opsForList().size(sessionId) <= 2 ){
-            redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
-            System.out.println("방 입장 완료 ");
+        if(roomId != null && redisTemplate.opsForList().size(roomId) < 2 ){
+            redisTemplate.opsForList().rightPush(roomId, redisHashUser);
+            System.out.println("방 입장 완료 :" + roomId );
             return;
         }
+
         throw new TaffyException(ErrorCode.CANNOT_JOIN_ROOM);
     }
 
-    @Cacheable(value = "rooms", key = "#invitee")
-    public String getRoomForInvitee(String invitee) {
-        String inviteKey = INVITE_PREFIX + invitee;
-        return (String) redisTemplate.opsForValue().get(inviteKey);
-    }
+//    @Cacheable(value = "rooms", key = "#invitee")
+//    public String getRoomForInvitee(String invitee) {
+//        String inviteKey = INVITE_PREFIX + invitee;
+//        return (String) redisTemplate.opsForValue().get(inviteKey);
+//    }
 }
