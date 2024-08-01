@@ -9,11 +9,25 @@ const Login = ({ setIsLoggedIn, navigate }) => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('https://i11e104.p.ssafy.io/api/login', { email, password });
-            console.log(response.data);
+            const response = await axios.post(
+                'https://i11e104.p.ssafy.io/api/login', 
+                { email, password },
+                // { withCredentials: true }
+            );
+            console.log(response);
+            console.log(window.localStorage);
+
             if (response.data) {
                 setIsLoggedIn(true);
                 navigate('/main');
+                alert(response.data);
+                setTimeout(() => {
+                    console.log(document.cookie)
+                    const cookies = parseCookies();
+                    console.log('Access Token:', cookies.accessToken);
+                    console.log('Refresh Token:', cookies.refreshToken);
+                }, 500); // 500ms 지연
+
             } else {
                 alert('Login failed');
             }
@@ -21,6 +35,15 @@ const Login = ({ setIsLoggedIn, navigate }) => {
             console.error('Error during login:', error);
             alert('An error occurred during login. Please try again.');
         }
+    };
+
+    // 쿠키 파싱 함수
+    const parseCookies = () => {
+        return document.cookie.split(';').reduce((cookies, cookie) => {
+            const [name, value] = cookie.split('=').map(c => c.trim());
+            cookies[name] = value;
+            return cookies;
+        }, {});
     };
 
     return (
