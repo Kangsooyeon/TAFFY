@@ -1,25 +1,28 @@
 import PropTypes from 'prop-types'
 import MenuItem from '../../components/mainPage/menuItem';
 import '../../styles/mainPage/mainPage.css';
+import PsEdu from '../../assets/images/mainPage/품새교육.png'
+import PsTest from '../../assets/images/mainPage/품새심사.png'
+import Sp from '../../assets/images/mainPage/겨루기.png'
 
 const MainPage = ({ language }) => {
   return (
     <div className="mainPage">
       <MenuItem
         title={language === 'ko' ? "품새 교육" : "Poomsae Edu"}
-        imageUrl={"/src/assets/images/mainPage/품새교육.png"}
+        imageUrl={PsEdu}
         linkUrl="/ps_edu"
         language={language}
       />
       <MenuItem
         title={language === 'ko' ? "품새 심사" : "Poomsae Test"}
-        imageUrl={"/src/assets/images/mainPage/품새심사.png"}
+        imageUrl={PsTest}
         linkUrl="/ps_test"
         language={language}
       />
       <MenuItem
         title={language === 'ko' ? "겨루기" : "Gyeorugi"}
-        imageUrl={"/src/assets/images/mainPage/겨루기.png"}
+        imageUrl={Sp}
         linkUrl="/sp"
         language={language}
       />

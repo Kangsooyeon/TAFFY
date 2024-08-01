@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../../styles/mainPage/menuItem.css';
+import StartKo from '../../assets/images/mainPage/start.png';
+import StartEn from '../../assets/images/mainPage/startEn.png';
 
 const MenuItem = ({ title, imageUrl, linkUrl, language }) => {
   const navigate = useNavigate();
@@ -10,8 +12,8 @@ const MenuItem = ({ title, imageUrl, linkUrl, language }) => {
   };
 
   const buttonImage = language === 'ko' 
-    ? '/src/assets/images/mainPage/start.png' 
-    : '/src/assets/images/mainPage/startEn.png';
+    ? StartKo
+    : StartEn;
 
   return (
     <div className='menuItem'>
