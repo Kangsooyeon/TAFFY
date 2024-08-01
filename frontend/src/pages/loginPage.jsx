@@ -1,4 +1,5 @@
 import '../styles/loginPage.css';
+import PropTypes from 'prop-types';
 
 const Login = ({ setIsLoggedIn, navigate }) => {
     const handleLogin = () => {
@@ -12,6 +13,7 @@ const Login = ({ setIsLoggedIn, navigate }) => {
                 <div className="login-title">
                     <p>Login</p>
                 </div>
+
                 <hr/>
                 <div className="login-form">
                     <div className="input-box">
@@ -30,5 +32,10 @@ const Login = ({ setIsLoggedIn, navigate }) => {
         </div>
     );
 }
+
+Login.propTypes = {
+    setIsLoggedIn: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+};
 
 export default Login;

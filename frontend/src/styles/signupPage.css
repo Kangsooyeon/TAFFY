@@ -22,6 +22,11 @@
     margin-top: 50px;
 }
 
+.signup-box hr{
+    width: 100%;
+    margin: 10px 0px;
+}
+
 .signup-title {
     color: black;
     height: 10%;

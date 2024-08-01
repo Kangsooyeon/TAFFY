@@ -13,6 +13,7 @@ import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage"
 import SparingResultPage from "./pages/sparingResultPage/sparingResultPage"
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
+import MyPage from "./pages/myPage/myPage"
 
 import './styles/fonts/font.css';
 // import { Navbar, Navbar2 } from './components/common/navbar';
@@ -57,6 +58,7 @@ function App() {
         <Route path="/sp/game" element={<SparingDetailPage/>}/>
         <Route path="/sp/game/result" element={<SparingResultPage/>}/>
         <Route path="/main" element={<MainPage language={language}/>} />
+        <Route path="/mypage" element={<MyPage/>} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
         <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />

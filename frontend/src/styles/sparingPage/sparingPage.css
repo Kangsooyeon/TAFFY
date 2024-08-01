@@ -20,7 +20,7 @@
 }
 
 .leftSection > div:first-child {
-  flex: 1;
+  flex: 2;
 }
 
 .leftSection > div:last-child {
@@ -33,4 +33,29 @@
 
 .rightSection > div:last-child {
   flex: 2;
+}
+
+.sparingtoppage {
+  position: relative
+}
+
+.helpbutton {
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  border: 3.5px solid black;
+  background-color: #F9E225;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color: black;
+  padding: 0
 }
