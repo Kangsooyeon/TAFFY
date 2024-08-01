@@ -10,12 +10,12 @@ const Login = ({ setIsLoggedIn, navigate }) => {
     const handleLogin = async () => {
         try {
             const response = await axios.post('https://i11e104.p.ssafy.io/api/login', { email, password });
-            console.log('Login response:', response.data);
-            if (response.data.success) {
+            console.log(response.data);
+            if (response.data) {
                 setIsLoggedIn(true);
                 navigate('/main');
             } else {
-                alert('Login failed: ' + response.data.message);
+                alert('Login failed');
             }
         } catch (error) {
             console.error('Error during login:', error);
