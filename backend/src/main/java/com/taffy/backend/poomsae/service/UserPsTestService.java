@@ -4,6 +4,7 @@ import com.taffy.backend.global.exception.ErrorCode;
 import com.taffy.backend.global.exception.TaffyException;
 import com.taffy.backend.poomsae.domain.UserPsMv;
 import com.taffy.backend.poomsae.domain.UserPsTest;
+import com.taffy.backend.poomsae.dto.PsDto;
 import com.taffy.backend.poomsae.dto.UserPsTestDto;
 import com.taffy.backend.poomsae.repository.UserPsTestRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,14 @@ public class UserPsTestService {
                         userPsTest.getUserPsTestId(),
                         userPsTest.getMember().getId(),
                         userPsTest.getPs().getPsId(),
+                        PsDto.builder()
+                                .psId(userPsTest.getPs().getPsId())
+                                .psKoName(userPsTest.getPs().getPsKoName())
+                                .psEnName(userPsTest.getPs().getPsEnName())
+                                .psKoDesc(userPsTest.getPs().getPsKoDesc())
+                                .psEnDesc(userPsTest.getPs().getPsEnDesc())
+                                .psThumb(userPsTest.getPs().getPsThumb())
+                                .build(),
                         userPsTest.isPassed(),
                         userPsTest.getModifiedDate()))
                 .collect(Collectors.toList());
