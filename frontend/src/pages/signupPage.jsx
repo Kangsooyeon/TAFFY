@@ -1,8 +1,6 @@
 import '../styles/signupPage.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
 
 const Signup = () => {
     const [email, setEmail] = useState('');
@@ -11,19 +9,8 @@ const Signup = () => {
     const [password2, setPassword2] = useState('');
     const [nickname, setNickname] = useState('');
     const [country, setCountry] = useState('');
-    const [verificationCode, setVerificationCode] = useState('');
 
     const navigate = useNavigate();
-
-    const handleEmailCertification = async () => {
-        try {
-            const response = await axios.post('/api/email', { email });
-            setVerificationCode(response.data);
-            alert(`Verification code sent to your email: ${response.data}`);
-        } catch (error) {
-            alert('Failed to send verification code. Please try again.');
-        }
-    };
 
     const handleSubmit = () => {
         navigate('/login');
@@ -34,6 +21,7 @@ const Signup = () => {
             <div className='signup-box'>
                 <div className='signup-title'>
                     <p>Sign Up</p>
+                    
                 </div>
                 <hr/>
                 <div className='signup-form'>
@@ -46,7 +34,7 @@ const Signup = () => {
                                 onChange={(e) => setEmail(e.target.value)} 
                                 placeholder="Please enter in email format" 
                             />
-                            <button className="action-button" onClick={handleEmailCertification}>Certification</button>
+                            <button className="action-button">Certification</button>
                         </div>
                     </div>
                     <div className='input-box'>
