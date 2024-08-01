@@ -17,4 +17,6 @@ public class PsDto {
     private String psUrl;
     private String psKoDesc;
     private String psEnDesc;
+    private String psThumb;
+
 }
