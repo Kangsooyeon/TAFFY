@@ -28,7 +28,9 @@ const PoomsaeEduAllPage = ({language}) => {
         
         <div className='allEduContent'>
 
-          <div className='mvGif'></div>
+          <div className='mvGif'>
+            {/* <img src="https://lab.ssafy.com/s11-webmobile1-sub2/S11P12E104/uploads/7c00745221ff1e97c803c24da2c4b8dd/ezgif.com-resize__1_.gif" alt="" /> */}
+          </div>
           <div className='userCam'></div>
           <div className='progress'>
             {/* 1. 정확도 */}

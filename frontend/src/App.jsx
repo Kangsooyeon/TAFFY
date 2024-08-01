@@ -42,6 +42,7 @@ function App() {
   return (
 
     <Provider store={store}>
+    {/* <Provider> */}
       {(!isTestPage && !isSparPage) && (
           <Navbar 
             isLoggedIn={isLoggedIn} 
