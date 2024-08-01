@@ -10,8 +10,8 @@ const MenuItem = ({ title, imageUrl, linkUrl, language }) => {
   };
 
   const buttonImage = language === 'ko' 
-    ? 'src/assets/images/mainPage/start.png' 
-    : 'src/assets/images/mainPage/startEn.png';
+    ? '/src/assets/images/mainPage/start.png' 
+    : '/src/assets/images/mainPage/startEn.png';
 
   return (
     <div className='menuItem'>
