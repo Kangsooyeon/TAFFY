@@ -1,5 +1,6 @@
 import '../../../styles/sparingPage/sparingmain/userInfo.css'
 
+
 const userInfo = () => {
   return (
   <div className="box">
