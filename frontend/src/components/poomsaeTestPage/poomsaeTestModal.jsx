@@ -17,7 +17,7 @@ const PoomsaeTestModal = ({ poomsae, onClose }) => {
           <p className="modal-title">{poomsae.name}</p>
           <div className="modal-ps">
             <div className="modal-image-box">
-              <img src="src/assets/images/poomsaeTestPage/ps1.png" alt="" className="modal-image" />
+              <img src={poomsae.imageUrl.PoomsaeImage} alt="" className="modal-image" />
             </div>
             <div className="modal-desc">
               <div className="modal-ps-description">
