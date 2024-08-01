@@ -23,9 +23,32 @@ const Signup = () => {
         }
     };
 
-    const handleSubmit = () => {
-        navigate('/login');
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (password !== password2) {
+            alert('비밀번호가 일치하지 않습니다');
+            return;
+        }
+
+        try {
+            const response = await axios.post('https://i11e104.p.ssafy.io/api/sign-up', {
+                email,
+                password,
+                nickName: nickname,
+                countryName: country
+            });
+
+            if (response.data === '회원가입 완료') {
+                alert('회원가입 완료');
+                navigate('/login');
+            } else {
+                alert(response.data);
+            }
+        } catch (error) {
+            console.error('Error during sign up:', error);
+            alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    };
 
     return (
         <div className='signupPage'>
@@ -34,7 +57,7 @@ const Signup = () => {
                     <p>Sign Up</p>
                 </div>
                 <hr/>
-                <div className='signup-form'>
+                <form className='signup-form' onSubmit={handleSubmit}>
                     <div className='input-box'>
                         <label>Email</label>
                         <div className="input-wrapper">
@@ -43,8 +66,9 @@ const Signup = () => {
                                 value={email} 
                                 onChange={(e) => setEmail(e.target.value)} 
                                 placeholder="Please enter in email format" 
+                                required
                             />
-                            <button className="action-button">Certification</button>
+                            <button type="button" className="action-button">Certification</button>
                         </div>
                     </div>
                     <div className='input-box'>
@@ -54,6 +78,7 @@ const Signup = () => {
                             value={code} 
                             onChange={(e) => setCode(e.target.value)} 
                             placeholder="Please enter code number"
+                            required
                         />
                     </div>
                     <div className='input-box'>
@@ -63,6 +88,7 @@ const Signup = () => {
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
                             placeholder="Please enter password"
+                            required
                         />
                     </div>
                     <div className='input-box'>
@@ -72,6 +98,7 @@ const Signup = () => {
                             value={password2} 
                             onChange={(e) => setPassword2(e.target.value)} 
                             placeholder="Please enter password again"
+                            required
                         />
                     </div>
                     <div className='input-box'>
@@ -82,8 +109,9 @@ const Signup = () => {
                                 value={nickname} 
                                 onChange={(e) => setNickname(e.target.value)} 
                                 placeholder="Please enter nickname" 
+                                required
                             />
-                            <button className="action-button" onClick={handleNicknameCheck}>Double Check</button>  
+                            <button type="button" className="action-button" onClick={handleNicknameCheck}>Double Check</button>  
                         </div>
                     </div>
                     <div className='input-box'>
@@ -91,15 +119,16 @@ const Signup = () => {
                         <select 
                             value={country} 
                             onChange={(e) => setCountry(e.target.value)} 
+                            required
                         >
                             <option value="South Korea">South Korea</option>
                             <option value="USA">USA</option>
                         </select>
                     </div>
                     <div>
-                        <button className="submit-button" onClick={handleSubmit}>Sign Up</button>  
+                        <button type="submit" className="submit-button">Sign Up</button>  
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );
