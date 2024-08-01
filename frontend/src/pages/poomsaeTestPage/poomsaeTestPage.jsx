@@ -3,6 +3,15 @@ import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
 import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
 import PoomsaeImage from '/src/assets/images/poomsaeTestPage/ps1.png';
+import GreenBelt from '/src/assets/images/common/belt/greenBelt.png';
+import YellowBelt from '/src/assets/images/common/belt/yellowBelt.png';
+import PurpleBelt from '/src/assets/images/common/belt/purpleBelt.png';
+import BlueBelt from '/src/assets/images/common/belt/blueBelt.png';
+import BrownBelt from '/src/assets/images/common/belt/brownBelt.png';
+import OrangeBelt from '/src/assets/images/common/belt/orangeBelt.png';
+import RedBelt from '/src/assets/images/common/belt/redBelt.png';
+import BlackBelt from '/src/assets/images/common/belt/blackBelt.png';
+
 
 
 const poomsaeDetails = [
@@ -64,16 +73,15 @@ const PoomsaeTestPage = () => {
     //임시 data
     const [completedStages] = useState([true, false, false, false, false, false, false, false]); 
 
-
     const belt_images = [
-        'src/assets/images/common/belt/yellowBelt.png',
-        'src/assets/images/common/belt/greenBelt.png',
-        'src/assets/images/common/belt/purpleBelt.png',
-        'src/assets/images/common/belt/blueBelt.png',
-        'src/assets/images/common/belt/brownBelt.png',
-        'src/assets/images/common/belt/orangeBelt.png',
-        'src/assets/images/common/belt/redBelt.png',
-        'src/assets/images/common/belt/blackBelt.png',
+        GreenBelt,
+        YellowBelt,
+        PurpleBelt,
+        BlueBelt,
+        BrownBelt,
+        OrangeBelt,
+        RedBelt,
+        BlackBelt,
     ];
 
     const handleItemClick = (index) => {
