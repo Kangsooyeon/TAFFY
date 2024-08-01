@@ -12,7 +12,6 @@ const Login = ({ setIsLoggedIn, navigate }) => {
             const response = await axios.post(
                 'https://i11e104.p.ssafy.io/api/login', 
                 { email, password },
-                // { withCredentials: true }
             );
             console.log(response);
             console.log(window.localStorage);
