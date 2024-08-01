@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -25,10 +27,12 @@ public class UserPsEdu extends BaseTime {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @ManyToOne
     @JoinColumn(name = "ps_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Ps ps;
 
     @Column(name = "user_ps_edu_done", columnDefinition = "TINYINT(1)")

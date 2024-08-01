@@ -6,6 +6,8 @@ import com.taffy.backend.record.domain.Record;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -29,6 +31,7 @@ public class Member extends BaseTime {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "country_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Country country;
 
     @Column(name = "profile_img")
@@ -37,6 +40,7 @@ public class Member extends BaseTime {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "belt_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Belt belt;
 
     @Column(name = "nickname")
