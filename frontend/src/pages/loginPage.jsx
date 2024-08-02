@@ -2,6 +2,7 @@ import '../styles/loginPage.css';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
 
 const Login = ({ setIsLoggedIn, navigate }) => {
     const [email, setEmail] = useState('');
@@ -14,14 +15,12 @@ const Login = ({ setIsLoggedIn, navigate }) => {
                 { email, password }
             );
 
-            // console.log(response.data);
-
             if (response.data && response.data.accessToken && response.data.refreshToken) {
                 const { accessToken, refreshToken } = response.data;
 
-                // 토큰을 로컬 스토리지에 저장
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
+                // 토큰을 쿠키에 저장
+                Cookies.set('accessToken', accessToken, { path: '/' });
+                Cookies.set('refreshToken', refreshToken, { path: '/' });
 
                 setIsLoggedIn(true);
                 navigate('/main');
