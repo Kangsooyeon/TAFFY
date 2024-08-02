@@ -11,7 +11,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      config.headers.Authorization = `Bearer ${'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJtZW1iZXJJZFwiOjEyfSIsImlhdCI6MTcyMjU4MDkxMSwiZXhwIjoxNzIyNTgxOTExfQ.0G3dYQcbqSbj8KKclRkO_oaJzQV9wXtSOom80VikYLE'}`;
+      config.headers.Authorization = `Bearer ${'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJtZW1iZXJJZFwiOjEyfSIsImlhdCI6MTcyMjU4NDkyMywiZXhwIjoxNzIyNTg1OTIzfQ.CWCX4lhUbHufFOi-9jYr02g_glIxH0tL74xeAzrA7JE'}`;
     }
     return config;
   },
@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-export const fetchUserProfile = async (nickname) => {
-  const response = await axiosInstance.get(`/${nickname}`);
+export const fetchUserProfile = async () => {
+  const response = await axiosInstance;
   return response.data;
 };

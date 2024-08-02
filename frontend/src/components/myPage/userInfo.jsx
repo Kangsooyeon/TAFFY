@@ -16,6 +16,7 @@ const UseInfo = () => {
   const userId = localStorage.getItem('accessToken'); // 로컬 스토리지에서 userId 가져오기
   const { profile, status, error } = useSelector((state) => state.user);
 
+  console.log(userId)
   useEffect(() => {
     if (userId) {
       dispatch(fetchUserProfileAsync(userId));
