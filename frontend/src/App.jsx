@@ -1,6 +1,5 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Provider } from 'react-redux';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import PoomsaeEduPage from "./pages/poomsaeEduPage/poomsaeEduPage";
@@ -16,10 +15,8 @@ import SignupPage from "./pages/signupPage";
 import MyPage from "./pages/myPage/myPage"
 
 import './styles/fonts/font.css';
-// import { Navbar, Navbar2 } from './components/common/navbar';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import store from './actions/store';
 
 function App() {
   const navigate = useNavigate();
@@ -37,12 +34,8 @@ function App() {
     setShowPopUp(true); 
   };
 
-  
-
   return (
-
-    <Provider store={store}>
-    {/* <Provider> */}
+    <>
       {(!isTestPage && !isSparPage) && (
           <Navbar 
             isLoggedIn={isLoggedIn} 
@@ -51,22 +44,21 @@ function App() {
             language={language} 
             setLanguage={setLanguage} 
           />
-        )}
+      )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* <Route path="/main" element={<MainPage />} /> */}
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game" element={<SparingDetailPage/>}/>
-        <Route path="/sp/game/result" element={<SparingResultPage/>}/>
+        <Route path="/sp/game" element={<SparingDetailPage />} />
+        <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage/>} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
         <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
-        <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language}/>} />
-        <Route path="/signup" element={<SignupPage language={language}/>} />
+        <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} navigate={navigate} language={language} />} />
+        <Route path="/signup" element={<SignupPage language={language} />} />
       </Routes>
       {showPopUp && (
         <PopUp 
@@ -77,7 +69,7 @@ function App() {
           btnHref2="" 
         />
       )}
-    </Provider> 
+    </>
   );
 }
 

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import MvItem from './mvItem';
 import { useNavigate } from 'react-router-dom';
 
-const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, moves }) => {
+const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, moves, loading, error }) => {
   const [buttonText, setButtonText] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
@@ -26,9 +26,17 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log(`Navigating to /ps_edu/${stageNum}?lang=${language}`);
     navigate(`/ps_edu/${stageNum}`);
   }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
 
   return (
     <div className='detailModal'>
@@ -48,10 +56,10 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
                 {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => (
                   <MvItem
                     key={index}
-                    title={language === 'ko' ? move.mv_ko_name : move.mv_en_name}
-                    image={move.mv_thumb}
+                    title={language === 'ko' ? move.mvKoName : move.mvEnName}
+                    image={move.mvThumb}
                     language={language}
-                    moveId={move.mv_id}
+                    moveId={move.mvId}
                     stageNum={stageNum}
                   />
                 ))}
@@ -80,11 +88,13 @@ Modal.propTypes = {
   onLearnComplete: PropTypes.func.isRequired,
   language: PropTypes.string.isRequired,
   moves: PropTypes.arrayOf(PropTypes.shape({
-    mv_id: PropTypes.number.isRequired,
-    mv_thumb: PropTypes.string.isRequired,
-    mv_ko_name: PropTypes.string.isRequired,
-    mv_en_name: PropTypes.string.isRequired,
+    mvId: PropTypes.number.isRequired,
+    mvThumb: PropTypes.string.isRequired,
+    mvKoName: PropTypes.string.isRequired,
+    mvEnName: PropTypes.string,
   })).isRequired,
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
 };
 
 export default Modal;
