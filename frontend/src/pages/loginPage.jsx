@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../store'; // 리덕스 액션 가져오기
 
-const Login = ({ setIsLoggedIn, navigate }) => {
+const Login = ({ navigate }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
 
     const handleLogin = async () => {
         try {
@@ -22,7 +25,12 @@ const Login = ({ setIsLoggedIn, navigate }) => {
                 Cookies.set('accessToken', accessToken, { path: '/' });
                 Cookies.set('refreshToken', refreshToken, { path: '/' });
 
-                setIsLoggedIn(true);
+                // 리덕스 스토어에 로그인 상태와 토큰 저장
+                dispatch(loginSuccess({ accessToken, refreshToken }));
+
+                console.log('Access Token:', accessToken);
+                console.log('Refresh Token:', refreshToken);
+
                 navigate('/main');
                 alert('로그인 완료');
             } else {
@@ -71,7 +79,6 @@ const Login = ({ setIsLoggedIn, navigate }) => {
 }
 
 Login.propTypes = {
-    setIsLoggedIn: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
 };
 
