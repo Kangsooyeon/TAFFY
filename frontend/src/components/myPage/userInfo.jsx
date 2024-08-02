@@ -7,14 +7,49 @@ import Dragon from '../../assets/images/myPage/용 기본동작 1.png'
 
 import Red from '../..//assets/images/common/belt/redBelt.png'
 
+import {useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
+
 const UseInfo = () => {
+  const dispatch = useDispatch();
+  const userId = localStorage.getItem('accessToken'); // 로컬 스토리지에서 userId 가져오기
+  const { profile, status, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchUserProfileAsync(userId));
+    }
+  }, [dispatch, userId]);
+
+  const getImageSrc = (imageUrl) => {
+    switch (imageUrl) {
+      case 'Tiger':
+        return Tiger;
+      case 'Bear':
+        return Bear;
+      case 'Dragon':
+        return Dragon;
+      default:
+        return Tiger;
+    }
+  };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="userinfobox">
       <div className="characterphoto">
         <img src={Tiger} alt="" />
       </div>
       <div className="characterinfomation">
-        <p className="mypagenickname">닉네임</p>
+        <p className="mypagenickname">{profile?.nickname}</p>
         <p className="mypagettiname">띠이름</p>
         <img src={Red} alt="" />
       </div>
