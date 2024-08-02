@@ -8,10 +8,18 @@ import com.taffy.backend.member.domain.Member;
 import com.taffy.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -22,6 +30,8 @@ public class FightService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String INVITE_PREFIX = "invite:";
+    private static final String ROOM_PREFIX = "taffy:";
+    private final LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
     @Transactional(readOnly = true)
     public String createRoom(Long memberId, String sessionId) {
@@ -39,7 +49,7 @@ public class FightService {
                 .build();
 
 //        String roomId = "room:" + member.getNickname()+":"+System.currentTimeMillis();
-        redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
+        redisTemplate.opsForList().rightPush(ROOM_PREFIX+sessionId, redisHashUser);
         return sessionId;
     }
 
@@ -78,9 +88,36 @@ public class FightService {
         throw new TaffyException(ErrorCode.CANNOT_JOIN_ROOM);
     }
 
-//    @Cacheable(value = "rooms", key = "#invitee")
-//    public String getRoomForInvitee(String invitee) {
-//        String inviteKey = INVITE_PREFIX + invitee;
-//        return (String) redisTemplate.opsForValue().get(inviteKey);
-//    }
+    public Map<String, Object> getAllKeys() {
+        Map<String, Object> keys = new HashMap<>();
+        Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match("*").build());
+        while (cursor.hasNext()) {
+            String key = new String(cursor.next());
+            Object value = redisTemplate.opsForList().range(key, 0, -1);
+
+//            HashOperations<String, String, Object> hashOps = redisTemplate.opsForHash();
+//            Map<String, Object> entries = hashOps.entries(key);
+
+//            if (entries.isEmpty()) {
+//                return null;
+//            }
+//
+//            RedisHashUser user = new RedisHashUser();
+//            user.setId(Long.valueOf((String) entries.get("id")));
+//            user.setEmail((String) entries.get("email"));
+//            user.setLoss(Integer.parseInt((String) entries.get("lose")));
+//            user.setWin(Integer.parseInt((String) entries.get("win")));
+//            user.setDraw(Integer.parseInt((String)entries.get("draw")));
+//            user.setNickName((String)entries.get("nickName"));
+//            user.setBeltName((String)entries.get("beltName"));
+
+            keys.put(key, value);
+        }
+        return keys;
+    }
+
+    public void getSpecificKey(String key) {
+        Object value = redisTemplate.opsForList().range(key,0,-1);
+        System.out.println("Key: " + key + ", Value: " + value);
+    }
 }
