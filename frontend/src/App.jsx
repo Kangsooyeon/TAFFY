@@ -1,6 +1,6 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Provider } from 'react-redux';
+
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
 import PoomsaeEduPage from "./pages/poomsaeEduPage/poomsaeEduPage";
@@ -19,7 +19,6 @@ import './styles/fonts/font.css';
 // import { Navbar, Navbar2 } from './components/common/navbar';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import store from './actions/store';
 
 function App() {
   const navigate = useNavigate();
@@ -40,8 +39,7 @@ function App() {
   
 
   return (
-
-    <Provider store={store}>
+    <div>
       {(!isTestPage && !isSparPage) && (
           <Navbar 
             isLoggedIn={isLoggedIn} 
@@ -76,7 +74,7 @@ function App() {
           btnHref2="" 
         />
       )}
-    </Provider> 
+    </div>
   );
 }
 
