@@ -16,8 +16,10 @@ public enum ErrorCode {
     JWT_UNSUPPORTED(HttpStatus.BAD_REQUEST,"지원하지 않는 JWT 토큰입니다."),
     JWT_MALFORMED(HttpStatus.BAD_REQUEST,"올바른 JWT 토큰의 형태가 아닙니다."),
     JWT_SIGNATURE(HttpStatus.BAD_REQUEST,"올바른 SIGNATURE가 아닙니다."),
-    JWT_ILLEGAL_ARGUMENT(HttpStatus.BAD_REQUEST,"잘못된 정보를 넣었습니다.");
+    JWT_ILLEGAL_ARGUMENT(HttpStatus.BAD_REQUEST,"잘못된 정보를 넣었습니다."),
 
+    CANNOT_BELT_UPGRADE(HttpStatus.BAD_REQUEST,"더 이상 승격할 수 없습니다. 이미 최고단계입니다."),
+    BELT_NOT_FOUNT(HttpStatus.NOT_FOUND, "없는 벨트 정보 입니다.");
 
     private final HttpStatus httpstatus;
     private final String message;

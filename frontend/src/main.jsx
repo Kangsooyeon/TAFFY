@@ -5,6 +5,8 @@ import {BrowserRouter} from'react-router-dom'
 import App from './App'
 import store from './store'
 import './styles/fonts/font.css';
+import { Provider } from 'react-redux';
+import store from './store/index';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>

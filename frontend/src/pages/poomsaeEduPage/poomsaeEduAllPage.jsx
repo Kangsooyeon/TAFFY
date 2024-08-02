@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
-
+import ProgressBar from '../../components/common/progressBar';
+import AudioImage from '../../assets/images/common/audio.png'
 
 const PoomsaeEduAllPage = ({language}) => {
   
@@ -31,13 +32,25 @@ const PoomsaeEduAllPage = ({language}) => {
           <div className='userCam'></div>
           <div className='progress'>
             {/* 1. 정확도 */}
+            <ProgressBar 
+              value = {75}
+              title = '정확도'
+              text = '75'/>
+
             {/* 2. 진행률 */}
+            <ProgressBar 
+              value = {75}
+              title = '진행률'
+              text = '75'
+              pathColor="orange" 
+              trailColor="grey" 
+              textColor="purple" />
           </div>
         
         </div>
 
         <div className='mvDescription'>
-          <img src="/src/assets/images/common/audio.png" alt="audio"/>
+          <img src={AudioImage} alt="audio"/>
           <h2 className='mvPsName'>동작 이름</h2>
           <PsDescription 
             className="mvPsDes"
