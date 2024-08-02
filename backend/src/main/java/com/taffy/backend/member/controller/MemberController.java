@@ -13,10 +13,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -34,10 +38,16 @@ public class MemberController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
         TokensResponseDTO tokens = memberService.login(loginRequestDto);
         cookieTokenSetting(httpServletResponse, tokens);
-        return ResponseEntity.status(OK).body("로그인 완료");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("accessToken", tokens.getAtk());
+        response.put("refreshToken", tokens.getRtk());
+
+        return ResponseEntity.status(OK).body(response);
+//        return ResponseEntity.status(OK).body("로그인 완료");
     }
 
     @PostMapping("/api/mail")
@@ -82,17 +92,28 @@ public class MemberController {
         memberService.isNicknameDuplicate(nicknameDuplicateDto);
         return ResponseEntity.status(OK).body("사용가능한 닉네임 입니다");
     }
-    
-    private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
-        Cookie cookieAtk = new Cookie("atk", tokens.getAtk());
-        Cookie cookieRtk = new Cookie("rtk", tokens.getRtk());
-        cookieAtk.setHttpOnly(true);
-        cookieAtk.setPath("/");
-        cookieAtk.setMaxAge(60 * 60);
-        cookieRtk.setHttpOnly(true);
-        cookieRtk.setPath("/");
-        cookieRtk.setMaxAge(60 * 60);
-        httpServletResponse.addCookie(cookieAtk);
-        httpServletResponse.addCookie(cookieRtk);
+
+    private static void cookieTokenSetting(HttpServletResponse response, TokensResponseDTO tokens) {
+        // Access Token 설정
+        ResponseCookie
+                cookieAtk = ResponseCookie.from("atk", tokens.getAtk())
+                .httpOnly(true)
+                .secure(true) // HTTPS 사용 시
+                .path("/")
+                .maxAge(60 * 60)
+                .sameSite("None") // 크로스사이트 전송 허용
+                .build();
+
+        // Refresh Token 설정
+        ResponseCookie cookieRtk = ResponseCookie.from("rtk", tokens.getRtk())
+                .httpOnly(true)
+                .secure(true) // HTTPS 사용 시
+                .path("/")
+                .maxAge(60 * 60)
+                .sameSite("None") // 크로스사이트 전송 허용
+                .build();
+
+        response.addHeader("Set-Cookie", cookieAtk.toString());
+        response.addHeader("Set-Cookie", cookieRtk.toString());
     }
 }
