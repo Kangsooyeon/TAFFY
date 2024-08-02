@@ -2,7 +2,11 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import {fetchUserProfile} from '../../apis/user/user.js'
 
 export const fetchUserProfileAsync = createAsyncThunk(
-
+  'user/fetchUserProfile',
+  async () => {
+    const data = await fetchUserProfile();
+    return data;
+  }
 )
 
 const userSlice = createSlice({
