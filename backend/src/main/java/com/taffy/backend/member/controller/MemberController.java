@@ -46,7 +46,7 @@ public class MemberController {
         response.put("accessToken", tokens.getAtk());
         response.put("refreshToken", tokens.getRtk());
 
-        return ResponseEntity.status(OK).body(response)
+        return ResponseEntity.status(OK).body(response);
 //        return ResponseEntity.status(OK).body("로그인 완료");
     }
 
