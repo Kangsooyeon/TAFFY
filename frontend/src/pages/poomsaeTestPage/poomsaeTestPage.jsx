@@ -2,55 +2,66 @@ import { useState } from 'react';
 import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
 import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
+import PoomsaeImage from '/src/assets/images/poomsaeTestPage/ps1.png';
+import GreenBelt from '/src/assets/images/common/belt/greenBelt.png';
+import YellowBelt from '/src/assets/images/common/belt/yellowBelt.png';
+import PurpleBelt from '/src/assets/images/common/belt/purpleBelt.png';
+import BlueBelt from '/src/assets/images/common/belt/blueBelt.png';
+import BrownBelt from '/src/assets/images/common/belt/brownBelt.png';
+import OrangeBelt from '/src/assets/images/common/belt/orangeBelt.png';
+import RedBelt from '/src/assets/images/common/belt/redBelt.png';
+import BlackBelt from '/src/assets/images/common/belt/blackBelt.png';
+
+
 
 const poomsaeDetails = [
     {
         id: 1,
         name: "태극 1장",
         description: "태극 1장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 2,
         name: "태극 2장",
         description: "태극 2장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 3,
         name: "태극 3장",
         description: "태극 1장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 4,
         name: "태극 4장",
         description: "태극 4장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 5,
         name: "태극 5장",
         description: "태극 5장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 6,
         name: "태극 6장",
         description: "태극 6장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 7,
         name: "태극 7장",
         description: "태극 7장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     {
         id: 8,
         name: "태극 8장",
         description: "태극 8장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: '/src/assets/images/poomsaeTestPage/ps1.png',
+        imageUrl: {PoomsaeImage},
     },
     
 ];
@@ -62,16 +73,15 @@ const PoomsaeTestPage = () => {
     //임시 data
     const [completedStages] = useState([true, false, false, false, false, false, false, false]); 
 
-
     const belt_images = [
-        'src/assets/images/common/belt/yellowBelt.png',
-        'src/assets/images/common/belt/greenBelt.png',
-        'src/assets/images/common/belt/purpleBelt.png',
-        'src/assets/images/common/belt/blueBelt.png',
-        'src/assets/images/common/belt/brownBelt.png',
-        'src/assets/images/common/belt/orangeBelt.png',
-        'src/assets/images/common/belt/redBelt.png',
-        'src/assets/images/common/belt/blackBelt.png',
+        GreenBelt,
+        YellowBelt,
+        PurpleBelt,
+        BlueBelt,
+        BrownBelt,
+        OrangeBelt,
+        RedBelt,
+        BlackBelt,
     ];
 
     const handleItemClick = (index) => {

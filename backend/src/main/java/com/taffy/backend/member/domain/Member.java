@@ -1,6 +1,8 @@
 package com.taffy.backend.member.domain;
 
 import com.taffy.backend.global.audit.BaseTime;
+import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
+import com.taffy.backend.record.domain.Record;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,11 +33,25 @@ public class Member extends BaseTime {
     @Column(name = "profile_img")
     private String profile_img;
 
-    @ManyToOne(fetch = LAZY)
+    @OneToOne
     @JoinColumn(name = "belt_id")
     private Belt belt;
 
     @Column(name = "nickname")
     private String nickname;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Record record;
+
+    public void updateInfo(MemberInfoUpdateRequestDto memberInfoUpdateRequestDto, Country country){
+        this.nickname = memberInfoUpdateRequestDto.getNickName();
+        this.profile_img = memberInfoUpdateRequestDto.getPhotoUrl();
+        if (country != null) {
+            this.country = country;
+        }
+    }
+
+    public void beltPromotion(Belt belt){
+        this.belt = belt;
+    }
 }

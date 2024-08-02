@@ -1,7 +1,3 @@
-/* *{
-  box-sizing: border-box;
-  } */
-
 .recordbox {
   box-sizing: border-box;
   border-radius: 10px;
@@ -17,7 +13,6 @@
   margin: 20px;
   position: relative;
   box-shadow: 3px 2px 0px 0px rgba(0, 0, 0, 0.50);
-  
 }
 
 .recordimgbottom {
@@ -78,6 +73,7 @@
 }
 
 .custom-hr {
+  width: 100%;
   margin-top: 1px;
   border: none;
   border-top: 1px solid #985A30;

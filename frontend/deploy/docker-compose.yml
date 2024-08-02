@@ -1,0 +1,10 @@
+
+version: "3.8"
+services:
+  fe:
+    container_name: taffy_fe
+    image: taffy_fe:0.1
+    build:
+      context: ../
+    ports:
+      - 3000:80

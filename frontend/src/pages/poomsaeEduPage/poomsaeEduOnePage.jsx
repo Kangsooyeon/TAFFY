@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
 // import { useParams} from 'react-router-dom'
+import AudioImage from '../../assets/images/common/audio.png'
 
 const PoomsaeEduOnePage = ({language}) => {
   // const {stageNum} = useParams();
@@ -42,7 +43,7 @@ const PoomsaeEduOnePage = ({language}) => {
       </div>
 
       <div className='mvDescription'>
-        <img src="/src/assets/images/common/audio.png" alt="audio"/>
+        <img src={AudioImage} alt="audio"/>
         <h2 className='mvPsName'>동작 이름</h2>
         <PsDescription 
           className="mvPsDes"
