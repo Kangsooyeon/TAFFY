@@ -17,7 +17,7 @@ import SignupPage from "./pages/signupPage";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import { logout } from './store'; // 로그아웃 액션 가져오기
+import { logout } from './store/user/loginLogout'; // 로그아웃 액션 가져오기
 
 function App() {
   const navigate = useNavigate();
@@ -36,6 +36,8 @@ function App() {
     // 쿠키 삭제
     Cookies.remove('accessToken', { path: '/' });
     Cookies.remove('refreshToken', { path: '/' });
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 
     // 리덕스 스토어 업데이트
     dispatch(logout());
