@@ -14,6 +14,7 @@ import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage";
 import SparingResultPage from "./pages/sparingResultPage/sparingResultPage";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
+import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
@@ -52,7 +53,7 @@ function App() {
   };
 
   return (
-    <>
+    <div>
       {(!isTestPage && !isSparPage) && (
         <Navbar 
           isLoggedIn={isLoggedIn} 
@@ -68,6 +69,7 @@ function App() {
         <Route path="/sp/game" element={<SparingDetailPage/>}/>
         <Route path="/sp/game/result" element={<SparingResultPage/>}/>
         <Route path="/main" element={<MainPage language={language}/>} />
+        <Route path="/mypage" element={<MyPage/>} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
         <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
@@ -87,7 +89,8 @@ function App() {
           handleBtn2Click={() => setShowPopUp(false)} // 팝업 닫기 핸들러 연결
         />
       )}
-    </>
+    </div>
+
   );
 }
 

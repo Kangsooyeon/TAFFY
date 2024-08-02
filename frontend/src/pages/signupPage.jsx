@@ -55,6 +55,7 @@ const Signup = () => {
             <div className='signup-box'>
                 <div className='signup-title'>
                     <p>Sign Up</p>
+                    
                 </div>
                 <hr/>
                 <form className='signup-form' onSubmit={handleSubmit}>
