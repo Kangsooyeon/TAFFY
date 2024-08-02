@@ -24,34 +24,34 @@ import java.util.Map;
 public class FightController {
 
     private static final Logger log = LoggerFactory.getLogger(FightController.class);
-//    private OpenVidu openvidu;
-//    @Value("${openvidu.url}")
-//    private String OPENVIDU_URL;
-//
-//    @Value("${openvidu.secret}")
-//    private String OPENVIDU_SECRET;
-//
-//
-//    @PostConstruct
-//    public void init() {
-//        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-//    }
+    private OpenVidu openvidu;
+    @Value("${openvidu.url}")
+    private String OPENVIDU_URL;
+
+    @Value("${openvidu.secret}")
+    private String OPENVIDU_SECRET;
+
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
 
 
     private final FightService fightService;
 
-//    public String initializeSession(Long memberId)
-//            throws OpenViduJavaClientException, OpenViduHttpException {
-//        Session session = openvidu.createSession();
-//        log.info(session.getSessionId());
-//        return session.getSessionId();
-//    }
+    public String initializeSession(Long memberId)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openvidu.createSession();
+        log.info(session.getSessionId());
+        return session.getSessionId();
+    }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
         log.info("memberId = ",memberId);
-//        String sessionId= initializeSession(memberId);
-        String sessionId = "test"+System.currentTimeMillis();
+        String sessionId= initializeSession(memberId);
+//        String sessionId = "test"+System.currentTimeMillis();
         String roomId = fightService.createRoom(memberId,sessionId); //sessionId로 room생성
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", roomId));
     }
