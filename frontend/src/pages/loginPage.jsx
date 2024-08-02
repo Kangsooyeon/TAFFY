@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../store'; // 리덕스 액션 가져오기
+import { loginSuccess} from '../store/user/loginLogout'; // 리덕스 액션 가져오기
 
 const Login = ({ navigate }) => {
     const [email, setEmail] = useState('');
@@ -24,6 +24,8 @@ const Login = ({ navigate }) => {
                 // 토큰을 쿠키에 저장
                 Cookies.set('accessToken', accessToken, { path: '/' });
                 Cookies.set('refreshToken', refreshToken, { path: '/' });
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
 
                 // 리덕스 스토어에 로그인 상태와 토큰 저장
                 dispatch(loginSuccess({ accessToken, refreshToken }));

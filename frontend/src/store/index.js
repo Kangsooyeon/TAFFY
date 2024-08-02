@@ -30,6 +30,8 @@ const authSlice = createSlice({
 // 액션과 리듀서 내보내기
 export const { loginSuccess, logout } = authSlice.actions;
 export const authReducer = authSlice.reducer;
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './user/loginLogout';
 
 // 스토어 설정
 const store = configureStore({
