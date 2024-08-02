@@ -13,7 +13,7 @@ public class CustomCorsConfigurationSource extends UrlBasedCorsConfigurationSour
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
         registerCorsConfiguration("/**", config);
