@@ -19,6 +19,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -35,10 +38,16 @@ public class MemberController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
         TokensResponseDTO tokens = memberService.login(loginRequestDto);
         cookieTokenSetting(httpServletResponse, tokens);
-        return ResponseEntity.status(OK).body("로그인 완료");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("accessToken", tokens.getAtk());
+        response.put("refreshToken", tokens.getRtk());
+
+        return ResponseEntity.status(OK).body(response)
+//        return ResponseEntity.status(OK).body("로그인 완료");
     }
 
     @PostMapping("/api/mail")
