@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPoomsaeTest } from '../../store/poomsaeTest/testUserPs';
+import { fetchPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
 import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
@@ -28,9 +28,14 @@ const PoomsaeTestPage = () => {
     const dispatch = useDispatch();
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
     const [selectedPoomsae, setSelectedPoomsae] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        dispatch(fetchPoomsaeTest());
+        const fetchData = async () => {
+            await dispatch(fetchPoomsaeTest());
+            setLoading(false);
+        };
+        fetchData();
     }, [dispatch]);
 
     const completedStages = poomsaeTest.map(item => item.passed);
@@ -51,7 +56,7 @@ const PoomsaeTestPage = () => {
                         key={index} 
                         imageUrl={url} 
                         onClick={() => handleItemClick(index)}
-                        completed={completedStages[index]}
+                        completed={completedStages[index] || false}
                     />
                 ))}
             </div>
