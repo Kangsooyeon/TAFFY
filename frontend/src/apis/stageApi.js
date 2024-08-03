@@ -1,33 +1,19 @@
 import axiosInstance from "./axiosInstance";
 
-// import axios from 'axios';
-
-// const API_BASE_URL = 'https://i11e104.p.ssafy.io/api/';
-
-// const axiosInstance = axios.create({
-//   baseURL: API_BASE_URL,
-// });
-
-// axiosInstance.interceptors.request.use(
-//   (config) => {
-//     // const token = localStorage.getItem('token'); // 토큰을 로컬 스토리지에서 가져온다고 가정
-//     const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJtZW1iZXJJZFwiOjh9IiwiaWF0IjoxNzIyNjYzMjU4LCJleHAiOjE3MjI2NjQyNTh9.dE68Q-9-ZKY77eDWUYgexkEULecQJX6V5VKOcDwC3D4'
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
 export const fetchStages = async () => {
   const response = await axiosInstance.get('edu/main');
+  console.log('Fetch stages response1 :', response.data); // 응답 데이터 출력
   return response.data;
 };
 
 export const fetchStageDetails = async (stageNum) => {
   const response = await axiosInstance.get(`edu/${stageNum}`);
+  console.log("Fetch stage details response2 :", response.data.data); // 추가된 로그
+  return response.data.data;
+};
+
+export const fetchAllStageDetails = async (psId) => {
+  const response = await axiosInstance.get(`edu/ps/${psId}`);
+  console.log('Fetch all stage details response3 :', response.data); // 추가된 로그
   return response.data;
 };

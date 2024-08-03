@@ -5,19 +5,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from "react";
 import { fetchStages } from "../../store/poomsaeEdu/stagesSlice";
 
-
 const PoomsaeEduPage = ({ language }) => {
   const dispatch = useDispatch();
   const { stages, loading, error } = useSelector((state) => state.stages);
   const activeStage = useSelector((state) => state.stage.activeStage);
 
   useEffect(() => {
-    dispatch((fetchStages()));
+    dispatch(fetchStages());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log('Stages:', stages); // 데이터 로깅
+  }, [stages]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!stages) return <div>No stages available</div>; // 초기 상태가 null인 경우 처리
+  if (!stages || stages.length === 0) return <div>No stages available</div>;
 
   return (
     <div className="poomsaeEduPage">

@@ -1,8 +1,8 @@
-import { SET_ACTIVE_ITEM, SET_ACTIVE_STAGE } from './actions';
+import { SET_ACTIVE_ITEM} from './actions';
 
 const initialState = {
   activeItem: 0,
-  activeStage: parseInt(localStorage.getItem('activeStage')) || 1, // 로컬 스토리지에서 상태 불러오기
+  // activeStage: parseInt(localStorage.getItem('activeStage')) || 1, // 로컬 스토리지에서 상태 불러오기
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,11 +12,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         activeItem: action.payload,
       };
-    case SET_ACTIVE_STAGE:
-      return {
-        ...state,
-        activeStage: action.payload,
-      };
+    // case SET_ACTIVE_STAGE:
+    //   return {
+    //     ...state,
+    //     activeStage: action.payload,
+    //   };
     default:
       return state;
   }

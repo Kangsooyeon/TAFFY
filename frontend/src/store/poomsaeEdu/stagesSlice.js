@@ -6,7 +6,7 @@ export const fetchStages = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetchStagesApi();
-      return response.data; // 여기서 payloadCreator는 API 호출 결과를 반환
+      return response.data; // 데이터 포맷을 정확히 반환합니다.
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -16,11 +16,19 @@ export const fetchStages = createAsyncThunk(
 const stagesSlice = createSlice({
   name: 'stages',
   initialState: {
+    stages: [],
     loading: false,
-    stages: null, // 초기 상태를 null로 설정
     error: null,
   },
-  reducers: {},
+  reducers: {
+    updateStage: (state, action) => {
+      const updatedStage = action.payload;
+      const index = state.stages.findIndex(stage => stage.psId === updatedStage.psId);
+      if (index !== -1) {
+        state.stages[index] = updatedStage;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchStages.pending, (state) => {
@@ -29,7 +37,7 @@ const stagesSlice = createSlice({
       })
       .addCase(fetchStages.fulfilled, (state, action) => {
         state.loading = false;
-        state.stages = action.payload;
+        state.stages = action.payload; // 제대로 데이터를 할당
       })
       .addCase(fetchStages.rejected, (state, action) => {
         state.loading = false;
@@ -38,4 +46,5 @@ const stagesSlice = createSlice({
   },
 });
 
+export const { updateStage } = stagesSlice.actions;
 export default stagesSlice.reducer;

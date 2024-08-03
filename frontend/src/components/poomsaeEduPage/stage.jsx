@@ -19,6 +19,10 @@ const Stage = ({ stageNum, image, text, locked, language, videoUrl, description 
     }
   }, [modalOpen, stageDetails, dispatch, stageNum]);
 
+  useEffect(() => {
+    console.log(`Stage details for ${stageNum}:`, stageDetails); // 데이터 로깅
+  }, [stageDetails]);
+
   const handleOpenModal = () => {
     if (!locked) {
       setModalOpen(true);
