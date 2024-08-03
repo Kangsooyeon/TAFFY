@@ -92,22 +92,22 @@ const PoomsaeEduAllPage = ({ language }) => {
           </div>
           <div className='userCam'></div>
           <div className='progress'>
-            {/* 1. 정확도 */}
+            {/* 1. 진행률 */}
             <ProgressBar
               value={accuracy}
-              title={language === 'ko' ? '정확도' : 'Accuracy'}
+              title={language === 'ko' ? '진행률' : 'Progress'}
               text={accuracy.toString()}
             />
-
-            {/* 2. 진행률 */}
+            {/* 2. 정확도 */}
             <ProgressBar
               value={progress}
-              title={language === 'ko' ? '진행률' : 'Progress'}
+              title={language === 'ko' ? '정확도' : 'Accuracy'}
               text={`${currentMoveIndex + 1} / ${moves.length}`}
-              pathColor="orange"
-              trailColor="grey"
-              textColor="purple"
+              pathColor="#DA1E28"
+              trailColor="#FFD7D9"
+              textColor="black"
             />
+
           </div>
           <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button> {/* 임시 버튼 */}
         </div>
