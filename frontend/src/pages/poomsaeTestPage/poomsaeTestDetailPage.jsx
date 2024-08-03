@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
@@ -7,9 +7,34 @@ import axios from 'axios';
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null);
+    const [instruction, setInstruction] = useState('영역 안에 몸 전체가 보이도록 위치를 조정해주세요.');
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
+
+    useEffect(() => {
+        const instructions = [
+            '차렷',
+            '경례',
+            '준비',
+            '시작'
+        ];
+
+        let currentInstruction = 0;
+
+        const changeInstruction = () => {
+            if (currentInstruction < instructions.length) {
+                setInstruction(instructions[currentInstruction]);
+                currentInstruction++;
+                setTimeout(changeInstruction, 3000);
+            }
+        };
+
+        const timer = setTimeout(changeInstruction, 3000);
+
+        // Clean up the timer if the component unmounts
+        return () => clearTimeout(timer);
+    }, []); // 빈 배열을 넣어 첫 렌더링 시 한 번만 실행되도록 설정
 
     const handleProgressUpdate = (success) => {
         if (success) {
@@ -64,8 +89,10 @@ const PoomsaeTestDetailPage = () => {
                 <p className="exit" onClick={handleExit}>나가기</p>
             </div>
             <div className="detail-content">
-                <p>영역 안에 몸 전체가 보이도록 위치를 조정해주세요.</p>
-                <div className='webcam'></div>
+                <p>{instruction}</p>
+                <div className='webcam'>
+                    
+                </div>
                 <div className="temp">
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                     <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
