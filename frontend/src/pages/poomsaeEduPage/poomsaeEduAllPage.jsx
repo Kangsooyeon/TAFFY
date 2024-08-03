@@ -7,7 +7,7 @@ import ProgressBar from '../../components/common/progressBar';
 import AudioImage from '../../assets/images/common/audio.png';
 import { fetchAllStageDetails } from '../../apis/stageApi';
 import { useDispatch } from 'react-redux';
-import { updateStage } from '../../store/poomsaeEdu/stagesSlice';
+import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
 
 const PoomsaeEduAllPage = ({ language }) => {
@@ -58,7 +58,7 @@ const PoomsaeEduAllPage = ({ language }) => {
       setAccuracy(100);
       setTimeout(() => {
         setShowSuccessPopup(true);
-        dispatch(updateStage(parseInt(stageNum))); // 스테이지 업데이트
+        dispatch(unlockNextStage(parseInt(stageNum) + 1)); // 다음 스테이지 잠금 해제
       }, 1000); // 게이지가 100%가 된 후 1초 후에 팝업 나타내기
     }
   };
@@ -88,43 +88,45 @@ const PoomsaeEduAllPage = ({ language }) => {
       <div className='allEduContainer'>
         <div className='allEduContent'>
           <div className='mvGif'>
-            <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage"/>
+            <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage" />
           </div>
           <div className='userCam'></div>
           <div className='progress'>
             {/* 1. 정확도 */}
-            <ProgressBar 
+            <ProgressBar
               value={accuracy}
               title={language === 'ko' ? '정확도' : 'Accuracy'}
-              text={accuracy.toString()} />
+              text={accuracy.toString()}
+            />
 
             {/* 2. 진행률 */}
-            <ProgressBar 
+            <ProgressBar
               value={progress}
               title={language === 'ko' ? '진행률' : 'Progress'}
               text={`${currentMoveIndex + 1} / ${moves.length}`}
-              pathColor="orange" 
-              trailColor="grey" 
-              textColor="purple" />
+              pathColor="orange"
+              trailColor="grey"
+              textColor="purple"
+            />
           </div>
           <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button> {/* 임시 버튼 */}
         </div>
 
         <div className='mvDescription'>
-          <img src={AudioImage} alt="audio"/>
+          <img src={AudioImage} alt="audio" />
           <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
-          <PsDescription 
+          <PsDescription
             className="mvPsDes"
-            description={description}/>
+            description={description}
+          />
         </div>
-        
+
         <div className='allEduFooter'>
           <div className='line'></div>
           <button className='exitButton' onClick={handleClick}>
             {buttonText}
           </button>
         </div>
-      
       </div>
       {showSuccessPopup && (
         <PopUp

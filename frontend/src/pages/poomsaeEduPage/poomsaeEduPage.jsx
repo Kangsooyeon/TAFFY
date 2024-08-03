@@ -8,7 +8,7 @@ import { fetchStages } from "../../store/poomsaeEdu/stagesSlice";
 const PoomsaeEduPage = ({ language }) => {
   const dispatch = useDispatch();
   const { stages, loading, error } = useSelector((state) => state.stages);
-  const activeStage = useSelector((state) => state.stage.activeStage);
+  const activeStage = useSelector((state) => state.stages.activeStage); // 수정
 
   useEffect(() => {
     dispatch(fetchStages());

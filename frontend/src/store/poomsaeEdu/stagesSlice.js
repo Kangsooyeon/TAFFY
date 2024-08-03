@@ -6,7 +6,8 @@ export const fetchStages = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetchStagesApi();
-      return response.data; // 데이터 포맷을 정확히 반환합니다.
+      console.log('API response:', response); // 데이터 구조 확인
+      return response.data; // data 필드만 반환
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -17,16 +18,13 @@ const stagesSlice = createSlice({
   name: 'stages',
   initialState: {
     stages: [],
+    activeStage: 1, // 처음엔 첫 번째 스테이지만 열려있음
     loading: false,
     error: null,
   },
   reducers: {
-    updateStage: (state, action) => {
-      const updatedStage = action.payload;
-      const index = state.stages.findIndex(stage => stage.psId === updatedStage.psId);
-      if (index !== -1) {
-        state.stages[index] = updatedStage;
-      }
+    unlockNextStage: (state, action) => {
+      state.activeStage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -37,7 +35,15 @@ const stagesSlice = createSlice({
       })
       .addCase(fetchStages.fulfilled, (state, action) => {
         state.loading = false;
-        state.stages = action.payload; // 제대로 데이터를 할당
+        console.log('Stages payload:', action.payload); // 데이터 구조 확인
+        if (Array.isArray(action.payload)) {
+          state.stages = action.payload; // 배열로 설정
+        } else if (action.payload && Array.isArray(action.payload.data)) {
+          state.stages = action.payload.data; // data 필드의 배열로 설정
+        } else {
+          console.error('Received non-array data:', action.payload);
+          state.stages = []; // 잘못된 데이터가 들어오면 빈 배열로 설정
+        }
       })
       .addCase(fetchStages.rejected, (state, action) => {
         state.loading = false;
@@ -46,5 +52,5 @@ const stagesSlice = createSlice({
   },
 });
 
-export const { updateStage } = stagesSlice.actions;
+export const { unlockNextStage } = stagesSlice.actions;
 export default stagesSlice.reducer;
