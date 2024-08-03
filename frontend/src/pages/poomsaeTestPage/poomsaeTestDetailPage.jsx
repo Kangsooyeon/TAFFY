@@ -1,8 +1,10 @@
+// src/pages/poomsaeTestPage/PoomsaeTestDetailPage.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 import axios from 'axios';
+import TeachableMachineWebcam from '../../components/poomsaeTestPage/tmWebcam';
 
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
@@ -34,27 +36,23 @@ const PoomsaeTestDetailPage = () => {
 
         // Clean up the timer if the component unmounts
         return () => clearTimeout(timer);
-    }, []); // 빈 배열을 넣어 첫 렌더링 시 한 번만 실행되도록 설정
+    }, []);
 
     const handleProgressUpdate = (success) => {
         if (success) {
             const newProgress = progress + 20;
-            console.log(`Progress updated to: ${newProgress}%`);
             setProgress(newProgress);
             if (newProgress >= 100) {
                 setGameStatus('pass');
-                console.log('Game status: pass');
             }
         } else {
             setGameStatus('fail');
-            console.log('Game status: fail');
         }
     };
 
     const handleReset = () => {
         setProgress(0);
         setGameStatus(null);
-        console.log('Progress reset to 0%. Game status reset.');
     };
 
     const handleExit = () => {
@@ -63,23 +61,26 @@ const PoomsaeTestDetailPage = () => {
 
     const handlePopUpButtonClick = async (href) => {
         const url = `https://i11e104.p.ssafy.io/api/test/${poomsaeId}`;
-        console.log('Request URL:', url);
         try {
             const response = await axios.put(
                 url,
-                {}, // 필요한 데이터가 있을 경우 여기에 추가
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-            console.log('API Response:', response.data);
             navigate(href);
         } catch (error) {
-            console.error('Error updating poomsae test:', error);
             alert('An error occurred while updating the test. Please try again.');
         }
+    };
+
+    const handlePrediction = (pose, prediction) => {
+        // Handle the prediction result here
+        console.log('Pose:', pose);
+        console.log('Prediction:', prediction);
     };
 
     return (
@@ -90,9 +91,7 @@ const PoomsaeTestDetailPage = () => {
             </div>
             <div className="detail-content">
                 <p>{instruction}</p>
-                <div className='webcam'>
-                    
-                </div>
+                <TeachableMachineWebcam onPrediction={handlePrediction} />
                 <div className="temp">
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                     <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
