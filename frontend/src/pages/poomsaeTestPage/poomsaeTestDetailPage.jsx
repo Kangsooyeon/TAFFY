@@ -1,4 +1,3 @@
-// src/pages/poomsaeTestPage/PoomsaeTestDetailPage.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
@@ -10,6 +9,7 @@ const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null);
     const [instruction, setInstruction] = useState('영역 안에 몸 전체가 보이도록 위치를 조정해주세요.');
+    const [predictions, setPredictions] = useState([]);
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
@@ -79,8 +79,7 @@ const PoomsaeTestDetailPage = () => {
 
     const handlePrediction = (pose, prediction) => {
         // Handle the prediction result here
-        console.log('Pose:', pose);
-        console.log('Prediction:', prediction);
+        setPredictions(prediction.map(p => ` ${p.className}: ${p.probability.toFixed(2)} `));
     };
 
     return (
@@ -92,6 +91,9 @@ const PoomsaeTestDetailPage = () => {
             <div className="detail-content">
                 <p>{instruction}</p>
                 <TeachableMachineWebcam onPrediction={handlePrediction} />
+                <div className="predictions">
+                    <p>{predictions}</p>
+                </div>
                 <div className="temp">
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                     <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
