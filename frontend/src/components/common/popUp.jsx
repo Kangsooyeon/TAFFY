@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import '../../styles/common/popUp.css';
 import PopUpImage from "/src/assets/images/common/popUp.png";
 
-const PopUp = ({ title, btnText1, btnHref1, btnText2, btnHref2, handleBtn1Click, handleBtn2Click, titleColor }) => {
+const PopUp = ({ title, btnText1, btnHref1, btnText2, btnHref2, handleBtn1Click, handleBtn2Click, titleColor, className }) => {
   const handleBtn1 = () => {
     if (handleBtn1Click) handleBtn1Click();
     if (btnHref1) window.location.href = btnHref1;
@@ -14,7 +14,7 @@ const PopUp = ({ title, btnText1, btnHref1, btnText2, btnHref2, handleBtn1Click,
   };
 
   return (
-    <div className="image-container">
+    <div className={`popup ${className}`}>
       <img src={PopUpImage} alt="Background" className="background-image" />
       <div className="text-overlay">
         <h1 style={{ color: titleColor }}>{title}</h1>
@@ -35,7 +35,8 @@ PopUp.propTypes = {
   btnHref2: PropTypes.string,
   handleBtn1Click: PropTypes.func,
   handleBtn2Click: PropTypes.func,
-  titleColor: PropTypes.string, // 추가된 prop 타입
+  titleColor: PropTypes.string, 
+  className: PropTypes.string, 
 };
 
 export default PopUp;
