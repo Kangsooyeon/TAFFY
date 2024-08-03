@@ -1,14 +1,15 @@
 package com.taffy.backend.fight.controller;
 
+import com.taffy.backend.fight.dto.ConnectionInfoDto;
 import com.taffy.backend.fight.dto.InviteRoomRequestDto;
 import com.taffy.backend.fight.dto.ResponseDto;
 import com.taffy.backend.fight.service.FightService;
 import io.openvidu.java.client.*;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,36 +24,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FightController {
 
-    private static final Logger log = LoggerFactory.getLogger(FightController.class);
-    private OpenVidu openvidu;
-    @Value("${openvidu.url}")
-    private String OPENVIDU_URL;
-
-    @Value("${openvidu.secret}")
-    private String OPENVIDU_SECRET;
-
-
-    @PostConstruct
-    public void init() {
-        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
-
-
     private final FightService fightService;
-
-    public String initializeSession(Long memberId)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-        Session session = openvidu.createSession();
-        log.info(session.getSessionId());
-        return session.getSessionId();
-    }
+    private static final Logger log = LoggerFactory.getLogger(FightController.class);
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
         log.info("memberId = ",memberId);
-        String sessionId= initializeSession(memberId);
+        String sessionId= fightService.initializeSession(memberId);
 //        String sessionId = "test"+System.currentTimeMillis();
-        String roomId = fightService.createRoom(memberId,sessionId); //sessionId로 room생성
+        ConnectionInfoDto roomId = fightService.createRoom(memberId,sessionId); //sessionId로 room생성
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", roomId));
     }
 
