@@ -10,16 +10,16 @@ import Red from '../..//assets/images/common/belt/redBelt.png'
 import {useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
+import { fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 
 const UseInfo = () => {
   const dispatch = useDispatch();
-  const userId = localStorage.getItem('accessToken'); // 로컬 스토리지에서 userId 가져오기
-  const { profile, status, error } = useSelector((state) => state.user);
-
-  console.log(userId)
+  const { profile, status: userStatus, error: userError } = useSelector((state) => state.user);
+  const { record, status: recordStatus, error: recordError } = useSelector((state) => state.userRecord);
 
   useEffect(() => {
     dispatch(fetchUserProfileAsync());
+    dispatch(fetchUserRecordAsync());
   }, [dispatch]);
 
   const getImageSrc = (imagename) => {
@@ -35,14 +35,19 @@ const UseInfo = () => {
     }
   };
 
-  if (status === 'loading') {
+  if (userStatus === 'loading' || recordStatus === 'loading') {
     return <div>Loading...</div>;
   }
 
-  if (status === 'failed') {
-    return <div>Error: {error}</div>;
+  if (userStatus === 'failed') {
+    return <div>Error: {userError}</div>;
   }
-  console.log
+
+  if (recordStatus === 'failed') {
+    return <div>Error: {recordError}</div>;
+  }
+  const winRate = (record?.win || 0) + (record?.lose || 0) + (record?.draw || 0) === 0 ? 0 :
+  ((record?.win || 0) / ((record?.win || 0) + (record?.lose || 0) + (record?.draw || 0))) * 100;
 
   return (
     <div className="userinfobox">
@@ -55,17 +60,16 @@ const UseInfo = () => {
         <img src={Red} alt="" />
       </div>
       <div className="poomsaeeducation">
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
-        <img src={Check} alt="" />
+        {profile?.poomSaeCompletedList ? (
+          profile.poomSaeCompletedList.map((item) => (
+            <img key={item.psId} src={item.isCompleted ? CheckComplete : Check} alt="" />
+          ))
+        ) : (
+          <p>No data available</p>
+        )}
       </div>
       <div className="winpoint">
-        <p>승률 : 30%</p>
+        <p>승률 : {winRate.toFixed(0)}%</p>
       </div>
     </div>
   )
