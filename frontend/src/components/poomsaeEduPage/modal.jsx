@@ -5,6 +5,8 @@ import PsDescription from './psDescription';
 import { useEffect, useState } from 'react';
 import MvItem from './mvItem';
 import { useNavigate } from 'react-router-dom';
+import RightButton from '../../assets/images/poomsaeEduPage/right.png';
+import LeftButton from '../../assets/images/poomsaeEduPage/left.png';
 
 const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, moves, loading, error }) => {
   const [buttonText, setButtonText] = useState('');
@@ -16,11 +18,15 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
   }, [language]);
 
   const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
+    if ((currentPage + 1) * itemsPerPage < moves.length) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const handlePrevPage = () => {
-    setCurrentPage(currentPage - 1);
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   const navigate = useNavigate();
@@ -37,11 +43,11 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
     return <div>Error: {error}</div>;
   }
 
+  const totalPages = Math.ceil(moves.length / itemsPerPage);
 
   return (
     <div className='detailModal'>
       <div className='modalWrapper'>
-        {/* <button className='completeButton' onClick={onLearnComplete}>학습 완료!</button> */}
         <button className='closeButton' onClick={modalClose}>X</button>
         <div className='modalContent'>
           <div className='sectionLeft'>
@@ -52,20 +58,27 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
               description={description} />
           </div>
           <div className='sectionRight'>
-              <div className='mvItems'>
-                {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => (
-                  <MvItem
-                    key={index}
-                    title={language === 'ko' ? move.mvKoName : move.mvEnName}
-                    image={move.mvThumb}
-                    language={language}
-                    moveId={move.mvId}
-                    stageNum={stageNum}
-                  />
-                ))}
-              </div>
-              {currentPage > 0 && <button onClick={handlePrevPage}>Previous</button>}
-              {(currentPage + 1) * itemsPerPage < moves.length && <button onClick={handleNextPage}>Next</button>}
+            <button className="navButton prevButton" onClick={handlePrevPage}>
+              <img src={LeftButton} alt="left" />
+            </button>
+            <div className='mvItems'>
+              {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => (
+                <MvItem
+                  key={index}
+                  title={language === 'ko' ? move.mvKoName : move.mvEnName}
+                  image={move.mvThumb}
+                  language={language}
+                  moveId={move.mvId}
+                  stageNum={stageNum}
+                />
+              ))}
+            </div>
+            <button className="navButton nextButton" onClick={handleNextPage}>
+              <img src={RightButton} alt="right" />
+            </button>
+            <div className="pageIndicator">
+              {`${currentPage + 1} / ${totalPages}`}
+            </div>
           </div>
         </div>
         <div className='modalFooter'>
@@ -85,7 +98,6 @@ Modal.propTypes = {
   videoUrl: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   modalClose: PropTypes.func.isRequired,
-  onLearnComplete: PropTypes.func.isRequired,
   language: PropTypes.string.isRequired,
   moves: PropTypes.arrayOf(PropTypes.shape({
     mvId: PropTypes.number.isRequired,

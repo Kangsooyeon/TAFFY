@@ -54,12 +54,10 @@ const Stage = ({ stageNum, image, text, locked, language, videoUrl, description 
         <Modal
           stageNum={stageNum}
           text={text}
-          videoUrl={videoUrl}
-          description={description}
+          videoUrl={stageDetails?.psUrl || videoUrl}
+          description={stageDetails?.psKoDesc || description}
           modalClose={handleCloseModal}
-          // onLearnComplete={handleLearnComplete}
           language={language}
-          // moves={moves} // 개별 동작 데이터 전달
           moves={stageDetails?.movements || []}
           loading={loading}
           error={error}
@@ -73,10 +71,10 @@ Stage.propTypes = {
   stageNum: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
-  videoUrl: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
   locked: PropTypes.bool.isRequired,
   language: PropTypes.string.isRequired,
+  videoUrl: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
 };
 
 export default Stage;

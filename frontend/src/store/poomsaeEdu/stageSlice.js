@@ -1,3 +1,4 @@
+// stagesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchStageDetails as fetchStageDetailsApi } from '../../apis/stageApi';
 
@@ -6,7 +7,7 @@ export const fetchStageDetails = createAsyncThunk(
   async (stageNum, { rejectWithValue }) => {
     try {
       const response = await fetchStageDetailsApi(stageNum);
-      return response.data.data; // payloadCreator는 API 호출 결과를 반환
+      return response.data; // API 호출 결과를 반환
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -39,7 +40,11 @@ const stageSlice = createSlice({
       })
       .addCase(fetchStageDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.stageDetails[action.payload.psId] = action.payload;
+        if (action.payload && action.payload.psId) {
+          state.stageDetails[action.payload.psId] = action.payload;
+        } else {
+          state.error = 'Invalid data received';
+        }
       })
       .addCase(fetchStageDetails.rejected, (state, action) => {
         state.loading = false;
