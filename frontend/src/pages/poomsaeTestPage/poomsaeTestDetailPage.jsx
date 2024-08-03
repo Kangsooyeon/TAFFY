@@ -105,6 +105,7 @@ const PoomsaeTestDetailPage = () => {
                     {gameStatus === 'pass' && (
                         <PopUp
                             title="합격"
+                            titleColor="blue"
                             btnText1="촬영하기"
                             btnHref1="/photo"
                             btnText2="목록으로"
@@ -116,6 +117,7 @@ const PoomsaeTestDetailPage = () => {
                     {gameStatus === 'fail' && (
                         <PopUp
                             title="불합격"
+                            titleColor="red"
                             btnText1="재도전하기"
                             btnHref1={`/ps_test/detail/${poomsaeId}`}
                             btnText2="교육하기"
