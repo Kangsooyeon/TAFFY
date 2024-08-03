@@ -37,7 +37,7 @@ const Navbar = ({ isLoggedIn, handleLogin, handleLogout, language, setLanguage }
     };
   };
 
-  const { login, logout, my, signup} = getLanguageImages();
+  const { login, logout, my, signup, language: languageImage} = getLanguageImages();
 
   const languageOptions = [
     { value: 'ko', label: '한국어' },
