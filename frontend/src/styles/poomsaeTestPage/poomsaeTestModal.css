@@ -56,13 +56,14 @@
 }
 
 .modal-desc{
-    width: 50%;
+    width: 55%;
     height: 90%;
-    margin-right: 80px;
+    margin-right: 50px;
 }
 
 .modal-ps-description{
     position: relative;
+    overflow-y: auto;
     font-size: 35px;
     font-family: 'HappinessM';
     height: 80%;
@@ -72,6 +73,7 @@
 
 .modal-btn {
     display: flex;
+    margin-top: 35px;
     justify-content: end; 
 }
 
