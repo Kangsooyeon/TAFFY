@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // const token = localStorage.getItem('token'); // 토큰을 로컬 스토리지에서 가져온다고 가정
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJtZW1iZXJJZFwiOjh9IiwiaWF0IjoxNzIyNjc3Mjc2LCJleHAiOjE3MjI2NzgyNzZ9.witLcIZBewTHYb76oGNteDQmh4kP-ZhrLL4rXb8dE48';
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJtZW1iZXJJZFwiOjh9IiwiaWF0IjoxNzIyNjc4NTE1LCJleHAiOjE3MjI2Nzk1MTV9.ltRj-VYLWo_HgAWkKk4aGDUEWYoswEGCqicKdgBlKWE';
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

@@ -130,11 +130,12 @@ const PoomsaeEduAllPage = ({ language }) => {
       </div>
       {showSuccessPopup && (
         <PopUp
+          className="eduPopUp"
           title={language === 'ko' ? `${stageDetails?.psKoName}을 성공했습니다!` : `You have successfully completed ${stageDetails?.psEnName}!`}
           btnText1={language === 'ko' ? "확인" : "Confirm"}
           btnHref1="#"
           btnText2={language === 'ko' ? "다시하기" : "Retry"}
-          btnHref2={`/ps_edu_all/${stageNum}`}
+          btnHref2={`/ps_edu/${stageNum}`}
         />
       )}
     </div>

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import '../../styles/common/popUp.css';
 import PopUpImage from "/src/assets/images/common/popUp.png";
 
-const PopUp = ({title, btnText1, btnHref1, btnText2, btnHref2}) => {
+const PopUp = ({title, btnText1, btnHref1, btnText2, btnHref2, className}) => {
   return (
-    <div className="image-container">
+    <div className={`popup ${className}`}>
       <img src={PopUpImage} alt="Background" className="background-image" />
       <div className="text-overlay">
         <h1>{title}</h1>
@@ -23,6 +23,7 @@ PopUp.propTypes = {
   btnHref1: PropTypes.string.isRequired,
   btnText2: PropTypes.string.isRequired,
   btnHref2: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default PopUp;
