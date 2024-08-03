@@ -18,7 +18,7 @@ import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import { logout } from './store/user/loginLogout'; // 로그아웃 액션 가져오기
+import { logout } from './store/user/loginlogout'; // 로그아웃 액션 가져오기
 
 function App() {
   const navigate = useNavigate();

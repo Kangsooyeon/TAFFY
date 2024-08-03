@@ -17,14 +17,13 @@ const UseInfo = () => {
   const { profile, status, error } = useSelector((state) => state.user);
 
   console.log(userId)
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchUserProfileAsync(userId));
-    }
-  }, [dispatch, userId]);
 
-  const getImageSrc = (imageUrl) => {
-    switch (imageUrl) {
+  useEffect(() => {
+    dispatch(fetchUserProfileAsync());
+  }, [dispatch]);
+
+  const getImageSrc = (imagename) => {
+    switch (imagename) {
       case 'Tiger':
         return Tiger;
       case 'Bear':
@@ -43,15 +42,16 @@ const UseInfo = () => {
   if (status === 'failed') {
     return <div>Error: {error}</div>;
   }
+  console.log
 
   return (
     <div className="userinfobox">
       <div className="characterphoto">
-        <img src={Tiger} alt="" />
+        <img src={getImageSrc(profile?.imageUrl)} alt="" />
       </div>
       <div className="characterinfomation">
         <p className="mypagenickname">{profile?.nickname}</p>
-        <p className="mypagettiname">띠이름</p>
+        <p className="mypagettiname">{profile?.beltName}</p>
         <img src={Red} alt="" />
       </div>
       <div className="poomsaeeducation">

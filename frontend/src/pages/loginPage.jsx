@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
 import { useDispatch } from 'react-redux';
-import { loginSuccess} from '../store/user/loginLogout'; // 리덕스 액션 가져오기
+import { loginSuccess} from '../store/user/loginlogout'; // 리덕스 액션 가져오기
 
 const Login = ({ navigate }) => {
     const [email, setEmail] = useState('');
