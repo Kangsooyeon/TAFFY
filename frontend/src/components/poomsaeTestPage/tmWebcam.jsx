@@ -69,6 +69,17 @@ const TeachableMachineWebcam = ({ onPrediction }) => {
         if (webcam.canvas) {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
             ctx.drawImage(webcam.canvas, 0, 0, canvas.width, canvas.height); // Draw the webcam feed
+            
+            // Draw green rectangle (guide line)
+            const rectWidth = canvas.width * 0.35; // Width relative to canvas width
+            const rectHeight = canvas.height * 0.60; // Height relative to canvas height
+            const rectX = (canvas.width - rectWidth) / 2;
+            const rectY = (canvas.height - rectHeight) / 2;
+
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 5;
+            ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+
             if (pose) {
                 const minPartConfidence = 0.5;
                 window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
