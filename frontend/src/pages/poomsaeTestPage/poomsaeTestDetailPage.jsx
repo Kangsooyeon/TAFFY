@@ -1,35 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 import axios from 'axios';
+import TeachableMachineWebcam from '../../components/poomsaeTestPage/tmWebcam';
 
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null);
+    const [instruction, setInstruction] = useState('영역 안에 몸 전체가 보이도록 위치를 조정해주세요.');
+    const [predictions, setPredictions] = useState([]);
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
 
+    useEffect(() => {
+        const instructions = [
+            '차렷',
+            '경례',
+            '준비',
+            '시작'
+        ];
+
+        let currentInstruction = 0;
+
+        const changeInstruction = () => {
+            if (currentInstruction < instructions.length) {
+                setInstruction(instructions[currentInstruction]);
+                currentInstruction++;
+                setTimeout(changeInstruction, 3000);
+            }
+        };
+
+        const timer = setTimeout(changeInstruction, 3000);
+
+        // Clean up the timer if the component unmounts
+        return () => clearTimeout(timer);
+    }, []);
+
     const handleProgressUpdate = (success) => {
         if (success) {
             const newProgress = progress + 20;
-            console.log(`Progress updated to: ${newProgress}%`);
             setProgress(newProgress);
             if (newProgress >= 100) {
                 setGameStatus('pass');
-                console.log('Game status: pass');
             }
         } else {
             setGameStatus('fail');
-            console.log('Game status: fail');
         }
     };
 
     const handleReset = () => {
         setProgress(0);
         setGameStatus(null);
-        console.log('Progress reset to 0%. Game status reset.');
     };
 
     const handleExit = () => {
@@ -38,23 +61,25 @@ const PoomsaeTestDetailPage = () => {
 
     const handlePopUpButtonClick = async (href) => {
         const url = `https://i11e104.p.ssafy.io/api/test/${poomsaeId}`;
-        console.log('Request URL:', url);
         try {
             const response = await axios.put(
                 url,
-                {}, // 필요한 데이터가 있을 경우 여기에 추가
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-            console.log('API Response:', response.data);
             navigate(href);
         } catch (error) {
-            console.error('Error updating poomsae test:', error);
             alert('An error occurred while updating the test. Please try again.');
         }
+    };
+
+    const handlePrediction = (pose, prediction) => {
+        // Handle the prediction result here
+        setPredictions(prediction.map(p => ` ${p.className}: ${p.probability.toFixed(2)} `));
     };
 
     return (
@@ -64,8 +89,11 @@ const PoomsaeTestDetailPage = () => {
                 <p className="exit" onClick={handleExit}>나가기</p>
             </div>
             <div className="detail-content">
-                <p>영역 안에 몸 전체가 보이도록 위치를 조정해주세요.</p>
-                <div className='webcam'></div>
+                <p>{instruction}</p>
+                <TeachableMachineWebcam onPrediction={handlePrediction} />
+                <div className="predictions">
+                    <p>{predictions}</p>
+                </div>
                 <div className="temp">
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                     <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
@@ -77,6 +105,7 @@ const PoomsaeTestDetailPage = () => {
                     {gameStatus === 'pass' && (
                         <PopUp
                             title="합격"
+                            titleColor="blue"
                             btnText1="촬영하기"
                             btnHref1="/photo"
                             btnText2="목록으로"
@@ -88,6 +117,7 @@ const PoomsaeTestDetailPage = () => {
                     {gameStatus === 'fail' && (
                         <PopUp
                             title="불합격"
+                            titleColor="red"
                             btnText1="재도전하기"
                             btnHref1={`/ps_test/detail/${poomsaeId}`}
                             btnText2="교육하기"
