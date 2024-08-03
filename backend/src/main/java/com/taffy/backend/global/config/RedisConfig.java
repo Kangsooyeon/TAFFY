@@ -48,23 +48,23 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
-    RedisTemplate<String, Object> objectRedisTemplate(RedisConnectionFactory connectionFactory) {
-        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator
-                .builder()
-                .allowIfSubType(Object.class)
-                .build();
-
-        var objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .registerModule(new JavaTimeModule())
-                .activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
-                .disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
-
-        var template = new RedisTemplate<String, Object>();
-        template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
-        return template;
-    }
+//    @Bean
+//    RedisTemplate<String, Object> objectRedisTemplate(RedisConnectionFactory connectionFactory) {
+//        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator
+//                .builder()
+//                .allowIfSubType(Object.class)
+//                .build();
+//
+//        var objectMapper = new ObjectMapper()
+//                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+//                .registerModule(new JavaTimeModule())
+//                .activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
+//                .disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
+//
+//        var template = new RedisTemplate<String, Object>();
+//        template.setConnectionFactory(connectionFactory);
+//        template.setKeySerializer(new StringRedisSerializer());
+//        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
+//        return template;
+//    }
 }
