@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
 import Cookies from 'js-cookie';
@@ -18,20 +18,35 @@ import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import { logout } from './store/user/loginLogout'; // 로그아웃 액션 가져오기
+import { logout, setAuthFromStorage  } from './store/user/loginLogout'; 
 
 function App() {
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // useDispatch 훅 사용
+  const dispatch = useDispatch(); 
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const isTestPage = location.pathname.startsWith('/ps_test/detail');
   const isSparPage = location.pathname.startsWith('/sp/game');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
 
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (accessToken && refreshToken) {
+      dispatch(setAuthFromStorage({
+        isLoggedIn: true,
+        accessToken,
+        refreshToken
+      }));
+    }
+  }, [dispatch]);
+
+
   const handleLogin = () => {
     navigate('/login');
   };
+  
 
   const handleLogoutConfirm = () => {
     // 쿠키 삭제

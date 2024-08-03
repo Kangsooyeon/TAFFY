@@ -22,9 +22,14 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
     },
+    setAuthFromStorage: (state, action) => {
+      state.isLoggedIn = action.payload.isLoggedIn;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+    }
   },
 });
 
 // 액션과 리듀서 내보내기
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, setAuthFromStorage } = authSlice.actions;
 export default authSlice.reducer;
