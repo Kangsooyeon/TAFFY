@@ -1,6 +1,5 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import {fetchUserProfile, fetchUserUpdateProfile} from '../../apis/user/user.js'
-
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchUserProfile, fetchUserUpdateProfile } from '../../apis/user/user.js';
 
 export const fetchUserProfileAsync = createAsyncThunk(
   'user/fetchUserProfile',
@@ -8,16 +7,16 @@ export const fetchUserProfileAsync = createAsyncThunk(
     const data = await fetchUserProfile();
     return data;
   }
-)
+);
 
 export const fetchUserUpdateProfileAsync = createAsyncThunk(
   'user/fetchUserUpdateProfile',
   async (profileData) => {
     const data = await fetchUserUpdateProfile(profileData);
-    console.log(profileData)
+    console.log(profileData);
     return data;
   }
-)
+);
 
 const userSlice = createSlice({
   name: 'user',
@@ -52,6 +51,6 @@ const userSlice = createSlice({
         state.error = action.error.message;
       });
   },
-})
+});
 
-export default userSlice.reducer
+export default userSlice.reducer;

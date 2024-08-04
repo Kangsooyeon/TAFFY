@@ -1,39 +1,37 @@
-import '../../styles/myPage/userUpdatePage.css'
-import React, { useState, useEffect } from 'react'
-import Bear from '../../assets/images/myPage/곰 머리.png'
-import Dragon from '../../assets/images/myPage/용 머리.png'
-import Tiger from '../../assets/images/myPage/호랑이 머리.png'
+import '../../styles/myPage/userUpdatePage.css';
+import React, { useState, useEffect } from 'react';
+import Bear from '../../assets/images/myPage/곰 머리.png';
+import Dragon from '../../assets/images/myPage/용 머리.png';
+import Tiger from '../../assets/images/myPage/호랑이 머리.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-import {fetchUserUpdateProfileAsync} from '../../store/myPage/myPageUser.js'
+import { fetchUserUpdateProfileAsync } from '../../store/myPage/myPageUser.js';
 
-const UserUpdatePage = ({closeUpdate}) => {
+const UserUpdatePage = ({ closeUpdate }) => {
   const dispatch = useDispatch();
-  const {profile} = useSelector((state) => state.user)
+  const { profile, status, error } = useSelector((state) => state.user);
 
   const [profileData, setProfileData] = useState({
     nickName: '',
     profileImg: '',
-    countryName: ''
-  })
-  console.log(profile.nickname)
-  
+    countryName: '',
+  });
+
+  const [selectedCharacter, setSelectedCharacter] = useState('');
+
   useEffect(() => {
     if (profile) {
       setProfileData({
         nickName: profile.nickname || '',
         profileImg: profile.imageUrl || '',
-        countryName: profile .country || '',
+        countryName: profile.country || '',
       });
       setSelectedCharacter(profile.imageUrl || 'Tiger');
     }
   }, [profile]);
-  
-  const [selectedCharacter, setSelectedCharacter] = useState('');
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting profile update:', profileData)
     try {
       await dispatch(fetchUserUpdateProfileAsync(profileData)).unwrap();
       closeUpdate();
@@ -43,7 +41,7 @@ const UserUpdatePage = ({closeUpdate}) => {
   };
 
   const handleCountryChange = (e) => {
-    setProfileData({...profileData, countryName: e.target.value});
+    setProfileData({ ...profileData, countryName: e.target.value });
   };
 
   const handleNickNameChange = (e) => {
@@ -59,8 +57,6 @@ const UserUpdatePage = ({closeUpdate}) => {
     setProfileData({ ...profileData, profileImg: e.target.value });
   };
 
-  console.log(profileData)
-
   return (
     <div className="updatepage">
       <button className="updateclosebutton" onClick={closeUpdate}>X</button>
@@ -74,7 +70,9 @@ const UserUpdatePage = ({closeUpdate}) => {
               onChange={handleNickNameChange}
               className="input-field"
             />
-            {profileData.nickName && <button className="clear-btn" onClick={clearInput}>&times;</button>}
+            {profileData.nickName && (
+              <button className="clear-btn" onClick={clearInput}>&times;</button>
+            )}
           </div>
           <button className="submit-btn" onClick={handleSubmit}>중복확인</button>
         </div>
@@ -102,8 +100,8 @@ const UserUpdatePage = ({closeUpdate}) => {
         </div>
         <div className="nationcontainer">
           <label className="nationlabel">국가 선택</label>
-          <select 
-            className="nationselect"             
+          <select
+            className="nationselect"
             name="country"
             value={profileData.countryName}
             onChange={handleCountryChange}
@@ -123,8 +121,9 @@ const UserUpdatePage = ({closeUpdate}) => {
         <button className="userdeletebutton">회원 탈퇴</button>
         <button type="submit" className="updatesavebutton">저장</button>
       </form>
+      {status === 'failed' && <p className="error-message">Error: {error}</p>}
     </div>
-  )
-}
+  );
+};
 
 export default UserUpdatePage;
