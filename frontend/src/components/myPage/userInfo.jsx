@@ -38,8 +38,6 @@ const UseInfo = () => {
         return Bear;
       case 'Dragon':
         return Dragon;
-      default:
-        return Tiger;
     }
   };
 
@@ -63,8 +61,6 @@ const UseInfo = () => {
         return WhiteBelt;
       case 'YellowBelt':
         return YellowBelt;
-      default:
-        return BlackBelt;
     }
   }
 
@@ -87,7 +83,7 @@ const UseInfo = () => {
   return (
     <div className="userinfobox">
       <div className="characterphoto">
-        <img src={getImageSrc(profile?.profileUrl)} alt="" />
+        <img src={getImageSrc(profile?.profileImg)} alt="" />
       </div>
       <div className="characterinfomation">
         <p className="mypagenickname">{profile?.nickname}</p>
