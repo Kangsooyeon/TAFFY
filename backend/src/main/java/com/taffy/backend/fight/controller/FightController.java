@@ -30,16 +30,15 @@ public class FightController {
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
         log.info("memberId = ",memberId);
-        String sessionId= fightService.initializeSession(memberId);
-//        String sessionId = "test"+System.currentTimeMillis();
-        ConnectionInfoDto roomId = fightService.createRoom(memberId,sessionId); //sessionId로 room생성
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", roomId));
+        ConnectionInfoDto connectionInfoDto = fightService.createRoom(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", connectionInfoDto));
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> enterRoom(@AuthenticationPrincipal Long memberId, @RequestParam  String sessionId){
-        fightService.enterRoom(memberId, sessionId);
-        return ResponseEntity.status(HttpStatus.OK).body("방에 가입이 되었습니다.");
+    public ResponseEntity<ResponseDto> enterRoom(@AuthenticationPrincipal Long memberId, @RequestParam  String sessionId)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+        ConnectionInfoDto connectionInfoDto = fightService.joinRoom(memberId, sessionId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value() , "방 가입 완료", connectionInfoDto));
     }
 
 }
