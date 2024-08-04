@@ -27,6 +27,12 @@ public class FightController {
     private final FightService fightService;
     private static final Logger log = LoggerFactory.getLogger(FightController.class);
 
+    @PostMapping("/matching")
+    public ResponseEntity<ResponseDto> matching(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
+        log.info("memberId = ",memberId);
+        ConnectionInfoDto connectionInfoDto = fightService.quickStart(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", connectionInfoDto));
+    }
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
         log.info("memberId = ",memberId);
@@ -34,7 +40,7 @@ public class FightController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", connectionInfoDto));
     }
 
-    @PostMapping("/join")
+    @PostMapping("/game-invitations")
     public ResponseEntity<ResponseDto> enterRoom(@AuthenticationPrincipal Long memberId, @RequestParam  String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException {
         ConnectionInfoDto connectionInfoDto = fightService.joinRoom(memberId, sessionId);
