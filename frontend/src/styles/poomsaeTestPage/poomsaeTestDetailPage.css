@@ -73,7 +73,7 @@
 
 .predictions p {
     color: black;
-    font-size: 20px; /* 텍스트 크기 조정 */
+    font-size: 30px; /* 텍스트 크기 조정 */
     text-align: center;
     overflow-y: auto; /* 내용이 넘치면 스크롤 */
 }

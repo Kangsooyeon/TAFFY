@@ -4,6 +4,10 @@ import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 import axios from 'axios';
 import TeachableMachineWebcam from '../../components/poomsaeTestPage/tmWebcam';
+import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
+import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
+import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
+import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
 
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
@@ -27,6 +31,21 @@ const PoomsaeTestDetailPage = () => {
         const changeInstruction = () => {
             if (currentInstruction < instructions.length) {
                 setInstruction(instructions[currentInstruction]);
+
+                if (instructions[currentInstruction] === '차렷') {
+                    const audio = new Audio(attentionSound);
+                    audio.play();
+                } else if (instructions[currentInstruction] === '경례') {
+                    const audio = new Audio(saluteSound);
+                    audio.play();
+                } else if (instructions[currentInstruction] === '준비') {
+                    const audio = new Audio(preparationSound);
+                    audio.play();
+                } else if (instructions[currentInstruction] === '시작') {
+                    const audio = new Audio(startSound);
+                    audio.play();
+                }
+
                 currentInstruction++;
                 setTimeout(changeInstruction, 3000);
             }
