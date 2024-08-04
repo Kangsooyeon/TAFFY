@@ -25,3 +25,8 @@ export const fetchUserProfile = async () => {
   const response = await axiosInstance.get('/user');
   return response.data;
 };
+
+export const fetchUserUpdateProfile = async (profileData) => {
+  const response = await axiosInstance.patch('/user', profileData);
+  return response.data;
+};
