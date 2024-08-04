@@ -74,7 +74,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
               <button className="clear-btn" onClick={clearInput}>&times;</button>
             )}
           </div>
-          <button className="submit-btn" onClick={handleSubmit}>중복확인</button>
+          <button type="button" className="submit-btn" onClick={handleSubmit}>중복확인</button>
         </div>
         <div className="character-label">캐릭터 선택</div>
         <div className="character-selection-container">
@@ -118,7 +118,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
             <option value="Malaysia">말레이시아</option>
           </select>
         </div>
-        <button className="userdeletebutton">회원 탈퇴</button>
+        <button type="button" className="userdeletebutton">회원 탈퇴</button>
         <button type="submit" className="updatesavebutton">저장</button>
       </form>
       {status === 'failed' && <p className="error-message">Error: {error}</p>}
