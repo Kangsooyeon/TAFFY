@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 import axios from 'axios';
@@ -8,6 +9,7 @@ import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
 import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
 import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
 import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
+import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
@@ -17,6 +19,8 @@ const PoomsaeTestDetailPage = () => {
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
+    const dispatch = useDispatch();
+    const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
 
     useEffect(() => {
         const instructions = [
@@ -32,17 +36,18 @@ const PoomsaeTestDetailPage = () => {
             if (currentInstruction < instructions.length) {
                 setInstruction(instructions[currentInstruction]);
 
+                let audio;
                 if (instructions[currentInstruction] === '차렷') {
-                    const audio = new Audio(attentionSound);
-                    audio.play();
+                    audio = new Audio(attentionSound);
                 } else if (instructions[currentInstruction] === '경례') {
-                    const audio = new Audio(saluteSound);
-                    audio.play();
+                    audio = new Audio(saluteSound);
                 } else if (instructions[currentInstruction] === '준비') {
-                    const audio = new Audio(preparationSound);
-                    audio.play();
+                    audio = new Audio(preparationSound);
                 } else if (instructions[currentInstruction] === '시작') {
-                    const audio = new Audio(startSound);
+                    audio = new Audio(startSound);
+                }
+
+                if (audio) {
                     audio.play();
                 }
 
@@ -78,10 +83,10 @@ const PoomsaeTestDetailPage = () => {
         navigate('/ps_test');
     };
 
-    const handlePopUpButtonClick = async (href) => {
+    const handlePopUpButtonClick = async (href, updateStatus = false) => {
         const url = `https://i11e104.p.ssafy.io/api/test/${poomsaeId}`;
         try {
-            const response = await axios.put(
+            await axios.put(
                 url,
                 {},
                 {
@@ -90,6 +95,15 @@ const PoomsaeTestDetailPage = () => {
                     },
                 }
             );
+
+            if (updateStatus) {
+                // Update the completed status in Redux store
+                const updatedPoomsaeTest = poomsaeTest.map(item => 
+                    item.id === Number(poomsaeId) ? { ...item, passed: true } : item
+                );
+                dispatch(setPoomsaeTest(updatedPoomsaeTest));
+            }
+
             navigate(href);
         } catch (error) {
             alert('An error occurred while updating the test. Please try again.');
@@ -129,8 +143,8 @@ const PoomsaeTestDetailPage = () => {
                             btnHref1="/photo"
                             btnText2="목록으로"
                             btnHref2="/ps_test"
-                            handleBtn1Click={() => handlePopUpButtonClick('/photo')}
-                            handleBtn2Click={() => handlePopUpButtonClick('/ps_test')}
+                            handleBtn1Click={() => handlePopUpButtonClick('/photo', true)}
+                            handleBtn2Click={() => handlePopUpButtonClick('/ps_test', true)}
                         />
                     )}
                     {gameStatus === 'fail' && (
