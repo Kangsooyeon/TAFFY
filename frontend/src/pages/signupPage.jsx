@@ -23,7 +23,6 @@ const Signup = () => {
             console.error('Error checking nickname:', error);
             alert('이미 존재하는 닉네임입니다');
             setIsNicknameChecked(false);
-
         }
     };
 
@@ -55,7 +54,21 @@ const Signup = () => {
             }
         } catch (error) {
             console.error('Error during sign up:', error);
-            alert('회원가입 중 오류가 발생했습니다. 혹시 닉네임 4글자 이상 입력하셨나요?');
+            if (error.response && error.response.data) {
+                const errorData = error.response.data;
+                if (errorData.msg) {
+                    alert(errorData.msg);
+                }
+                if (errorData.data) {
+                    const errorDetails = Object.values(errorData.data).join('\n');
+                    alert(errorDetails);
+                }
+                if (errorData.includes('이미 존재하는 이메일')) {
+                    alert('이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.');
+                }
+            } else {
+                alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
         }
     };
 
@@ -117,7 +130,10 @@ const Signup = () => {
                             <input 
                                 type="text" 
                                 value={nickname} 
-                                onChange={(e) => setNickname(e.target.value)} 
+                                onChange={(e) => {
+                                    setNickname(e.target.value);
+                                    setIsNicknameChecked(false); // 닉네임이 변경될 때 중복확인 상태를 리셋
+                                }} 
                                 placeholder="Please enter nickname" 
                                 required
                             />
