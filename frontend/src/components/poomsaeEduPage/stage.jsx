@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/poomsaeEduPage/stage.css';
-import lockImg from '../../assets/images/poomsaeEduPage/lock.png';
+import lockImg from '../../assets/images/common/lock.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStageDetails } from '../../store/poomsaeEdu/stageSlice';
 import Modal from './modal';
