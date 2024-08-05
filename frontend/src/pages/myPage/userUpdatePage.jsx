@@ -1,16 +1,16 @@
 import '../../styles/myPage/userUpdatePage.css';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Bear from '../../assets/images/myPage/곰 머리.png';
 import Dragon from '../../assets/images/myPage/용 머리.png';
 import Tiger from '../../assets/images/myPage/호랑이 머리.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserUpdateProfileAsync, fetchUserProfileAsync, fetchNicknameProfileAsync } from '../../store/myPage/myPageUser.js';
+import { fetchUserUpdateProfileAsync, fetchUserProfileAsync } from '../../store/myPage/myPageUser.js';
 import axios from 'axios';
 
 const UserUpdatePage = ({ closeUpdate }) => {
   const dispatch = useDispatch();
-  const { profile, status, error, nicknameStatus, nicknameValid } = useSelector((state) => state.user);
+  const { profile, status, error } = useSelector((state) => state.user);
 
   const [profileData, setProfileData] = useState({
     nickName: '',
@@ -20,6 +20,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
 
   const [selectedCharacter, setSelectedCharacter] = useState('');
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [initialNickName, setInitialNickName] = useState('');
 
   useEffect(() => {
     if (profile) {
@@ -29,12 +30,13 @@ const UserUpdatePage = ({ closeUpdate }) => {
         countryName: profile.country || '',
       });
       setSelectedCharacter(profile.profileImg || 'Tiger');
+      setInitialNickName(profile.nickname || '');
     }
   }, [profile]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isNicknameChecked) {
+    if (profileData.nickName !== initialNickName && !isNicknameChecked) {
       alert('닉네임 중복확인을 해주세요.');
       return;
     }
@@ -82,6 +84,10 @@ const UserUpdatePage = ({ closeUpdate }) => {
     setSelectedCharacter(e.target.value);
     setProfileData({ ...profileData, profileImg: e.target.value });
   };
+
+  const handleUserDelete = (e) => {
+
+  }
 
   console.log(profileData);
 
@@ -138,7 +144,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
             <option value="Korea">한국</option>
             <option value="China">중국</option>
             <option value="India">인도</option>
-            <option value="Kanada">캐나다</option>
+            <option value="Canada">캐나다</option>
             <option value="Australia">호주</option>
             <option value="Indonesia">인도네시아</option>
             <option value="Vietnam">베트남</option>
@@ -146,7 +152,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
             <option value="Malaysia">말레이시아</option>
           </select>
         </div>
-        <button type="button" className="userdeletebutton">회원 탈퇴</button>
+        <button type="button" className="userdeletebutton" onClick={handleUserDelete}>회원 탈퇴</button>
         <button type="submit" className="updatesavebutton">저장</button>
       </form>
       {status === 'failed' && <p className="error-message">Error: {error}</p>}

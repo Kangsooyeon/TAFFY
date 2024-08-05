@@ -5,7 +5,7 @@ import Australia from '../../assets/images/myPage/flag/Australia.gif'
 import China from '../../assets/images/myPage/flag/China.gif'
 import India from '../../assets/images/myPage/flag/India.gif'
 import Indonesia from '../../assets/images/myPage/flag/Indonesia.gif'
-import Kanada from '../../assets/images/myPage/flag/Kanada.gif'
+import Canada from '../../assets/images/myPage/flag/Canada.gif'
 import Morocco from '../../assets/images/myPage/flag/Morocco.gif'
 import Malaysia from '../../assets/images/myPage/flag/Malaysia.gif'
 import USA from '../../assets/images/myPage/flag/USA.gif'
@@ -14,7 +14,6 @@ import Vietnam from '../../assets/images/myPage/flag/Vietnam.gif'
 import {useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
-
 
 const RoomInfo = () => {
   const dispatch = useDispatch();
@@ -32,8 +31,8 @@ const RoomInfo = () => {
         return India;
       case 'Indonesia':
         return Indonesia;
-      case 'Kanada':
-        return Kanada;
+      case 'Canada':
+        return Canada;
       case'Morocco':
         return Morocco;
       case 'Malaysia':
