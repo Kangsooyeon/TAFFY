@@ -52,8 +52,11 @@ public class MemberService {
     public void signUpWithInitialData(SignUpRequestDto signUpRequestDto) {
 
         boolean existsEmail = memberRepository.existsByEmail(signUpRequestDto.getEmail());
+        boolean existsNickname = memberRepository.existsByNickname(signUpRequestDto.getNickName());
         if (existsEmail) {
             throw new TaffyException(ErrorCode.DUPLICATE_EMAIL);
+        } else if (existsNickname) {
+            throw new TaffyException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
         Country country = countryRepository.findByCountryName(signUpRequestDto.getCountryName());
@@ -199,7 +202,7 @@ public class MemberService {
         boolean isExistNickname = memberRepository.existsByNickname(nicknameDuplicateDto.getNickName());
 
         if (isExistNickname){
-            throw new TaffyException(ErrorCode.NICHNAME_ALREADY_EXIST);
+            throw new TaffyException(ErrorCode.DUPLICATE_NICKNAME);
         }
     }
 

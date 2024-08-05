@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일 계정입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 회원의 정보 입니다."),
 
     JWT_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST,"JWT 토큰이 만료되었습니다."),
@@ -20,7 +21,6 @@ public enum ErrorCode {
 
     CANNOT_BELT_UPGRADE(HttpStatus.BAD_REQUEST,"더 이상 승격할 수 없습니다. 이미 최고단계입니다."),
     BELT_NOT_FOUNT(HttpStatus.NOT_FOUND, "없는 벨트 정보 입니다."),
-    NICHNAME_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다"),
     CANNOT_JOIN_ROOM(HttpStatus.CONFLICT,"인원수가 초과되었습니다."),
 
     PS_NOT_FOUND(HttpStatus.BAD_REQUEST, "없는 품새 ID 입니다"),
