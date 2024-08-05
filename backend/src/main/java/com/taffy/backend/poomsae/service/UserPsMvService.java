@@ -15,8 +15,8 @@ public class UserPsMvService {
     private final UserPsMvRepository userPsMvRepository;
 
     @Transactional(readOnly = true)
-    public Boolean isMvDone(Long userId, Integer psMvId) {
-        Optional<UserPsMv> userPsMvOptional = userPsMvRepository.findByUserIdAndPsMvId(userId, psMvId);
+    public Boolean isMvDone(Long userId, Integer psId, Integer mvSeq) {
+        Optional<UserPsMv> userPsMvOptional = userPsMvRepository.findByUserIdAndPsIdAndMvSeq(userId, psId, mvSeq);
         return userPsMvOptional.map(UserPsMv::getUserPsMvDone).orElse(false);
     }
 }

@@ -57,13 +57,13 @@ public class PsMvService {
         return new PsWholeDto(psDto ,mvDetails.size(), mvDetails);
     }
 
-    public MvDetailDto getUsPsMvDetailByPsMvId(Long userId, Integer psMvId) {
-        return userPsMvRepository.findMvDetail(userId, psMvId);
+    public MvDetailDto getUsPsMvDetailByPsMvId(Long userId, Integer psId, Integer mvSeq) {
+        return userPsMvRepository.findMvDetail(userId, psId, mvSeq);
     }
 
     @Transactional
-    public void mvDone(Long userId, Integer psMvId) {
-        Optional<UserPsMv> userPsMvOpt = userPsMvRepository.findByUserIdAndPsMvId(userId, psMvId);
+    public void mvDone(Long userId, Integer psId, Integer mvSeq) {
+        Optional<UserPsMv> userPsMvOpt = userPsMvRepository.findByUserIdAndPsIdAndMvSeq(userId, psId, mvSeq);
         UserPsMv userPsMv = userPsMvOpt.orElseThrow(() -> new TaffyException(ErrorCode.USER_PS_MV_NOT_FOUND));
         userPsMv.userPsMvDone();
         userPsMvRepository.save(userPsMv);
