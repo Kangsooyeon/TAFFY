@@ -99,20 +99,20 @@ const PoomsaeEduAllPage = ({ language }) => {
           </div>
           <div className='userCam'></div>
           <div className='progress'>
-            {/* 1. 진행률 */}
+            {/* 1. 정확도 */}
             <ProgressBar
               value={accuracy}
-              title={language === 'ko' ? '진행률' : 'Progress'}
+              title={language === 'ko' ? '정확도' : 'Accuracy'}              
               text={accuracy.toString()}
-            />
-            {/* 2. 정확도 */}
-            <ProgressBar
-              value={progress}
-              title={language === 'ko' ? '정확도' : 'Accuracy'}
-              text={`${currentMoveIndex + 1} / ${moves.length}`}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"
+            />
+            {/* 2. 진행률 */}
+            <ProgressBar
+              value={progress}
+              title={language === 'ko' ? '진행률' : 'Progress'}
+              text={`${currentMoveIndex + 1} / ${moves.length}`}
             />
 
           </div>
@@ -121,7 +121,9 @@ const PoomsaeEduAllPage = ({ language }) => {
 
         <div className='mvDescription'>
           <img src={AudioImage} alt="audio" />
-          <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
+          <div className='mvPs'>
+            <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
+          </div>
           <PsDescription
             className="mvPsDes"
             description={description}
