@@ -11,6 +11,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일 계정입니다."),
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다."),
+    COUNTRY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 국가를 찾을 수 없습니다."),
+
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "없는 회원의 정보 입니다."),
 
     JWT_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST,"JWT 토큰이 만료되었습니다."),

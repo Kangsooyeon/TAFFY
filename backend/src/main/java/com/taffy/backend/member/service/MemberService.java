@@ -60,6 +60,10 @@ public class MemberService {
         }
 
         Country country = countryRepository.findByCountryName(signUpRequestDto.getCountryName());
+        if (country == null) {
+            throw new TaffyException(ErrorCode.COUNTRY_NOT_FOUND);
+        }
+
         Belt belt = beltRepository.findById(1L).get();
 
         Member member = Member.builder()
