@@ -70,6 +70,7 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
                   language={language}
                   moveId={move.mvId}
                   stageNum={stageNum}
+                  index={currentPage * itemsPerPage + index}
                 />
               ))}
             </div>
