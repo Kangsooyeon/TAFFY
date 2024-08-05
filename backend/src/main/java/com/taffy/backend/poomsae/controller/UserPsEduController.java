@@ -72,9 +72,9 @@ public class UserPsEduController {
     }
 
     // 유저 기본동작 완료
-    @PutMapping("/mv/{psMvId}")
-    public ResponseEntity<ResponseDto> mvDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psMvId) {
-        psMvService.mvDone(userId, psMvId);
+    @PutMapping("/mv/{psId}/{mvSeq}")
+    public ResponseEntity<ResponseDto> mvDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psId, @PathVariable Integer mvSeq) {
+        psMvService.mvDone(userId, psId, mvSeq);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 동작을 완료했습니다."));
     }
 
@@ -90,9 +90,9 @@ public class UserPsEduController {
     }
 
     // 동작별 완료 여부
-    @GetMapping("/mv/users/{psMvId}")
-    public ResponseEntity<ResponseDto> isMvDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psMvId) {
-        boolean isDone = userPsMvService.isMvDone(userId, psMvId);
+    @GetMapping("/mv/users/{psId}/{mvSeq}")
+    public ResponseEntity<ResponseDto> isMvDone(@AuthenticationPrincipal Long userId, @PathVariable Integer psId, @PathVariable Integer mvSeq) {
+        boolean isDone = userPsMvService.isMvDone(userId, psId, mvSeq);
         if (isDone) {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "해당 기본동작은 완료되었습니다."));
         } else {

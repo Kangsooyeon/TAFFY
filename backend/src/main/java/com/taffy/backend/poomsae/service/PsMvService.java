@@ -62,8 +62,8 @@ public class PsMvService {
     }
 
     @Transactional
-    public void mvDone(Long userId, Integer psMvId) {
-        Optional<UserPsMv> userPsMvOpt = userPsMvRepository.findByUserIdAndPsMvId(userId, psMvId);
+    public void mvDone(Long userId, Integer psId, Integer mvSeq) {
+        Optional<UserPsMv> userPsMvOpt = userPsMvRepository.findByUserIdAndPsIdAndMvSeq(userId, psId, mvSeq);
         UserPsMv userPsMv = userPsMvOpt.orElseThrow(() -> new TaffyException(ErrorCode.USER_PS_MV_NOT_FOUND));
         userPsMv.userPsMvDone();
         userPsMvRepository.save(userPsMv);
