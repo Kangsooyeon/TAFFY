@@ -10,6 +10,7 @@ const Signup = () => {
     const [password2, setPassword2] = useState('');
     const [nickname, setNickname] = useState('');
     const [country, setCountry] = useState('Korea');
+    const [isNicknameChecked, setIsNicknameChecked] = useState(false); // 닉네임 중복확인 상태 추가
 
     const navigate = useNavigate();
 
@@ -17,9 +18,12 @@ const Signup = () => {
         try {
             const response = await axios.post('https://i11e104.p.ssafy.io/api/nickname', { nickName: nickname });
             alert(response.data); // 응답 메시지를 alert로 표시
+            setIsNicknameChecked(true);
         } catch (error) {
             console.error('Error checking nickname:', error);
             alert('이미 존재하는 닉네임입니다');
+            setIsNicknameChecked(false);
+
         }
     };
 
@@ -27,6 +31,11 @@ const Signup = () => {
         e.preventDefault();
         if (password !== password2) {
             alert('비밀번호가 일치하지 않습니다');
+            return;
+        }
+
+        if (!isNicknameChecked) { // 닉네임 중복확인 여부 체크
+            alert('닉네임 중복확인을 해주세요');
             return;
         }
 
@@ -46,7 +55,7 @@ const Signup = () => {
             }
         } catch (error) {
             console.error('Error during sign up:', error);
-            alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+            alert('회원가입 중 오류가 발생했습니다. 혹시 닉네임 4글자 이상 입력하셨나요?');
         }
     };
 
