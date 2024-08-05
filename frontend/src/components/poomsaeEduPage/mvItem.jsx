@@ -14,6 +14,7 @@ const MvItem = ({ stageNum, title, image, moveId }) => {
 
   return (
     <div className='mvItem' onClick={handleClick}>
+      {/* <h2>{moveId -1}</h2> */}
       <img src={image} alt={title} />
       <h2 className='mvName'>{title}</h2>
     </div>

@@ -26,31 +26,31 @@ const userSlice = createSlice({
     error: null,
   },
   reducers: {},
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(fetchUserProfileAsync.pending, (state) => {
-  //       state.status = 'loading';
-  //     })
-  //     .addCase(fetchUserProfileAsync.fulfilled, (state, action) => {
-  //       state.status = 'succeeded';
-  //       state.profile = action.payload;
-  //     })
-  //     .addCase(fetchUserProfileAsync.rejected, (state, action) => {
-  //       state.status = 'failed';
-  //       state.error = action.error.message;
-  //     })
-  //     .addCase(fetchUserUpdateProfileAsync.pending, (state) => {
-  //       state.status = 'loading';
-  //     })
-  //     .addCase(fetchUserUpdateProfileAsync.fulfilled, (state, action) => {
-  //       state.status = 'succeeded';
-  //       state.profile = action.payload;
-  //     })
-  //     .addCase(fetchUserUpdateProfileAsync.rejected, (state, action) => {
-  //       state.status = 'failed';
-  //       state.error = action.error.message;
-  //     });
-  // },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserProfileAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUserProfileAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.profile = action.payload;
+      })
+      .addCase(fetchUserProfileAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(fetchUserUpdateProfileAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUserUpdateProfileAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.profile = action.payload;
+      })
+      .addCase(fetchUserUpdateProfileAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      });
+  },
 });
 
 export default userSlice.reducer;

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import '../../styles/common/popUp.css';
-// import PopUpImage from "/src/assets/images/common/popUp.png";
+import PopUpImage from "/src/assets/images/common/popUp.png";
 
 const PopUp = ({ title, btnText1, btnHref1, btnText2, btnHref2, handleBtn1Click, handleBtn2Click, titleColor, className }) => {
   const handleBtn1 = () => {
