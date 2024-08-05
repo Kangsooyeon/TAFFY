@@ -18,7 +18,7 @@ export const completePoomsae = createAsyncThunk(
   'stages/completePoomsae',
   async ({ psId, token }, { rejectWithValue }) => {
     try {
-      const response = await completePoomsaeApi(psId, token);
+      const response = await completePoomsae(psId, token);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
