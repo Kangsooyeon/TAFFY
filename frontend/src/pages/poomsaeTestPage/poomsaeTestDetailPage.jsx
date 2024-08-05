@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
+import ProgressBar from '../../components/common/progressBar';
 import axios from 'axios';
 import TeachableMachineWebcam from '../../components/poomsaeTestPage/tmWebcam';
 import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
@@ -131,6 +132,13 @@ const PoomsaeTestDetailPage = () => {
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                     <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
                     <button onClick={handleReset}>Reset</button>
+                </div>
+                <div className='progress-bar-container'>
+                    <ProgressBar 
+                        value={progress} 
+                        text={`${progress}%`} 
+                        title="진행률" 
+                    />
                 </div>
             </div>
             {gameStatus && (
