@@ -135,7 +135,7 @@ const Signup = () => {
                             <option value="USA">USA</option>
                             <option value="China">China</option>
                             <option value="India">India</option>
-                            <option value="Kanada">Kanada</option>
+                            <option value="Canada">Canada</option>
                             <option value="Australia">Australia</option>
                             <option value="Indonesia">Indonesia</option>
                             <option value="Vietnam">Vietnam</option>
