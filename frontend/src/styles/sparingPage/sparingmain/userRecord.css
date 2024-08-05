@@ -77,10 +77,11 @@
   margin-top: 1px;
   border: none;
   border-top: 1px solid #985A30;
+  margin-bottom: 7px;
 }
 
 .custom-title {
   padding: 4px;
   margin: 1px;
-  font-size: 16px;
+  font-size: 20px;
 }
