@@ -59,10 +59,7 @@ public class MemberService {
             throw new TaffyException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
-        Country country = countryRepository.findByCountryName(signUpRequestDto.getCountryName());
-        if (country == null) {
-            throw new TaffyException(ErrorCode.COUNTRY_NOT_FOUND);
-        }
+        Country country = countryRepository.findByCountryName(signUpRequestDto.getCountryName()).orElseThrow(() -> new TaffyException(ErrorCode.COUNTRY_NOT_FOUND));
 
         Belt belt = beltRepository.findById(1L).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
 
@@ -161,7 +158,7 @@ public class MemberService {
     @Transactional
     public void modificationInfo(Long memberId, MemberInfoUpdateRequestDto memberInfoUpdateRequestDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
-        Country country = countryRepository.findByCountryName(memberInfoUpdateRequestDto.getCountryName());
+        Country country = countryRepository.findByCountryName(memberInfoUpdateRequestDto.getCountryName()).orElseThrow(() -> new TaffyException(ErrorCode.COUNTRY_NOT_FOUND));
 
         member.updateInfo(memberInfoUpdateRequestDto, country);
     }
