@@ -64,7 +64,7 @@ public class MemberService {
             throw new TaffyException(ErrorCode.COUNTRY_NOT_FOUND);
         }
 
-        Belt belt = beltRepository.findById(1L).get();
+        Belt belt = beltRepository.findById(1L).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
 
         Member member = Member.builder()
                 .email(signUpRequestDto.getEmail())
@@ -174,7 +174,7 @@ public class MemberService {
         if (beltLevel > 11){
             throw new TaffyException(ErrorCode.CANNOT_BELT_UPGRADE);
         }
-        Belt belt = beltRepository.findById(beltLevel).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUNT));
+        Belt belt = beltRepository.findById(beltLevel).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
         member.beltPromotion(belt);
     }
 
