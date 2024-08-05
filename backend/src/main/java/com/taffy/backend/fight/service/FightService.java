@@ -90,7 +90,7 @@ public class FightService {
         map.put("sessionId", sessionId2);
         map.put("memberId", memberId);
         //redis에 저장
-        redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
+        redisTemplate.opsForList().rightPush(sessionId2, redisHashUser);
         //openvidu 미디어서버로 connection
         String connectionToken = joinSession(map);
         return  new ConnectionInfoDto(sessionId, connectionToken);
