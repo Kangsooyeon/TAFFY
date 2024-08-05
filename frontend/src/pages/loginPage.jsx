@@ -4,17 +4,20 @@ import { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
 import { useDispatch } from 'react-redux';
-import { loginSuccess} from '../store/user/loginLogout'; // 리덕스 액션 가져오기
+import { loginSuccess } from '../store/user/loginLogout'; // 리덕스 액션 가져오기
 
 const Login = ({ navigate }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        // 폼의 기본 동작을 막습니다.
+        if (e) e.preventDefault();
+
         try {
             const response = await axios.post(
-                'https://i11e104.p.ssafy.io/api/login', 
+                'https://i11e104.p.ssafy.io/api/login',
                 { email, password }
             );
 
@@ -44,6 +47,12 @@ const Login = ({ navigate }) => {
         }
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin(e);
+        }
+    };
+
     return (
         <div className="loginPage">
             <div className="login-box">
@@ -51,8 +60,8 @@ const Login = ({ navigate }) => {
                     <p>Login</p>
                 </div>
 
-                <hr/>
-                <div className="login-form">
+                <hr />
+                <form className="login-form" onSubmit={handleLogin}>
                     <div className="input-box">
                         <label>Email</label>
                         <input
@@ -60,6 +69,7 @@ const Login = ({ navigate }) => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Please enter in email format"
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <div className="input-box">
@@ -69,12 +79,13 @@ const Login = ({ navigate }) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Please enter a password"
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <div>
-                        <button onClick={handleLogin}>Login</button>  
+                        <button type="submit">Login</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );
