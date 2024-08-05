@@ -76,7 +76,6 @@ Stage.propTypes = {
   image: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   locked: PropTypes.bool.isRequired,
-  completed: PropTypes.bool.isRequired,
   language: PropTypes.string.isRequired,
   videoUrl: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,

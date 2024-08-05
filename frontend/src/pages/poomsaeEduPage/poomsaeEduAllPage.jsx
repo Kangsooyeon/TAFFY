@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
 import ProgressBar from '../../components/common/progressBar';
 import AudioImage from '../../assets/images/common/audio.png';
-import { fetchAllStageDetails } from '../../apis/stageApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { unlockNextStage, completePoomsae } from '../../store/poomsaeEdu/stagesSlice';
+import { completePoomsae, fetchAllStageDetails } from '../../apis/stageApi';
+import { useDispatch } from 'react-redux';
+import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
 
 const PoomsaeEduAllPage = ({ language }) => {
@@ -23,8 +23,8 @@ const PoomsaeEduAllPage = ({ language }) => {
   const { stageNum } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = useSelector(state => state.auth.token); // 사용자 토큰 가져오기
-  const activeStage = useSelector(state => state.stages.activeStage);
+  // const token = useSelector((state) => state.auth.token); // 사용자 토큰 가져오기
+  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -40,7 +40,7 @@ const PoomsaeEduAllPage = ({ language }) => {
         const data = await fetchAllStageDetails(stageNum);
         setStageDetails(data.data.ps);
         setMoves(data.data.mvDetails);
-        setDescription(language === 'ko' ? data.data.mvDetails[0].mvKoDesc : data.data.mvDetails[0].mvEnDesc);
+        setDescription(language === 'ko' ? data.data.mvDetails[0].mvKoDesc : data.data.mvDetails[0].mvEnDesc); // 첫번째 동작 설명
       } catch (error) {
         console.error("Failed to fetch stage details:", error);
       }
@@ -54,14 +54,18 @@ const PoomsaeEduAllPage = ({ language }) => {
       setCurrentMoveIndex(currentMoveIndex + 1);
       setDescription(language === 'ko' ? moves[currentMoveIndex + 1].mvKoDesc : moves[currentMoveIndex + 1].mvEnDesc);
       setProgress(((currentMoveIndex + 1) / moves.length) * 100);
-      setAccuracy(75);
+      setAccuracy(75); // 예시값
     } else {
       setProgress(100);
       setAccuracy(100);
-      setTimeout(() => {
+      setTimeout(async () => {
         setShowSuccessPopup(true);
-        dispatch(unlockNextStage(Math.max(activeStage, parseInt(stageNum) + 1))); // 다음 스테이지 잠금 해제
-        dispatch(completePoomsae({ poomsaeId: stageNum, token })); // Poomsae 완료 요청 디스패치
+        try {
+          await completePoomsae(stageNum, token); // Poomsae 완료 요청
+          dispatch(unlockNextStage(parseInt(stageNum) + 1));
+        } catch (error) {
+          console.error("Failed to complete poomsae:", error);
+        }
       }, 1000);
     }
   };
@@ -95,11 +99,13 @@ const PoomsaeEduAllPage = ({ language }) => {
           </div>
           <div className='userCam'></div>
           <div className='progress'>
+            {/* 1. 진행률 */}
             <ProgressBar
               value={accuracy}
               title={language === 'ko' ? '진행률' : 'Progress'}
               text={accuracy.toString()}
             />
+            {/* 2. 정확도 */}
             <ProgressBar
               value={progress}
               title={language === 'ko' ? '정확도' : 'Accuracy'}
@@ -108,8 +114,9 @@ const PoomsaeEduAllPage = ({ language }) => {
               trailColor="#FFD7D9"
               textColor="black"
             />
+
           </div>
-          <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button>
+          <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button> {/* 임시 버튼 */}
         </div>
 
         <div className='mvDescription'>
@@ -131,7 +138,7 @@ const PoomsaeEduAllPage = ({ language }) => {
       {showSuccessPopup && (
         <PopUp
           className="eduPopUp"
-          title={language === 'ko' ? `${stageDetails?.psKoName.split(':')[0]}을 성공했습니다!` : `You have successfully completed ${stageDetails?.psEnName.split(':')[0]}!`}
+          title={language === 'ko' ? `${stageDetails?.psKoName}을 성공했습니다!` : `You have successfully completed ${stageDetails?.psEnName}!`}
           btnText1={language === 'ko' ? "확인" : "Confirm"}
           btnHref1="#"
           btnText2={language === 'ko' ? "다시하기" : "Retry"}

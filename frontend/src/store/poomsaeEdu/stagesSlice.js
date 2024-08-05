@@ -1,44 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchStages as fetchStagesApi, completePoomsae as completePoomsaeApi } from '../../apis/stageApi';
-
-// Helper functions to handle localStorage
-const loadState = (token) => {
-  try {
-    const serializedState = localStorage.getItem(`poomsaeState_${token}`);
-    return serializedState ? JSON.parse(serializedState) : { completedStages: [], activeStage: 1 };
-  } catch (err) {
-    console.error('Could not load state', err);
-    return { completedStages: [], activeStage: 1 };
-  }
-};
-
-const saveState = (token, state) => {
-  try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem(`poomsaeState_${token}`, serializedState);
-  } catch (err) {
-    console.error('Could not save state', err);
-  }
-};
-
-const initialState = {
-  stages: [],
-  activeStage: 1,
-  completedStages: [],
-  loading: false,
-  error: null,
-};
+import { fetchStages as fetchStagesApi } from '../../apis/stageApi';
 
 export const fetchStages = createAsyncThunk(
   'stages/fetchStages',
-  async (_, { rejectWithValue }) => {
+  async ({ token }, { rejectWithValue }) => {
     try {
-      console.log('Fetching stages in Thunk...'); // 로그 추가
-      const response = await fetchStagesApi();
-      console.log('Fetch stages thunk response111:', response.data); // 데이터 확인
-      return response.data;
+      const response = await fetchStagesApi(token);
+      console.log('API response:', response); // 데이터 구조 확인
+      return response.data; // data 필드만 반환
     } catch (error) {
-      console.error('Error in fetchStages thunk:', error); // 에러 로그 추가
       return rejectWithValue(error.message);
     }
   }
@@ -46,14 +16,11 @@ export const fetchStages = createAsyncThunk(
 
 export const completePoomsae = createAsyncThunk(
   'stages/completePoomsae',
-  async ({ poomsaeId, token }, { rejectWithValue }) => {
+  async ({ psId, token }, { rejectWithValue }) => {
     try {
-      console.log('Completing poomsae in Thunk...', poomsaeId, token); // 로그 추가
-      const response = await completePoomsaeApi(poomsaeId, token);
-      console.log('Complete poomsae thunk response:', response); // 데이터 확인
-      return { poomsaeId, token, ...response };
+      const response = await completePoomsaeApi(psId, token);
+      return response.data;
     } catch (error) {
-      console.error('Error in completePoomsae thunk:', error); // 에러 로그 추가
       return rejectWithValue(error.message);
     }
   }
@@ -61,55 +28,52 @@ export const completePoomsae = createAsyncThunk(
 
 const stagesSlice = createSlice({
   name: 'stages',
-  initialState,
+  initialState: {
+    stages: [],
+    activeStage: 1, // 처음엔 첫 번째 스테이지만 열려있음
+    loading: false,
+    error: null,
+  },
   reducers: {
     unlockNextStage: (state, action) => {
-      state.activeStage = Math.max(state.activeStage, action.payload);
+      state.activeStage = action.payload;
     },
-    loadUserState: (state, action) => {
-      const userState = loadState(action.payload);
-      return { ...state, ...userState };
-    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchStages.pending, (state) => {
         state.loading = true;
         state.error = null;
-        console.log('Fetch stages pending'); // 상태 확인
       })
       .addCase(fetchStages.fulfilled, (state, action) => {
         state.loading = false;
-        state.stages = action.payload;
-        console.log('Stages fetched and updated:', action.payload); // 데이터 확인
+        console.log('Stages payload:', action.payload); // 데이터 구조 확인
+
+        if (Array.isArray(action.payload)) {
+          state.stages = action.payload; // 배열로 설정
+          const unlockedStage = action.payload.findIndex(stage => !stage.userPsEduDone);
+          state.activeStage = unlockedStage === -1 ? action.payload.length : unlockedStage + 1;
+          
+        } else if (action.payload && Array.isArray(action.payload.data)) {
+          state.stages = action.payload.data; // data 필드의 배열로 설정
+          // 사용자의 현재 진행 상태를 설정
+          const unlockedStage = action.payload.data.findIndex(stage => !stage.userPsEduDone);
+          state.activeStage = unlockedStage === -1 ? action.payload.data.length : unlockedStage + 1;
+
+        } else {
+          console.error('Received non-array data:', action.payload);
+          state.stages = []; // 잘못된 데이터가 들어오면 빈 배열로 설정
+        }
       })
       .addCase(fetchStages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        console.error('Fetch stages rejected:', action.payload); // 에러 확인
-      })
-      .addCase(completePoomsae.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        console.log('Complete poomsae pending'); // 상태 확인
-      })
-      .addCase(completePoomsae.fulfilled, (state, action) => {
-        state.loading = false;
-        const { poomsaeId, token } = action.payload;
-        if (!state.completedStages.includes(poomsaeId)) {
-          state.completedStages.push(poomsaeId);
-        }
-        state.activeStage = Math.max(state.activeStage, poomsaeId + 1);
-        saveState(token, state);
-        console.log('Poomsae completed and state updated:', state); // 상태 업데이트 확인
-      })
-      .addCase(completePoomsae.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        console.error('Complete poomsae rejected:', action.payload); // 에러 확인
       });
+      // .addCase(completePoomsae.fulfilled, (state, action) => {
+      //   state.activeStage += 1; // 완료 시 다음 스테이지 잠금 해제
+      // });
   },
 });
 
-export const { unlockNextStage, loadUserState } = stagesSlice.actions;
+export const { unlockNextStage } = stagesSlice.actions;
 export default stagesSlice.reducer;
