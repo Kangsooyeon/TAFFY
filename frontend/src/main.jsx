@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import App from './App';
 import store from './store/index.js';
 import './styles/fonts/font.css';
+import store from './store/index';
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

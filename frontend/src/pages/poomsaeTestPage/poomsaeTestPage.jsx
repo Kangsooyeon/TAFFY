@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
 import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
-import PoomsaeImage from '/src/assets/images/poomsaeTestPage/ps1.png';
 import GreenBelt from '/src/assets/images/common/belt/greenBelt.png';
 import YellowBelt from '/src/assets/images/common/belt/yellowBelt.png';
 import PurpleBelt from '/src/assets/images/common/belt/purpleBelt.png';
@@ -12,107 +13,59 @@ import OrangeBelt from '/src/assets/images/common/belt/orangeBelt.png';
 import RedBelt from '/src/assets/images/common/belt/redBelt.png';
 import BlackBelt from '/src/assets/images/common/belt/blackBelt.png';
 
-
-
-const poomsaeDetails = [
-    {
-        id: 1,
-        name: "태극 1장",
-        description: "태극 1장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 2,
-        name: "태극 2장",
-        description: "태극 2장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 3,
-        name: "태극 3장",
-        description: "태극 1장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 4,
-        name: "태극 4장",
-        description: "태극 4장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 5,
-        name: "태극 5장",
-        description: "태극 5장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 6,
-        name: "태극 6장",
-        description: "태극 6장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 7,
-        name: "태극 7장",
-        description: "태극 7장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    {
-        id: 8,
-        name: "태극 8장",
-        description: "태극 8장은 팔괘 중에서 하늘을 상징하는 건(建)에 해당한다...",
-        imageUrl: {PoomsaeImage},
-    },
-    
+const belt_images = [
+    GreenBelt,
+    YellowBelt,
+    PurpleBelt,
+    BlueBelt,
+    BrownBelt,
+    OrangeBelt,
+    RedBelt,
+    BlackBelt,
 ];
 
-
-
 const PoomsaeTestPage = () => {
+    const dispatch = useDispatch();
+    const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
     const [selectedPoomsae, setSelectedPoomsae] = useState(null);
-    //임시 data
-    const [completedStages] = useState([true, false, false, false, false, false, false, false]); 
+    const [loading, setLoading] = useState(true);
 
-    const belt_images = [
-        GreenBelt,
-        YellowBelt,
-        PurpleBelt,
-        BlueBelt,
-        BrownBelt,
-        OrangeBelt,
-        RedBelt,
-        BlackBelt,
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            await dispatch(fetchPoomsaeTest());
+            setLoading(false);
+        };
+        fetchData();
+    }, [dispatch]);
+
+    const completedStages = poomsaeTest.map(item => item.passed);
 
     const handleItemClick = (index) => {
-        setSelectedPoomsae(poomsaeDetails[index]);
-
+        setSelectedPoomsae(poomsaeTest[index]);
     };
-    
+
     const handleCloseModal = () => {
         setSelectedPoomsae(null);
     };
-    
 
     return (
         <div className="poomsae-test-page">
             <div className="belt-box">
-            {belt_images.map((url, index) => (
-                <PoomsaeBeltItem 
-                key={index} 
-                imageUrl={url} 
-                onClick={() => handleItemClick(index)}
-                completed={completedStages[index]}
-                />
-            ))}
+                {belt_images.map((url, index) => (
+                    <PoomsaeBeltItem 
+                        key={index} 
+                        imageUrl={url} 
+                        onClick={() => handleItemClick(index)}
+                        completed={completedStages[index] || false}
+                    />
+                ))}
             </div>
             {selectedPoomsae && (
                 <PoomsaeTestModal 
-                poomsae={selectedPoomsae}
-                onClose={handleCloseModal} 
+                    poomsae={selectedPoomsae}
+                    onClose={handleCloseModal} 
                 />
             )}
-
         </div>
     );
 };

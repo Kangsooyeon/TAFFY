@@ -16,7 +16,6 @@ const UserUpdatePage = ({closeUpdate}) => {
   };
 
   const handleSubmit = () => {
-    // Handle submit action
     alert(`Submitted: ${inputValue}`);
   };
 
