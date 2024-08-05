@@ -9,7 +9,7 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [nickname, setNickname] = useState('');
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState('Korea');
 
     const navigate = useNavigate();
 
@@ -122,8 +122,16 @@ const Signup = () => {
                             onChange={(e) => setCountry(e.target.value)} 
                             required
                         >
-                            <option value="South Korea">South Korea</option>
+                            <option value="Korea">Korea</option>
                             <option value="USA">USA</option>
+                            <option value="China">China</option>
+                            <option value="India">India</option>
+                            <option value="Kanada">Kanada</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Indonesia">Indonesia</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="Morocco">Morocco</option>
+                            <option value="Malaysia">Malaysia</option>
                         </select>
                     </div>
                     <div>
