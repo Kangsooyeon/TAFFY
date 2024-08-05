@@ -81,10 +81,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game" element={<SparingDetailPage/>}/>
-        <Route path="/sp/game/result" element={<SparingResultPage/>}/>
+        <Route path="/sp/game" element={<SparingDetailPage />} />
+        <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage/>} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
         <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
@@ -105,7 +105,6 @@ function App() {
         />
       )}
     </div>
-
   );
 }
 

@@ -9,7 +9,21 @@ const YouTube = ({ videoUrl }) => {
     setIsVideoPlaying(true);
   };
 
-  const videoId = videoUrl.split('v=')[1];
+  let videoId = '';
+  if (videoUrl) {
+    try {
+      const url = new URL(videoUrl);
+      if (url.hostname === 'youtu.be') {
+        // Shortened YouTube URL (e.g., https://youtu.be/VIDEO_ID)
+        videoId = url.pathname.slice(1);
+      } else {
+        // Standard YouTube URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID)
+        videoId = url.searchParams.get('v');
+      }
+    } catch (error) {
+      console.error('Invalid video URL', error);
+    }
+  }
 
   return (
     <div className="videoThumbnail" onClick={handleVideoPlay}>
@@ -19,6 +33,7 @@ const YouTube = ({ videoUrl }) => {
             src={`https://img.youtube.com/vi/${videoId}/0.jpg`}
             alt="Play video"
             className="thumbnailImage"
+            onError={(e) => { e.target.src = 'fallback-image-url.jpg'; }} // You can use a fallback image
           />
           <div className="playButton">
             <img src={play} alt="youtubeIcon" />

@@ -12,8 +12,8 @@ const ProgressBar = ({ value, text, title, pathColor, trailColor, textColor }) =
           text={text}
           styles={buildStyles({
             textColor: textColor || "black",
-            pathColor: pathColor || "blue",
-            trailColor: trailColor || "#d6d6d6",
+            pathColor: pathColor || "#0043CE",
+            trailColor: trailColor || "#D0E2FF",
             backgroundColor: "transparent",
             pathTransitionDuration: 0.5,
             pathTransition: 'stroke-dashoffset 0.5s ease 0s',
