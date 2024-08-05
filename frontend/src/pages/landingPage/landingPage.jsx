@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 import '../../styles/landingPage/landingPage.css';
-import { setActiveItem } from '../../actions/actions';
+import { setActiveItem } from '../../store/landing/landingSlice';
 import Image1 from '../../assets/images/landingPage/poomsaePage.png';
 import Image2 from '../../assets/images/landingPage/gyeorugiPage.png';
 
@@ -27,7 +27,7 @@ const transitionStyles = {
 };
 
 const LandingPage = () => {
-  const activeItem = useSelector((state) => state.activeItem);
+  const activeItem = useSelector((state) => state.landing.activeItem); // slice의 이름에 맞게 변경
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const nodeRef = useRef(null);
