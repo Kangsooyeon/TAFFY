@@ -58,13 +58,14 @@ public class FightService {
             throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
-        log.info(session.getSessionId());
+        log.info("openvidu session : "+session.getSessionId());
         return session.getSessionId();
     }
 
     // Map<String, String > params : sessionId, userName
     public String joinSession(Map<String,Object> params) throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(params.get("sessionId").toString());
+        System.out.println("joinSession : " + params.get("sessionId"));
         if (session == null) {
             new TaffyException(ErrorCode.CANNOT_JOIN_ROOM);
         }
@@ -83,10 +84,11 @@ public class FightService {
         RedisHashUser redisHashUser = createRedisHashUser(memberId);
         //sessionId 생성
         String sessionId = generateSessionId();
-        map.put("sessionId", sessionId);
-        map.put("memberId", memberId);
         //openvidu 방 생성
-        initializeSession(map);
+       String sessionId2=  initializeSession(map);
+
+        map.put("sessionId", sessionId2);
+        map.put("memberId", memberId);
         //redis에 저장
         redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         //openvidu 미디어서버로 connection
@@ -110,6 +112,7 @@ public class FightService {
         // 빠른참여
         //일단 redis에 빈 방 있는지부터 찾아
         String sessionId = findAvailableRoom();
+        System.out.println("quickStart method  sessoinId  : " + sessionId);
         if(sessionId.equals("notfound")){ //참여가능한 게임방을 찾지 못한 경우
             // 자신이 새로 게임방을 만든 후, 다른 사람이 들어올 때 까지 대기하게 됨
             return createRoom(memberId);
