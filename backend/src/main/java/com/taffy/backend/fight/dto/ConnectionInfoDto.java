@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ConnectionInfoDto {
     String sessionId;
     String connectionToken;
+    String status;
 }

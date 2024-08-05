@@ -93,7 +93,7 @@ public class FightService {
         redisTemplate.opsForList().rightPush(sessionId2, redisHashUser);
         //openvidu 미디어서버로 connection
         String connectionToken = joinSession(map);
-        return  new ConnectionInfoDto(sessionId2, connectionToken);
+        return  new ConnectionInfoDto(sessionId2, connectionToken, "waiting");
     }
 
     @Transactional(readOnly = true)
@@ -104,7 +104,7 @@ public class FightService {
         map.put("sessionId", sessionId);
         map.put("memberId", memberId);
         String connectionToken = joinSession(map);
-        return new ConnectionInfoDto(sessionId, connectionToken);
+        return new ConnectionInfoDto(sessionId, connectionToken, "start");
     }
 
     @Transactional(readOnly = true)
