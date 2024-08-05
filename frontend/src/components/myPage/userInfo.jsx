@@ -49,7 +49,7 @@ const UseInfo = () => {
         return BlueBelt;
       case 'BrownBelt':
         return BrownBelt;
-      case 'GreenBel':
+      case 'GreenBelt':
         return GreenBelt;
       case 'OrangeBelt':
         return OrangeBelt;
@@ -88,7 +88,9 @@ const UseInfo = () => {
       <div className="characterinfomation">
         <p className="mypagenickname">{profile?.nickname}</p>
         <p className="mypagettiname">{profile?.beltName}</p>
-        <img src={getBeltSrc(profile?.beltName.split('/')[1].replace(/\s/g, ''))} alt="" />
+        {profile?.beltName && (
+          <img src={getBeltSrc(profile.beltName.split('/')[1].replace(/\s/g, ''))} alt="Belt" />
+        )}
       </div>
       <div className="poomsaeeducation">
         {profile?.poomSaeCompletedList ? (

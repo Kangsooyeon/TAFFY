@@ -5,11 +5,12 @@ import Dragon from '../../assets/images/myPage/용 머리.png';
 import Tiger from '../../assets/images/myPage/호랑이 머리.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserUpdateProfileAsync } from '../../store/myPage/myPageUser.js';
+import { fetchUserUpdateProfileAsync, fetchUserProfileAsync, fetchNicknameProfileAsync } from '../../store/myPage/myPageUser.js';
+import axios from 'axios';
 
 const UserUpdatePage = ({ closeUpdate }) => {
   const dispatch = useDispatch();
-  const { profile, status, error } = useSelector((state) => state.user);
+  const { profile, status, error, nicknameStatus, nicknameValid } = useSelector((state) => state.user);
 
   const [profileData, setProfileData] = useState({
     nickName: '',
@@ -18,27 +19,52 @@ const UserUpdatePage = ({ closeUpdate }) => {
   });
 
   const [selectedCharacter, setSelectedCharacter] = useState('');
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
   useEffect(() => {
     if (profile) {
       setProfileData({
         nickName: profile.nickname || '',
-        profileImg: profile.imageUrl || '',
+        profileImg: profile.profileImg || '',
         countryName: profile.country || '',
       });
-      setSelectedCharacter(profile.imageUrl || 'Tiger');
+      setSelectedCharacter(profile.profileImg || 'Tiger');
     }
   }, [profile]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isNicknameChecked) {
+      alert('닉네임 중복확인을 해주세요.');
+      return;
+    }
     try {
       await dispatch(fetchUserUpdateProfileAsync(profileData)).unwrap();
+      await dispatch(fetchUserProfileAsync());
       closeUpdate();
     } catch (err) {
       console.error('Failed to save the profile: ', err);
     }
   };
+
+  const handleNickname = async () => {
+    try {
+      const response = await axios.post('https://i11e104.p.ssafy.io/api/nickname', { nickName: profileData.nickName });
+      if (response.status === 200) {
+        alert('사용 가능한 닉네임입니다');
+        setIsNicknameChecked(true); // 중복확인 완료로 설정
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        alert('이미 존재하는 닉네임입니다');
+      } else {
+        console.error('Error checking nickname:', error);
+        alert('닉네임 확인 중 오류가 발생했습니다.');
+      }
+      setIsNicknameChecked(false); // 중복확인 실패로 설정
+    }
+  };
+
 
   const handleCountryChange = (e) => {
     setProfileData({ ...profileData, countryName: e.target.value });
@@ -57,6 +83,8 @@ const UserUpdatePage = ({ closeUpdate }) => {
     setProfileData({ ...profileData, profileImg: e.target.value });
   };
 
+  console.log(profileData);
+
   return (
     <div className="updatepage">
       <button className="updateclosebutton" onClick={closeUpdate}>X</button>
@@ -74,7 +102,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
               <button className="clear-btn" onClick={clearInput}>&times;</button>
             )}
           </div>
-          <button type="button" className="submit-btn" onClick={handleSubmit}>중복확인</button>
+          <button type="button" className="submit-btn" onClick={handleNickname}>중복확인</button>
         </div>
         <div className="character-label">캐릭터 선택</div>
         <div className="character-selection-container">
