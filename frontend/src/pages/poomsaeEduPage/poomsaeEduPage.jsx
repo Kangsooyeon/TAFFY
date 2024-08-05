@@ -3,21 +3,39 @@ import '../../styles/poomsaeEduPage/poomsaeEdu.css';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from "react";
-import { fetchStages } from "../../store/poomsaeEdu/stagesSlice";
+import { unlockNextStage, fetchStages } from "../../store/poomsaeEdu/stagesSlice";
 
 const PoomsaeEduPage = ({ language }) => {
   const dispatch = useDispatch();
   const { stages, loading, error } = useSelector((state) => state.stages);
   const activeStage = useSelector((state) => state.stages.activeStage); // 수정
+  const token = localStorage.getItem('accessToken');
+
+  // useEffect(() => {
+  //   dispatch(fetchStages());
+  // }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchStages());
+    if (token) {
+      dispatch(fetchStages({ token })); // 토큰을 포함하여 스테이지 데이터 가져오기
+    }
+  }, [dispatch, token]);
+
+  // useEffect(() => {
+  //   console.log('Stages:', stages); // 데이터 로깅
+  // }, [stages]);
+
+  useEffect(() => {
+    const savedActiveStage = localStorage.getItem('activeStage');
+    if (savedActiveStage) {
+      dispatch(unlockNextStage(parseInt(savedActiveStage, 10)));
+    }
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('Stages:', stages); // 데이터 로깅
-  }, [stages]);
-
+    localStorage.setItem('activeStage', activeStage);
+  }, [activeStage]);
+  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!stages || stages.length === 0) return <div>No stages available</div>;

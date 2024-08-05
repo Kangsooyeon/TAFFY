@@ -8,14 +8,26 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken'); // 토큰을 로컬 스토리지에서 가져온다고 가정
-    // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJtZW1iZXJJZFwiOjh9IiwiaWF0IjoxNzIyODE5MTUzLCJleHAiOjE3MjI4MjAxNTN9.DbDBGlfuxXphqO1UVGCHCY6b3jQW5Ej8_qbqhX3uSHc';
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log('Axios request config:', config); // 요청 설정 확인
     return config;
   },
   (error) => {
+    console.error('Axios request error:', error); // 요청 에러 로그
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    console.log('Axios response:', response); // 응답 확인
+    return response;
+  },
+  (error) => {
+    console.error('API call error:', error.response); // 응답 에러 로그
     return Promise.reject(error);
   }
 );

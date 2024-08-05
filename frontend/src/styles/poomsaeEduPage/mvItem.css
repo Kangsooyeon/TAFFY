@@ -5,36 +5,51 @@
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
   padding: 2%;
-  /* margin: 5% 10%; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease; /* 크기 변경 시 부드럽게 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.mvName {
-  font-size: 13px;
-  margin-top: 10%;
+.mvItemNumberContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 50px solid #383838;
+  border-bottom: 50px solid transparent;
+}
+
+.mvItemNumber {
+  position: absolute;
+  top: 2.5px;
+  margin-left: -42px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
 }
 
 .mvItem:hover {
-  transform: scale(1.05); /* 크기 5% 증가 */
+  transform: scale(1.05);
   cursor: pointer;
+  box-shadow: 8px 8px 15px 0px rgba(0, 0, 0, 0.5);
 }
 
-div.mvItem img {
-  width: auto; /* 가로/세로 비율 유지 */
-  height: 68%; 
-  object-fit: contain; /* 이미지 비율 유지 */
+.mvItem:hover .mvItemImage {
+  opacity: 0.7;
+  transform: scale(1.1);
+}
+
+.mvItemImage {
+  width: auto;
+  height: 70%;
+  object-fit: contain;
   background-repeat: no-repeat;
   border: none;
-  outline: none;  
-  }
-
-.mvItem h2 {
-  font-family: Noto-Sans, sans-serif;
-  text-align: center;
-  font-style: normal;
-  font-weight: 400;  
+  outline: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }

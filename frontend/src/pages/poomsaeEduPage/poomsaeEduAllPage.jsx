@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
 import ProgressBar from '../../components/common/progressBar';
 import AudioImage from '../../assets/images/common/audio.png';
-import { fetchAllStageDetails } from '../../apis/stageApi';
+import { completePoomsae, fetchAllStageDetails } from '../../apis/stageApi';
 import { useDispatch } from 'react-redux';
 import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
@@ -23,6 +23,8 @@ const PoomsaeEduAllPage = ({ language }) => {
   const { stageNum } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const token = useSelector((state) => state.auth.token); // 사용자 토큰 가져오기
+  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -56,10 +58,15 @@ const PoomsaeEduAllPage = ({ language }) => {
     } else {
       setProgress(100);
       setAccuracy(100);
-      setTimeout(() => {
+      setTimeout(async () => {
         setShowSuccessPopup(true);
-        dispatch(unlockNextStage(parseInt(stageNum) + 1)); // 다음 스테이지 잠금 해제
-      }, 1000); // 게이지가 100%가 된 후 1초 후에 팝업 나타내기
+        try {
+          await completePoomsae(stageNum, token); // Poomsae 완료 요청
+          dispatch(unlockNextStage(parseInt(stageNum) + 1));
+        } catch (error) {
+          console.error("Failed to complete poomsae:", error);
+        }
+      }, 1000);
     }
   };
 
@@ -92,20 +99,20 @@ const PoomsaeEduAllPage = ({ language }) => {
           </div>
           <div className='userCam'></div>
           <div className='progress'>
-            {/* 1. 진행률 */}
+            {/* 1. 정확도 */}
             <ProgressBar
               value={accuracy}
-              title={language === 'ko' ? '진행률' : 'Progress'}
+              title={language === 'ko' ? '정확도' : 'Accuracy'}              
               text={accuracy.toString()}
-            />
-            {/* 2. 정확도 */}
-            <ProgressBar
-              value={progress}
-              title={language === 'ko' ? '정확도' : 'Accuracy'}
-              text={`${currentMoveIndex + 1} / ${moves.length}`}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"
+            />
+            {/* 2. 진행률 */}
+            <ProgressBar
+              value={progress}
+              title={language === 'ko' ? '진행률' : 'Progress'}
+              text={`${currentMoveIndex + 1} / ${moves.length}`}
             />
 
           </div>
@@ -114,7 +121,9 @@ const PoomsaeEduAllPage = ({ language }) => {
 
         <div className='mvDescription'>
           <img src={AudioImage} alt="audio" />
-          <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
+          <div className='mvPs'>
+            <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
+          </div>
           <PsDescription
             className="mvPsDes"
             description={description}
@@ -131,7 +140,7 @@ const PoomsaeEduAllPage = ({ language }) => {
       {showSuccessPopup && (
         <PopUp
           className="eduPopUp"
-          title={language === 'ko' ? `${stageDetails?.psKoName}을 성공했습니다!` : `You have successfully completed ${stageDetails?.psEnName}!`}
+          title={language === 'ko' ? `${stageDetails?.psKoName.split(':')[0]}을 성공했습니다!` : `You have successfully completed ${stageDetails?.psEnName.split(':')[0]}!`}
           btnText1={language === 'ko' ? "확인" : "Confirm"}
           btnHref1="#"
           btnText2={language === 'ko' ? "다시하기" : "Retry"}
