@@ -1,4 +1,4 @@
-.box{
+.box {
 }
 
 .overlap-group {
@@ -8,7 +8,7 @@
   position: relative;
   top: 50px;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 .vector {
@@ -20,7 +20,6 @@
   height: 150px;
   z-index: 1;
 }
-
 
 .userInfoBox {
   display: flex;
@@ -34,14 +33,25 @@
   position: relative;
   transform: rotate(-10deg);
 }
-  
+
 .nickname {
   -webkit-text-stroke: 1.5px #ffffff;
   color: #000000;
   font-family: "Lee", Helvetica;
-  font-size: 70px;
+  font-size: 60px;
   font-weight: 400;
   text-align: center;
+  width: 60%; /* 너비를 100%로 설정 */
+  word-break: break-word; /* 단어가 박스를 넘을 경우 줄 바꿈 */
+  overflow-wrap: break-word; /* 줄 바꿈을 위해 단어를 나눔 */
+  display: flex; /* Flexbox를 사용하여 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* 중앙 정렬을 위해 높이 설정 */
+}
+
+.nickname.auto-scale {
+  font-size: calc(10px + 1.5vw); /* 글씨 크기를 화면 너비에 따라 조절 */
 }
 
 .beltInfo {
@@ -51,14 +61,51 @@
 }
 
 .beltname {
-  color: #ff0000;
+  color: #000000;
   font-family: "Lee", Helvetica;
-  font-size: 50px;
+  font-size: 40px;
   font-weight: 400;
   text-align: center;
+  margin-right: 10px;
 }
 
 .belt {
   height: 35px;
   object-fit: cover;
+}
+
+.black-stroke {
+  -webkit-text-stroke: 1px #000000;
+}
+
+.blue-stroke {
+  -webkit-text-stroke: 1px #0000ff;
+}
+
+.brown-stroke {
+  -webkit-text-stroke: 1px #8b4513;
+}
+
+.green-stroke {
+  -webkit-text-stroke: 1px #008000;
+}
+
+.orange-stroke {
+  -webkit-text-stroke: 1px #ffa500;
+}
+
+.purple-stroke {
+  -webkit-text-stroke: 1px #800080;
+}
+
+.red-stroke {
+  -webkit-text-stroke: 1px #ff0000;
+}
+
+.white-stroke {
+  -webkit-text-stroke: 1px #ffffff;
+}
+
+.yellow-stroke {
+  -webkit-text-stroke: 1px #ffff00;
 }

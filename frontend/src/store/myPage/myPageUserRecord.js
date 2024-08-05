@@ -1,18 +1,18 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import {fetchUserRecord} from '../../apis/record/userRecord.js'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchUserRecord } from '../../apis/record/userRecord.js';
 
 export const fetchUserRecordAsync = createAsyncThunk(
-  'user/fetchUserRecord',
+  'userRecord/fetchUserRecord',
   async () => {
     const data = await fetchUserRecord();
     return data;
   }
-)
+);
 
 const userRecordSlice = createSlice({
-  name: 'user',
+  name: 'userRecord',
   initialState: {
-    profile: null,
+    record: null,
     status: 'idle',
     error: null,
   },
@@ -24,13 +24,13 @@ const userRecordSlice = createSlice({
       })
       .addCase(fetchUserRecordAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.profile = action.payload;
+        state.record = action.payload;
       })
       .addCase(fetchUserRecordAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
   },
-})
+});
 
-export default userRecordSlice.reducer
+export default userRecordSlice.reducer;

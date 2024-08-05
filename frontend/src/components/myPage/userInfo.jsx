@@ -79,6 +79,7 @@ const UseInfo = () => {
   ((record?.win || 0) / ((record?.win || 0) + (record?.lose || 0) + (record?.draw || 0))) * 100;
 
   console.log(profile)
+  console.log(record)
 
   return (
     <div className="userinfobox">
