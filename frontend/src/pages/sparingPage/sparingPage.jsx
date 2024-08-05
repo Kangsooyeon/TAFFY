@@ -40,7 +40,7 @@ const sparingPage = () => {
     return <div>Error loading data</div>;
   }
 
-  console.log(record)
+  // console.log(record)
 
   return (
     <div className="sparingtoppage">
