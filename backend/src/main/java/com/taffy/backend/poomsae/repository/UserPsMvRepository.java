@@ -31,8 +31,8 @@ public interface UserPsMvRepository extends JpaRepository<UserPsMv, Long> {
             "FROM PsMv pm " +
             "JOIN pm.mv m " +
             "LEFT JOIN UserPsMv upm ON upm.psMv.psMvId = pm.psMvId AND upm.member.id = :userId " +
-            "WHERE pm.psMvId = :psId")
-    MvDetailDto findMvDetail(@Param("userId") Long userId, @Param("psId") Integer psId);
+            "WHERE pm.ps.psId = :psId AND pm.psMvSeq = :mvSeq")
+    MvDetailDto findMvDetail(@Param("userId") Long userId, @Param("psId") Integer psId, Integer mvSeq);
 
     @Query("SELECT upm FROM UserPsMv upm WHERE upm.member.id = :userId AND upm.psMv.psMvId = :psMvId")
     Optional<UserPsMv> findByUserIdAndPsMvId(@Param("userId") Long userId, @Param("psMvId") Integer psMvId);

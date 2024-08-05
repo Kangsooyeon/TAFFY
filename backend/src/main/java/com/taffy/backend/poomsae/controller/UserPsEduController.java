@@ -53,9 +53,9 @@ public class UserPsEduController {
     }
 
     // 품새 개별동작 조회
-    @GetMapping("/mv/{psMvId}")
-    public ResponseEntity<ResponseDto> mvEduDetail(@AuthenticationPrincipal Long userId, @PathVariable Integer psMvId) {
-        MvDetailDto mvDetailDto = psMvService.getUsPsMvDetailByPsMvId(userId, psMvId);
+    @GetMapping("/mv/{psId}/{mvSeq}")
+    public ResponseEntity<ResponseDto> mvEduDetail(@AuthenticationPrincipal Long userId, @PathVariable Integer psId, @PathVariable Integer mvSeq) {
+        MvDetailDto mvDetailDto = psMvService.getUsPsMvDetailByPsMvId(userId, psId, mvSeq);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), mvDetailDto));
     }
 

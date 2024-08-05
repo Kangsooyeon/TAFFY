@@ -57,8 +57,8 @@ public class PsMvService {
         return new PsWholeDto(psDto ,mvDetails.size(), mvDetails);
     }
 
-    public MvDetailDto getUsPsMvDetailByPsMvId(Long userId, Integer psMvId) {
-        return userPsMvRepository.findMvDetail(userId, psMvId);
+    public MvDetailDto getUsPsMvDetailByPsMvId(Long userId, Integer psId, Integer mvSeq) {
+        return userPsMvRepository.findMvDetail(userId, psId, mvSeq);
     }
 
     @Transactional
