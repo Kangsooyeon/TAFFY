@@ -97,7 +97,7 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
       <form onSubmit={handleSubmit} className="updateformbox">
         <div className="input-container">
           <div className="input-wrapper">
-            <label className="input-label">{language === 'en' ? 'nickname' : '닉네임'}</label>
+            <label className="input-label">{language === 'en' ? 'Nickname' : '닉네임'}</label>
             <input
               type="text"
               value={profileData.nickName}
@@ -108,9 +108,9 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
               <button className="clear-btn" onClick={clearInput}>&times;</button>
             )}
           </div>
-          <button type="button" className="submit-btn" onClick={handleNickname}>중복확인</button>
+          <button type="button" className="submit-btn" onClick={handleNickname}>{language === 'en' ? 'Double check' : '중복확인'}</button>
         </div>
-        <div className="character-label">캐릭터 선택</div>
+        <div className="character-label">{language === 'en' ? 'Character' : '캐릭터 선택'}</div>
         <div className="character-selection-container">
           <div className="character-options">
             {[
@@ -133,27 +133,27 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
           </div>
         </div>
         <div className="nationcontainer">
-          <label className="nationlabel">국가 선택</label>
+          <label className="nationlabel">{language === 'en' ? 'Country' : '국가 선택'}</label>
           <select
             className="nationselect"
             name="country"
             value={profileData.countryName}
             onChange={handleCountryChange}
           >
-            <option value="USA">미국</option>
-            <option value="Korea">한국</option>
-            <option value="China">중국</option>
-            <option value="India">인도</option>
-            <option value="Canada">캐나다</option>
-            <option value="Australia">호주</option>
-            <option value="Indonesia">인도네시아</option>
-            <option value="Vietnam">베트남</option>
-            <option value="Morocco">모로코</option>
-            <option value="Malaysia">말레이시아</option>
+            <option value="USA">{language === 'en' ? 'Withdrawal' : '미국'}</option>
+            <option value="Korea">{language === 'en' ? 'Withdrawal' : '한국'}</option>
+            <option value="China">{language === 'en' ? 'Withdrawal' : '중국'}</option>
+            <option value="India">{language === 'en' ? 'Withdrawal' : '인도'}</option>
+            <option value="Canada">{language === 'en' ? 'Withdrawal' : '캐나다'}</option>
+            <option value="Australia">{language === 'en' ? 'Withdrawal' : '호주'}</option>
+            <option value="Indonesia">인도네시아{language === 'en' ? 'Withdrawal' : ''}</option>
+            <option value="Vietnam">베트남{language === 'en' ? 'Withdrawal' : ''}</option>
+            <option value="Morocco">모로코{language === 'en' ? 'Withdrawal' : ''}</option>
+            <option value="Malaysia">말레이시아{language === 'en' ? 'Withdrawal' : ''}</option>
           </select>
         </div>
-        <button type="button" className="userdeletebutton" onClick={handleUserDelete}>회원 탈퇴</button>
-        <button type="submit" className="updatesavebutton">저장</button>
+        <button type="button" className="userdeletebutton" onClick={handleUserDelete}>{language === 'en' ? 'Withdrawal' : '회원 탈퇴'}</button>
+        <button type="submit" className="updatesavebutton">{language === 'en' ? 'Save' : '저장'}</button>
       </form>
       {status === 'failed' && <p className="error-message">Error: {error}</p>}
     </div>
