@@ -167,13 +167,18 @@ public class MemberService {
     @Transactional
     public void beltPromotion(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
-        long beltLevel = member.getBelt().getId() + 1;
+        int currentBeltLevel = member.getBelt().getBeltLevel();
+        int newBeltLevel = currentBeltLevel + 1;
 
-        if (beltLevel > 11){
+        if (newBeltLevel > 11){
             throw new TaffyException(ErrorCode.CANNOT_BELT_UPGRADE);
         }
-        Belt belt = beltRepository.findById(beltLevel).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
-        member.beltPromotion(belt);
+
+        Belt newBelt = beltRepository.findByBeltLevel(newBeltLevel)
+                .orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
+
+        member.setBelt(newBelt);
+        memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
@@ -188,7 +193,7 @@ public class MemberService {
 
         MyPageDto myPageDto = MyPageDto.builder()
                 .nickname(userRecord.getMember().getNickname())
-                .beltName(userRecord.getMember().getBelt().getBelt_name())
+                .beltName(userRecord.getMember().getBelt().getBeltName())
                 .poomSaeCompletedList(poomSaeCompletedDto)
                 .winScore(winPercentage)
                 .profileImg((userRecord.getMember().getProfile_img()))
@@ -225,7 +230,7 @@ public class MemberService {
         Record userRecord = memberRepository.findUserAndRecord(member);
         UserInfoDto userInfoDto = UserInfoDto.builder()
                 .nickname(member.getNickname())
-                .belt(member.getBelt().getBelt_name())
+                .belt(member.getBelt().getBeltName())
                 .totalMatches(userRecord.getWin()+userRecord.getLose()+userRecord.getDraw())
                 .win(userRecord.getWin())
                 .lose(userRecord.getLose())
@@ -234,4 +239,19 @@ public class MemberService {
                 .build();
         return userInfoDto;
     }
+
+    @Transactional
+    public String passPsTest(Long memberId, Integer psId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
+        UserPsTest userPsTest = userPsTestRepository.findByMember_IdAndPs_PsId(memberId, psId).orElseThrow(() -> new TaffyException(ErrorCode.USER_PS_TEST_NOT_FOUND));
+
+        if (!userPsTest.isPassed()) {
+            userPsTest.setPassed(true);
+            beltPromotion(memberId);
+
+            userPsTestRepository.save(userPsTest);
+        }
+        return member.getBelt().getBeltName();
+    }
+
 }

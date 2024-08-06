@@ -75,6 +75,7 @@ public class MemberController {
         return ResponseEntity.status(OK).body("회원정보 수정 완료");
     }
 
+    @Deprecated
     @PutMapping("/api/belt")
     public ResponseEntity<String> beltPromotion(@AuthenticationPrincipal Long memberId){
         memberService.beltPromotion(memberId);

@@ -164,7 +164,7 @@ public class FightService {
                 .draw(member.getRecord().getDraw())
                 .loss(member.getRecord().getLose())
                 .nickName(member.getNickname())
-                .beltName(member.getBelt().getBelt_name())
+                .beltName(member.getBelt().getBeltName())
                 .build();
         return redisHashUser;
     }

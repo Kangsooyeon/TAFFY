@@ -42,8 +42,8 @@ public class UserPsTestController {
     // 유저 품새 심사 통과
     @PutMapping("/{psId}")
     public ResponseEntity<ResponseDto> passPsTest(@AuthenticationPrincipal Long userId, @PathVariable Integer psId) {
-        userPsTestService.passPsTest(userId, psId);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), "심사 통과"));
+        TestPassResponseDto testPassResponseDto = userPsTestService.passPsTest(userId, psId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(true, HttpStatus.OK.value(), testPassResponseDto));
     }
 
 }
