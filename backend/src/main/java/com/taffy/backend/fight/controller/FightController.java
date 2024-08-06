@@ -3,7 +3,9 @@ package com.taffy.backend.fight.controller;
 import com.taffy.backend.fight.dto.ConnectionInfoDto;
 import com.taffy.backend.fight.dto.InviteRoomRequestDto;
 import com.taffy.backend.fight.dto.ResponseDto;
+import com.taffy.backend.fight.dto.UserInfoDto;
 import com.taffy.backend.fight.service.FightService;
+import com.taffy.backend.member.service.MemberService;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -26,6 +28,14 @@ public class FightController {
 
     private final FightService fightService;
     private static final Logger log = LoggerFactory.getLogger(FightController.class);
+    private final MemberService memberService;
+
+
+    @GetMapping("/")
+    public ResponseEntity<ResponseDto> sparMain(@AuthenticationPrincipal Long memberId) {
+        UserInfoDto userInfoDto = memberService.sparUseInfo(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "유저 정보", userInfoDto));
+    }
 
     @PostMapping("/matching")
     public ResponseEntity<ResponseDto> matching(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
