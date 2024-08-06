@@ -46,6 +46,11 @@ const PoomsaeTestDetailPage = () => {
                     audio = new Audio(preparationSound);
                 } else if (instructions[currentInstruction] === '시작') {
                     audio = new Audio(startSound);
+                    audio.play().then(() => {
+                        setTimeout(() => {
+                            console.log('Predictions:', predictions);
+                        }, 5000);
+                    });
                 }
 
                 if (audio) {
@@ -61,7 +66,7 @@ const PoomsaeTestDetailPage = () => {
 
         // Clean up the timer if the component unmounts
         return () => clearTimeout(timer);
-    }, []);
+    }, [predictions]);
 
     const handleProgressUpdate = (success) => {
         if (success) {

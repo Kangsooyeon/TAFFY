@@ -30,7 +30,6 @@ function App() {
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
 
-
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
@@ -43,17 +42,19 @@ function App() {
     }
   }, [dispatch]);
 
-
   const handleLogin = () => {
     navigate('/login');
   };
 
   const handleLogoutConfirm = () => {
-    // 쿠키 삭제
-    Cookies.remove('accessToken', { path: '/' });
-    Cookies.remove('refreshToken', { path: '/' });
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    // 모든 로컬 스토리지 항목 삭제
+    localStorage.clear();
+
+    // 모든 쿠키 삭제
+    const allCookies = Cookies.get(); // 모든 쿠키 가져오기
+    for (let cookie in allCookies) {
+      Cookies.remove(cookie, { path: '/' });
+    }
 
     // 리덕스 스토어 업데이트
     dispatch(logout());
@@ -81,12 +82,12 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game/:sessionId" element={<SparingDetailPage />} />
+        <Route path="/sp/game" element={<SparingDetailPage />} />
         <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage language={language}  />} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
-        <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
