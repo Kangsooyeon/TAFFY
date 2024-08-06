@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
 // import { useParams} from 'react-router-dom'
 import AudioImage from '../../assets/images/common/audio.png'
+// import ProgressBar from '../../components/common/progressBar';
 
 const PoomsaeEduOnePage = ({language}) => {
   // const {stageNum} = useParams();
