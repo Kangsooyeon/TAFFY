@@ -4,7 +4,6 @@ import '../../styles/poomsaeEduPage/mvItem.css';
 import CompletedImage from '../../assets/images/common/completed.png'
 
 const MvItem = ({ stageNum, title, image, mvSeq, isDone }) => {
-  // 개별 동작 진행할 때 클릭했을 때 해당 동작 교육으로 이동
   const navigate = useNavigate();
 
   const handleClick = () => {
