@@ -37,7 +37,9 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (profileData.nickName !== initialNickName && !isNicknameChecked) {
-      alert('닉네임 중복확인을 해주세요.');
+      {language === 'en' ?
+        alert('Please check for duplicate nicknames.') :
+        alert('닉네임 중복확인을 해주세요') }
       return;
     }
     try {
@@ -53,15 +55,21 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
     try {
       const response = await axios.post('https://i11e104.p.ssafy.io/api/nickname', { nickName: profileData.nickName });
       if (response.status === 200) {
-        alert('사용 가능한 닉네임입니다');
+        {language === 'en' ?
+           alert('Available nickname') :
+           alert('사용 가능한 닉네임입니다') }
         setIsNicknameChecked(true); // 중복확인 완료로 설정
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        alert('이미 존재하는 닉네임입니다');
+        {language === 'en' ?
+          alert('This nickname already exists') :
+          alert('이미 존재하는 닉네임입니다') }
       } else {
         console.error('Error checking nickname:', error);
-        alert('닉네임 확인 중 오류가 발생했습니다.');
+        {language === 'en' ?
+          alert('An error occurred while resolving your nickname.') :
+          alert('닉네임 확인 중 오류가 발생했습니다') }
       }
       setIsNicknameChecked(false); // 중복확인 실패로 설정
     }
@@ -140,16 +148,16 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
             value={profileData.countryName}
             onChange={handleCountryChange}
           >
-            <option value="USA">{language === 'en' ? 'Withdrawal' : '미국'}</option>
-            <option value="Korea">{language === 'en' ? 'Withdrawal' : '한국'}</option>
-            <option value="China">{language === 'en' ? 'Withdrawal' : '중국'}</option>
-            <option value="India">{language === 'en' ? 'Withdrawal' : '인도'}</option>
-            <option value="Canada">{language === 'en' ? 'Withdrawal' : '캐나다'}</option>
-            <option value="Australia">{language === 'en' ? 'Withdrawal' : '호주'}</option>
-            <option value="Indonesia">인도네시아{language === 'en' ? 'Withdrawal' : ''}</option>
-            <option value="Vietnam">베트남{language === 'en' ? 'Withdrawal' : ''}</option>
-            <option value="Morocco">모로코{language === 'en' ? 'Withdrawal' : ''}</option>
-            <option value="Malaysia">말레이시아{language === 'en' ? 'Withdrawal' : ''}</option>
+            <option value="USA">{language === 'en' ? 'USA' : '미국'}</option>
+            <option value="Korea">{language === 'en' ? 'Korea' : '한국'}</option>
+            <option value="China">{language === 'en' ? 'China' : '중국'}</option>
+            <option value="India">{language === 'en' ? 'India' : '인도'}</option>
+            <option value="Canada">{language === 'en' ? 'Canada' : '캐나다'}</option>
+            <option value="Australia">{language === 'en' ? 'Australia' : '호주'}</option>
+            <option value="Indonesia">{language === 'en' ? 'Indonesia' : '인도네시아'}</option>
+            <option value="Vietnam">{language === 'en' ? 'Vietnam' : '베트남'}</option>
+            <option value="Morocco">{language === 'en' ? 'Morocco' : '모로코'}</option>
+            <option value="Malaysia">{language === 'en' ? 'Malaysia' : '말레이시아'}</option>
           </select>
         </div>
         <button type="button" className="userdeletebutton" onClick={handleUserDelete}>{language === 'en' ? 'Withdrawal' : '회원 탈퇴'}</button>
