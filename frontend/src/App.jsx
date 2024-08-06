@@ -1,6 +1,6 @@
-import { useState, useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
+import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
@@ -18,11 +18,8 @@ import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import { logout, setAuthFromStorage  } from './store/user/loginLogout'; 
-import io from "socket.io-client";
+import { logout, setAuthFromStorage } from './store/user/loginLogout';
 
-
-// const socket = io.connect("http://localhost:3001");
 
 function App() {
   const navigate = useNavigate();
@@ -50,7 +47,6 @@ function App() {
   const handleLogin = () => {
     navigate('/login');
   };
-  
 
   const handleLogoutConfirm = () => {
     // 쿠키 삭제
