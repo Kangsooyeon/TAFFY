@@ -68,7 +68,8 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
                   title={language === 'ko' ? move.mvKoName : move.mvEnName}
                   image={move.mvThumb}
                   language={language}
-                  moveId={move.mvId}
+                  // moveId={move.mvId}
+                  mvSeq={move.mvSeq}
                   stageNum={stageNum}
                   index={currentPage * itemsPerPage + index}
                 />
@@ -102,6 +103,7 @@ Modal.propTypes = {
   language: PropTypes.string.isRequired,
   moves: PropTypes.arrayOf(PropTypes.shape({
     mvId: PropTypes.number.isRequired,
+    mvSeq: PropTypes.number.isRequired,
     mvThumb: PropTypes.string.isRequired,
     mvKoName: PropTypes.string.isRequired,
     mvEnName: PropTypes.string,
