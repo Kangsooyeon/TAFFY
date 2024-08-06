@@ -1,6 +1,7 @@
 package com.taffy.backend.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.taffy.backend.fight.dto.UserInfoDto;
 import com.taffy.backend.global.exception.ErrorCode;
 import com.taffy.backend.global.exception.TaffyException;
 import com.taffy.backend.global.security.jwt.JwtProvider;
@@ -186,7 +187,6 @@ public class MemberService {
         List<PoomSaeCompletedDto> poomSaeCompletedDto = getPoomSaeCompletedDtos(userAndPoomSaeComplete);
 
         MyPageDto myPageDto = MyPageDto.builder()
-                .imageUrl(userRecord.getMember().getProfile_img())
                 .nickname(userRecord.getMember().getNickname())
                 .beltName(userRecord.getMember().getBelt().getBelt_name())
                 .poomSaeCompletedList(poomSaeCompletedDto)
@@ -217,5 +217,21 @@ public class MemberService {
 
     private static int getWinPercentage(Record userRecord) {
         return (int) ((userRecord.getWin() * 100.0) / (userRecord.getWin() + userRecord.getDraw() + userRecord.getLose()));
+    }
+
+    @Transactional(readOnly = true)
+    public UserInfoDto sparUseInfo(Long userId) {
+        Member member = memberRepository.findById(userId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
+        Record userRecord = memberRepository.findUserAndRecord(member);
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .nickname(member.getNickname())
+                .belt(member.getBelt().getBelt_name())
+                .totalMatches(userRecord.getWin()+userRecord.getLose()+userRecord.getDraw())
+                .win(userRecord.getWin())
+                .lose(userRecord.getLose())
+                .draw(userRecord.getDraw())
+                .avatar(member.getProfile_img())
+                .build();
+        return userInfoDto;
     }
 }

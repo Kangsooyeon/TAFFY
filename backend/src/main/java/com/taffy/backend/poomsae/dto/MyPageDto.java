@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class MyPageDto {
 
-    private String imageUrl;
     private String nickname;
     private String beltName;
     private List<PoomSaeCompletedDto> poomSaeCompletedList;
