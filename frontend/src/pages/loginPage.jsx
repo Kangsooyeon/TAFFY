@@ -1,10 +1,8 @@
 import '../styles/loginPage.css';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../store/user/loginLogout'; // 리덕스 액션 가져오기
+import { loginUser } from '../store/user/loginLogout'; // 수정된 부분
 
 const Login = ({ navigate }) => {
     const [email, setEmail] = useState('');
@@ -12,35 +10,18 @@ const Login = ({ navigate }) => {
     const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
-        // 폼의 기본 동작을 막습니다.
         if (e) e.preventDefault();
 
         try {
-            const response = await axios.post(
-                'https://i11e104.p.ssafy.io/api/login',
-                { email, password }
-            );
+            const response = await dispatch(loginUser({ email, password })).unwrap();
+            const { accessToken, refreshToken, activeStage } = response;
 
-            if (response.data && response.data.accessToken && response.data.refreshToken) {
-                const { accessToken, refreshToken } = response.data;
+            console.log('Access Token:', accessToken);
+            console.log('Refresh Token:', refreshToken);
+            console.log('Active Stage:', activeStage);
 
-                // 토큰을 쿠키에 저장
-                Cookies.set('accessToken', accessToken, { path: '/' });
-                Cookies.set('refreshToken', refreshToken, { path: '/' });
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
-
-                // 리덕스 스토어에 로그인 상태와 토큰 저장
-                dispatch(loginSuccess({ accessToken, refreshToken }));
-
-                console.log('Access Token:', accessToken);
-                console.log('Refresh Token:', refreshToken);
-
-                navigate('/main');
-                alert('로그인 완료');
-            } else {
-                alert('Login failed');
-            }
+            navigate('/main');
+            alert('로그인 완료');
         } catch (error) {
             console.error('Error during login:', error);
             alert('An error occurred during login. Please try again.');
@@ -59,7 +40,6 @@ const Login = ({ navigate }) => {
                 <div className="login-title">
                     <p>Login</p>
                 </div>
-
                 <hr />
                 <form className="login-form" onSubmit={handleLogin}>
                     <div className="input-box">
