@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDto loginRequestDto, BindingResult bindingResult, HttpServletResponse httpServletResponse){
         TokensResponseDTO tokens = memberService.login(loginRequestDto);
         cookieTokenSetting(httpServletResponse, tokens);
 

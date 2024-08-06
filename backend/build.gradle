@@ -49,6 +49,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.github.codemonstur/embedded-redis
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	testImplementation 'com.github.codemonstur:embedded-redis:1.4.3'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {

@@ -52,12 +52,16 @@ public class MemberService {
     public void signUpWithInitialData(SignUpRequestDto signUpRequestDto) {
 
         boolean existsEmail = memberRepository.existsByEmail(signUpRequestDto.getEmail());
+        boolean existsNickname = memberRepository.existsByNickname(signUpRequestDto.getNickName());
         if (existsEmail) {
             throw new TaffyException(ErrorCode.DUPLICATE_EMAIL);
+        } else if (existsNickname) {
+            throw new TaffyException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
-        Country country = countryRepository.findByCountryName(signUpRequestDto.getCountryName());
-        Belt belt = beltRepository.findById(1L).get();
+        Country country = countryRepository.findByCountryName(signUpRequestDto.getCountryName()).orElseThrow(() -> new TaffyException(ErrorCode.COUNTRY_NOT_FOUND));
+
+        Belt belt = beltRepository.findById(1L).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
 
         Member member = Member.builder()
                 .email(signUpRequestDto.getEmail())
@@ -154,7 +158,7 @@ public class MemberService {
     @Transactional
     public void modificationInfo(Long memberId, MemberInfoUpdateRequestDto memberInfoUpdateRequestDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
-        Country country = countryRepository.findByCountryName(memberInfoUpdateRequestDto.getCountryName());
+        Country country = countryRepository.findByCountryName(memberInfoUpdateRequestDto.getCountryName()).orElseThrow(() -> new TaffyException(ErrorCode.COUNTRY_NOT_FOUND));
 
         member.updateInfo(memberInfoUpdateRequestDto, country);
     }
@@ -167,7 +171,7 @@ public class MemberService {
         if (beltLevel > 11){
             throw new TaffyException(ErrorCode.CANNOT_BELT_UPGRADE);
         }
-        Belt belt = beltRepository.findById(beltLevel).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUNT));
+        Belt belt = beltRepository.findById(beltLevel).orElseThrow(() -> new TaffyException(ErrorCode.BELT_NOT_FOUND));
         member.beltPromotion(belt);
     }
 
@@ -199,7 +203,7 @@ public class MemberService {
         boolean isExistNickname = memberRepository.existsByNickname(nicknameDuplicateDto.getNickName());
 
         if (isExistNickname){
-            throw new TaffyException(ErrorCode.NICHNAME_ALREADY_EXIST);
+            throw new TaffyException(ErrorCode.DUPLICATE_NICKNAME);
         }
     }
 
