@@ -40,8 +40,7 @@
 }
 
 .mvItem:hover .mvItemImage {
-  opacity: 0.7;
-  transform: scale(1.1);
+  animation: flipHorizontal 0.8s ease-in-out; /* 좌우로 뒤집기 애니메이션 적용, 속도 조절 */
 }
 
 .mvItemImage {
@@ -64,4 +63,22 @@
   height: 70px;
   z-index: 1;
   pointer-events: none; /* 이미지 클릭 불가능하게 설정 */
+}
+
+/* 좌우로 뒤집기 애니메이션 정의 */@keyframes flipHorizontal {
+  0% {
+    transform: scaleX(-1) scale(1); /* 초기 상태 (수평으로 뒤집기) */
+  }
+  25% {
+    transform: scaleX(0) scale(1.1); /* 중간 상태 (원래 상태로 돌아오면서 확대) */
+  }
+  50% {
+    transform: scaleX(1) scale(1.1); /* 원래 상태로 확대 */
+  }
+  75% {
+    transform: scaleX(0) scale(1.1); /* 다시 뒤집기 전 중간 상태 */
+  }
+  100% {
+    transform: scaleX(-1) scale(1); /* 최종 상태 (다시 수평으로 뒤집기) */
+  }
 }
