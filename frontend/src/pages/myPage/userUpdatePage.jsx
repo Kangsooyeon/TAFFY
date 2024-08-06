@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserUpdateProfileAsync, fetchUserProfileAsync } from '../../store/myPage/myPageUser.js';
 import axios from 'axios';
 
-const UserUpdatePage = ({ closeUpdate }) => {
+const UserUpdatePage = ({ closeUpdate, language }) => {
   const dispatch = useDispatch();
   const { profile, status, error } = useSelector((state) => state.user);
 
@@ -97,7 +97,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
       <form onSubmit={handleSubmit} className="updateformbox">
         <div className="input-container">
           <div className="input-wrapper">
-            <label className="input-label">닉네임</label>
+            <label className="input-label">{language === 'en' ? 'nickname' : '닉네임'}</label>
             <input
               type="text"
               value={profileData.nickName}

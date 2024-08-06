@@ -84,7 +84,7 @@ function App() {
         <Route path="/sp/game" element={<SparingDetailPage />} />
         <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage language={language}  />} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
         <Route path="/ps_edu/:stageNum/:mvSeq" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />

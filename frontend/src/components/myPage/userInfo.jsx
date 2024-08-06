@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
 import { fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 
-const UseInfo = () => {
+const UseInfo = ({language}) => {
   const dispatch = useDispatch();
   const { profile, status: userStatus, error: userError } = useSelector((state) => state.user);
   const { record, status: recordStatus, error: recordError } = useSelector((state) => state.userRecord);
@@ -88,7 +88,7 @@ const UseInfo = () => {
       </div>
       <div className="characterinfomation">
         <p className="mypagenickname">{profile?.nickname}</p>
-        <p className="mypagettiname">{profile?.beltName}</p>
+        <p className="mypagettiname">{language === 'en'? profile?.beltName.split('/')[1] : profile?.beltName.split('/')[0]}</p>
         {profile?.beltName && (
           <img src={getBeltSrc(profile.beltName.split('/')[1].replace(/\s/g, ''))} alt="Belt" />
         )}
@@ -103,7 +103,7 @@ const UseInfo = () => {
         )}
       </div>
       <div className="winpoint">
-        <p>승률 : {winRate.toFixed(0)}%</p>
+        <p>{language === 'en' ? 'WP' : '승률'} : {winRate.toFixed(0)}%</p>
       </div>
     </div>
   )
