@@ -47,6 +47,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	// https://mvnrepository.com/artifact/com.github.codemonstur/embedded-redis
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	testImplementation 'com.github.codemonstur:embedded-redis:1.4.3'
 }
 
