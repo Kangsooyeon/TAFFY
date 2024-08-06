@@ -19,6 +19,10 @@ import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
 import { logout, setAuthFromStorage  } from './store/user/loginLogout'; 
+import io from "socket.io-client";
+
+
+// const socket = io.connect("http://localhost:3001");
 
 function App() {
   const navigate = useNavigate();
@@ -81,7 +85,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game" element={<SparingDetailPage />} />
+        <Route path="/sp/game/:sessionId" element={<SparingDetailPage />} />
         <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/mypage" element={<MyPage />} />

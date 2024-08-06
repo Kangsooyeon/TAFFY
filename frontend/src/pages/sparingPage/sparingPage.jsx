@@ -11,17 +11,20 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
 import { fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
+import { fetchSparingUserAsync } from '../../store/sparing/sparUser'
 
 const sparingPage = () => {
   const dispatch = useDispatch();
   const [isOpenHelp, setIsOpenHelp] = useState(false)
 
+  const { userdata, status: userdataStatus } = useSelector((state) => state.user);
   const { profile, status: profileStatus } = useSelector((state) => state.user);
   const { record, status: recordStatus } = useSelector((state) => state.userRecord);
 
   useEffect(() => {
     dispatch(fetchUserProfileAsync());
     dispatch(fetchUserRecordAsync());
+    dispatch(fetchSparingUserAsync());
   }, [dispatch]);
 
   const openHelp = () => {
@@ -32,11 +35,11 @@ const sparingPage = () => {
     setIsOpenHelp(false)
   }
 
-  if (profileStatus === 'loading' || recordStatus === 'loading') {
+  if (profileStatus === 'loading' || recordStatus === 'loading' || userdataStatus === 'loading') {
     return <div>Loading...</div>;
   }
 
-  if (profileStatus === 'failed' || recordStatus === 'failed') {
+  if (profileStatus === 'failed' || recordStatus === 'failed' || userdataStatus === 'failed') {
     return <div>Error loading data</div>;
   }
 
