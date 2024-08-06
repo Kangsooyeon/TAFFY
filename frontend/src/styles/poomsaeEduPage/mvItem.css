@@ -53,3 +53,14 @@
   outline: none;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
+.completedImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto; /* 이미지 크기를 적절히 조정하세요 */
+  height: 70px;
+  z-index: 1;
+  pointer-events: none; /* 이미지 클릭 불가능하게 설정 */
+}

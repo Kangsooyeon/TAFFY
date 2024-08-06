@@ -86,7 +86,7 @@ function App() {
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
-        <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
