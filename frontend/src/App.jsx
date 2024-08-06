@@ -1,4 +1,4 @@
-import { useState, useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
@@ -18,7 +18,8 @@ import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import { logout, setAuthFromStorage  } from './store/user/loginLogout'; 
+import { logout, setAuthFromStorage } from './store/user/loginLogout';
+
 
 function App() {
   const navigate = useNavigate();

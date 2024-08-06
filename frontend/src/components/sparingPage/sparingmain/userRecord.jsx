@@ -3,10 +3,10 @@ import SparInfoBottom from '../../../assets/images/sparingPage/spar-info-bottom.
 import SparInfoTop from '../../../assets/images/sparingPage/spar-info-top.png'
 
 
-const userRecord = ({record}) => {
-  const winRate = (record.data.win + record.data.lose + record.data.draw) === 0 
+const userRecord = ({userdata}) => {
+  const winRate = (userdata.data.totalMatches) === 0 
   ? 0 
-  : (record.data.win / (record.data.win + record.data.lose + record.data.draw)) * 100;
+  : (userdata.data.win / (userdata.data.totalMatches)) * 100;
   return (
     <div className="recordbox">
       <div>
@@ -17,12 +17,12 @@ const userRecord = ({record}) => {
           <div className="totalcount">
             <p className="custom-title">총 횟수</p>
             <hr className="custom-hr"/>
-            <p style={{fontSize: '50px', margin: '0px'}}>{record.data.win+record.data.lose+record.data.draw}<span style={{fontSize: '20px'}}>회</span></p>
+            <p style={{fontSize: '50px', margin: '0px'}}>{userdata.data.totalMatches}<span style={{fontSize: '20px'}}>회</span></p>
           </div>
           <div className="wincount">
             <p className="custom-title">이긴 횟수</p>
             <hr className="custom-hr"/>
-            <p style={{fontSize: '50px', margin: '0px'}}>{record.data.win}<span style={{fontSize: '20px'}}>회</span></p>
+            <p style={{fontSize: '50px', margin: '0px'}}>{userdata.data.win}<span style={{fontSize: '20px'}}>회</span></p>
           </div>
         </div>
         <div className="winscore">
