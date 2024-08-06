@@ -52,6 +52,7 @@
   border: none;
   outline: none;
   transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: scaleX(-1); /* 수평으로 이미지 뒤집기 */
 }
 
 .completedImage {
