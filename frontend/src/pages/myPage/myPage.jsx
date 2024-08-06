@@ -6,7 +6,7 @@ import UserInfo from '../../components/myPage/userInfo.jsx'
 import Update from '../../pages/myPage/userUpdatePage.jsx'
 import Photo from '../../pages/myPage/roomDecoPage.jsx'
 
-const MyPage = () => {
+const MyPage = ({ language }) => {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isPhotoOpen, setIsPhotoOpen] = useState(false)
 
@@ -28,12 +28,12 @@ const MyPage = () => {
 
   return (
     <div className="mypage">
-      <RoomInfo/>
-      <UserInfo/>
-      <button className="mypageupdatebutton" onClick={openUpdate}>수정</button>
-      <button className="photoselectbutton" onClick={openPhoto}></button>
-      {isUpdateOpen && <Update closeUpdate={closeUpdate} />}
-      {isPhotoOpen && <Photo closePhoto={closePhoto}/>}
+      <RoomInfo language={language}/>
+      <UserInfo language={language}/>
+      <button className="mypageupdatebutton" onClick={openUpdate} language={language}>{language === 'ko'?'수정':'edit'}</button>
+      <button className="photoselectbutton" onClick={openPhoto} language={language}></button>
+      {isUpdateOpen && <Update closeUpdate={closeUpdate} language={language} />}
+      {isPhotoOpen && <Photo closePhoto={closePhoto} language={language}/>}
     </div>
   )
 }
