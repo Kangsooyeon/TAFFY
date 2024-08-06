@@ -1,6 +1,6 @@
 import { useState, useEffect  } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
+import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
@@ -19,10 +19,6 @@ import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
 import { logout, setAuthFromStorage  } from './store/user/loginLogout'; 
-import io from "socket.io-client";
-
-
-// const socket = io.connect("http://localhost:3001");
 
 function App() {
   const navigate = useNavigate();
@@ -32,7 +28,6 @@ function App() {
   const isSparPage = location.pathname.startsWith('/sp/game');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
-
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
@@ -46,18 +41,19 @@ function App() {
     }
   }, [dispatch]);
 
-
   const handleLogin = () => {
     navigate('/login');
   };
-  
 
   const handleLogoutConfirm = () => {
-    // 쿠키 삭제
-    Cookies.remove('accessToken', { path: '/' });
-    Cookies.remove('refreshToken', { path: '/' });
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    // 모든 로컬 스토리지 항목 삭제
+    localStorage.clear();
+
+    // 모든 쿠키 삭제
+    const allCookies = Cookies.get(); // 모든 쿠키 가져오기
+    for (let cookie in allCookies) {
+      Cookies.remove(cookie, { path: '/' });
+    }
 
     // 리덕스 스토어 업데이트
     dispatch(logout());
@@ -85,7 +81,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game/:sessionId" element={<SparingDetailPage />} />
+        <Route path="/sp/game" element={<SparingDetailPage />} />
         <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/mypage" element={<MyPage />} />
