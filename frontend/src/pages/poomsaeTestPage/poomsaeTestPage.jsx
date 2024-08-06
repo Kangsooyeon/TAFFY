@@ -27,6 +27,7 @@ const belt_images = [
 const PoomsaeTestPage = () => {
     const dispatch = useDispatch();
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
+    const activeStage = useSelector(state => state.stages.activeStage);
     const [selectedPoomsae, setSelectedPoomsae] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -39,6 +40,7 @@ const PoomsaeTestPage = () => {
     }, [dispatch]);
 
     const completedStages = poomsaeTest.map(item => item.passed);
+    console.log(activeStage)
 
     const handleItemClick = (index) => {
         setSelectedPoomsae(poomsaeTest[index]);
@@ -57,6 +59,7 @@ const PoomsaeTestPage = () => {
                         imageUrl={url} 
                         onClick={() => handleItemClick(index)}
                         completed={completedStages[index] || false}
+                        locked={index+1 >= activeStage}
                     />
                 ))}
             </div>
