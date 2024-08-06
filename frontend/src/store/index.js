@@ -6,6 +6,7 @@ import stagesReducer from "./poomsaeEdu/stagesSlice";
 import landingReducer from "./landing/landingSlice";
 import authReducer from './user/loginLogout';
 import poomsaeTestReducer from './poomsaeTest/poomsaeTest';
+import moveReducer from './poomsaeEdu/moveSlice';
 
 
 // Redux store 설정
@@ -18,6 +19,7 @@ const store = configureStore({
     poomsaeTest: poomsaeTestReducer,
     user: userReducer,
     userRecord: userRecordReducer,
+    move: moveReducer,
   }
 });
 

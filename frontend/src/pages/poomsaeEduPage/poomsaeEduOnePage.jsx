@@ -1,11 +1,13 @@
 import '../../styles/poomsaeEduPage/poomsaeEduAll.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
 import AudioImage from '../../assets/images/common/audio.png';
 import ProgressBar from '../../components/common/progressBar';
-import { fetchMoveDetail } from '../../apis/mvApi';
+import { fetchMoveDetail, completeMovement, setMoveCompletion } from '../../store/poomsaeEdu/moveSlice';
+import PopUp from '../../components/common/popUp';
 
 const PoomsaeEduOnePage = ({ language }) => {
   const { stageNum, mvSeq } = useParams();
@@ -13,9 +15,11 @@ const PoomsaeEduOnePage = ({ language }) => {
   const [accuracy, setAccuracy] = useState(0);
   const [count, setCount] = useState(0);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [moveDetail, setMoveDetail] = useState(null); // 상태 추가
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState(null); // 에러 상태
+  const [showFailurePopup, setShowFailurePopup] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { moveDetail, loading, error, completedMoves } = useSelector((state) => state.move);
   const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
@@ -23,26 +27,25 @@ const PoomsaeEduOnePage = ({ language }) => {
   }, [language]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response  = await fetchMoveDetail(stageNum, mvSeq, token);
-        setMoveDetail(response.data);
-      } catch (error) {
-        setError('Failed to fetch data');
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (token) {
+      dispatch(fetchMoveDetail({ mvSeq, psId: stageNum, token }));
+    }
+  }, [dispatch, mvSeq, stageNum, token]);
 
-    fetchData();
-  }, [token, stageNum, mvSeq]);
+  const handleCompletion = async () => {
+    try {
+      await dispatch(completeMovement({ psId: stageNum, mvSeq, token })).unwrap();
+      dispatch(setMoveCompletion({ psId: stageNum, mvSeq }));
+      setShowSuccessPopup(true);
+    } catch (error) {
+      console.error('Completion failed:', error);
+      setShowFailurePopup(true);
+    }
+  };
 
-  useEffect(() => {
-    console.log('stageNum:', stageNum, 'mvSeq:', mvSeq);
-  }, [stageNum, mvSeq]);
-
-  const navigate = useNavigate();
-  const handleClick = () => {
+  const handleClosePopup = () => {
+    setShowSuccessPopup(false);
+    setShowFailurePopup(false);
     navigate(`/ps_edu`);
   };
 
@@ -50,19 +53,20 @@ const PoomsaeEduOnePage = ({ language }) => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (error || !moveDetail) {
+    return <div>Error: {error || 'Move details not found'}</div>;
   }
 
   const mvName = language === 'ko' ? moveDetail.mvKoName : moveDetail.mvEnName;
   const mvDesc = language === 'ko' ? moveDetail.mvKoDesc : moveDetail.mvEnDesc;
+  const isCompleted = completedMoves.some(move => move.psId === stageNum && move.mvSeq === mvSeq);
 
   return (
     <div className='poomsaeEduAllPage'>
       <div className='allEduContainer'>
         <div className='allEduContent'>
           <div className='mvGif'>
-            <img src={moveDetail.mvUrl} alt={mvName} className="mvGifImage"/>
+            <img src={moveDetail.mvUrl} alt={mvName} className="mvGifImage" />
           </div>
           <div className='userCam'></div>
           <div className='progress'>
@@ -86,6 +90,7 @@ const PoomsaeEduOnePage = ({ language }) => {
           <div className='mvPsDiv'>
             <div className='mvPs'>
               <h2 className='mvPsName'>{mvName}</h2>
+              {isCompleted && <img src="/path/to/completedImage.png" alt="Completed" />}
             </div>
             <PsDescription
               className="mvPsDes"
@@ -95,11 +100,38 @@ const PoomsaeEduOnePage = ({ language }) => {
         </div>
         <div className='allEduFooter'>
           <div className='line'></div>
-          <button className='exitButton' onClick={handleClick}>
+          <button className='exitButton' onClick={handleClosePopup}>
             {buttonText}
           </button>
+          {!isCompleted && (
+            <button className='completeButton' onClick={handleCompletion}>
+              {language === 'ko' ? '완료' : 'Complete'}
+            </button>
+          )}
         </div>
       </div>
+      {showSuccessPopup && (
+        <PopUp
+          className="eduPopUp"
+          title={language === 'ko' ? "학습을 완료했습니다!" : "You have successfully completed the move!"}
+          btnText1={language === 'ko' ? "확인" : "Confirm"}
+          btnHref1="/ps_edu"
+          btnText2={language === 'ko' ? "다시하기" : "Retry"}
+          btnHref2={`/ps_edu/${stageNum}/${mvSeq}`}
+          onClose={handleClosePopup}
+        />
+      )}
+      {showFailurePopup && (
+        <PopUp
+          className="eduPopUp"
+          title={language === 'ko' ? "학습을 실패했습니다." : "Failed to complete the move."}
+          btnText1={language === 'ko' ? "다시하기" : "Retry"}
+          btnHref1={`/ps_edu/${stageNum}/${mvSeq}`}
+          btnText2={language === 'ko' ? "확인" : "Confirm"}
+          btnHref2="/ps_edu"
+          onClose={handleClosePopup}
+        />
+      )}
     </div>
   );
 };
