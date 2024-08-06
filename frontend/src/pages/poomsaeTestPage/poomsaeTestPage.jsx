@@ -27,9 +27,9 @@ const belt_images = [
 const PoomsaeTestPage = () => {
     const dispatch = useDispatch();
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
-    const activeStage = useSelector(state => state.stages.activeStage);
     const [selectedPoomsae, setSelectedPoomsae] = useState(null);
     const [loading, setLoading] = useState(true);
+    const activeStage = localStorage.getItem('activeStage');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,10 +37,17 @@ const PoomsaeTestPage = () => {
             setLoading(false);
         };
         fetchData();
+
+
     }, [dispatch]);
 
+    // activeStage가 변경될 때마다 localStorage에 값을 저장
+    useEffect(() => {
+        localStorage.setItem('activeStage', activeStage);
+    }, [activeStage]);
+
     const completedStages = poomsaeTest.map(item => item.passed);
-    console.log(activeStage)
+    console.log(activeStage);
 
     const handleItemClick = (index) => {
         setSelectedPoomsae(poomsaeTest[index]);
@@ -59,7 +66,7 @@ const PoomsaeTestPage = () => {
                         imageUrl={url} 
                         onClick={() => handleItemClick(index)}
                         completed={completedStages[index] || false}
-                        locked={index+1 >= activeStage}
+                        locked={index + 1 >= activeStage}
                     />
                 ))}
             </div>
