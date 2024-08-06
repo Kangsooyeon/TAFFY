@@ -56,8 +56,8 @@ public class Member extends BaseTime {
             this.country = country;
         }
     }
-
-    public void beltPromotion(Belt belt){
+    public void setBelt(Belt belt) {
         this.belt = belt;
     }
+
 }
