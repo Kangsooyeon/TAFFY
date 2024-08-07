@@ -5,7 +5,7 @@ import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 import ProgressBar from '../../components/common/progressBar';
 import axios from 'axios';
-import TeachableMachineWebcam from '../../components/poomsaeTestPage/tmWebcam';
+import Webcam from '../../components/poomsaeTestPage/Webcam';
 import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
 import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
 import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
@@ -116,9 +116,10 @@ const PoomsaeTestDetailPage = () => {
         }
     };
 
-    const handlePrediction = (pose, prediction) => {
+    const handlePrediction = (predictions) => {
         // Handle the prediction result here
-        setPredictions(prediction.map(p => ` ${p.className}: ${p.probability.toFixed(2)} `));
+        const predictionResults = predictions.map((p, index) => `Class ${index}: ${p.toFixed(2)}`);
+        setPredictions(predictionResults);
     };
 
     return (
@@ -129,9 +130,9 @@ const PoomsaeTestDetailPage = () => {
             </div>
             <div className="detail-content">
                 <p>{instruction}</p>
-                <TeachableMachineWebcam onPrediction={handlePrediction} />
+                <Webcam onPrediction={handlePrediction} />
                 <div className="predictions">
-                    <p>{predictions}</p>
+                    <p>{predictions.join(', ')}</p>
                 </div>
                 <div className="temp">
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
