@@ -89,10 +89,10 @@ const SparingPage = () => {
         console.log('User Data:', userdataRef.current);
         navigate(`/sp/game/${sessionIDRef.current}`, {
           state: {
-            sessionId: sessionIDRef.current,
+            // sessionId: sessionIDRef.current,
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
-            status: statusRef.current,
+            // status: statusRef.current,
           },
         });
       }

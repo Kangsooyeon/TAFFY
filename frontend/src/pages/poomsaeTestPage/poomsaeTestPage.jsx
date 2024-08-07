@@ -14,8 +14,8 @@ import RedBelt from '/src/assets/images/common/belt/redBelt.png';
 import BlackBelt from '/src/assets/images/common/belt/blackBelt.png';
 
 const belt_images = [
-    GreenBelt,
     YellowBelt,
+    GreenBelt,
     PurpleBelt,
     BlueBelt,
     BrownBelt,

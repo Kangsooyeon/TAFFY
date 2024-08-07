@@ -15,11 +15,11 @@ import { OpenVidu } from 'openvidu-browser';
 
 const SparingDetailPage = () => {
   const location = useLocation();
-  const { sessionId, connectionToken, userdata, status } = location.state;
-  console.log('Received in SparingDetailPage:', { sessionId, connectionToken, userdata, status });
+  const { connectionToken, userdata } = location.state;
+  console.log('Received in SparingDetailPage:', { connectionToken, userdata });
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
-  const [subscriber, setSubscriber] = useState(null);
+  const [subscribers, setSubscribers] = useState([]);
 
   useEffect(() => {
     const OV = new OpenVidu();
@@ -27,7 +27,12 @@ const SparingDetailPage = () => {
 
     session.on('streamCreated', (event) => {
       const subscriber = session.subscribe(event.stream, undefined);
-      setSubscriber(subscriber);
+      setSubscribers(prevSubscribers => [...prevSubscribers, subscriber]);
+    });
+
+    session.on('streamDestroyed', (event) => {
+      event.stream.streamManager?.dispose();
+      setSubscribers(prevSubscribers => prevSubscribers.filter(sub => sub !== event.stream.streamManager));
     });
 
     session.connect(connectionToken)
@@ -41,8 +46,6 @@ const SparingDetailPage = () => {
         session.publish(publisher);
         setPublisher(publisher);
         setSession(session);
-
-      
       })
       .catch(error => {
         console.error('Failed to connect to the session:', error);
@@ -51,7 +54,7 @@ const SparingDetailPage = () => {
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken, sessionId]);
+  }, [connectionToken]);
 
   return (
     <div className="sparinggame">
@@ -69,8 +72,10 @@ const SparingDetailPage = () => {
       <Character className="characterright" />
       <Mission />
       <Timer />
-      <WebCam className="webcamright" streamManager={subscriber} />
       <WebCam className="webcamleft" streamManager={publisher} />
+      {subscribers.map((subscriber, index) => (
+        <WebCam key={index} className="webcamright" streamManager={subscriber} />
+      ))}
     </div>
   );
 };
