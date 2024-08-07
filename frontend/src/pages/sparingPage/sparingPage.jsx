@@ -6,46 +6,73 @@ import UserCharacter from '../../components/sparingPage/sparingmain/userCharacte
 import UserRecord from '../../components/sparingPage/sparingmain/userRecord';
 import QuickButton from '../../components/sparingPage/sparingmain/quickButton';
 import Help from '../../components/sparingPage/sparingmain/sparinghelp.jsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSparingUserAsync } from '../../store/sparing/sparUser';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import { useNavigate } from 'react-router-dom';
 
 let stompClient = null;
 
 const SparingPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpenHelp, setIsOpenHelp] = useState(false);
   const { userdata, status: userdataStatus } = useSelector((state) => state.sparingUser);
   const [isConnected, setIsConnected] = useState(false);
+  const [sessionID, setSessionID] = useState(null);
+  const [connectionToken, setConnectionToken] = useState(null);
+
+  // useRef를 사용하여 최신 상태값을 참조하도록 함
+  const sessionIDRef = useRef(sessionID);
 
   useEffect(() => {
     dispatch(fetchSparingUserAsync());
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = new SockJS('http://i11e104.p.ssafy.io:8081/ws');
-    console.log(socket)
+    const socket = new SockJS('https://i11e104.p.ssafy.io/ws');
     stompClient = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => {
-        console.log(str);
-      },
+      debug: (str) => console.log(str),
       reconnectDelay: 5000,
-      onConnect: onConnected,
-      onStompError: onError,
+      onConnect: () => {
+        console.log('Connected to WebSocket');
+        stompClient.subscribe('/topic/data', (message) => {
+          joinGame(message);
+        });
+        setIsConnected(true);
+      },
+      onStompError: (error) => {
+        console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
+      },
     });
     stompClient.activate();
+
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
   }, []);
 
-  const onConnected = () => {
-    console.log('Connected to WebSocket');
-    setIsConnected(true);
-  };
+  // sessionIDRef.current를 최신 sessionID로 업데이트
+  useEffect(() => {
+    sessionIDRef.current = sessionID;
+  }, [sessionID]);
 
-  const onError = (error) => {
-    console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
+  const joinGame = (message) => {
+    const receivedData = JSON.parse(message.body);
+    console.log('Game data received: ', receivedData);
+    console.log('Received sessionId:', receivedData.sessionId);
+    console.log('Current sessionID:', sessionIDRef.current);
+    if (receivedData.sessionId === sessionIDRef.current) {
+      console.log('game start!');
+      navigate(`/sp/game/${sessionIDRef.current}`, {
+        state: { sessionId: sessionIDRef.current, connectionToken, status: 'start' },
+      });
+    }
   };
 
   const openHelp = () => {
@@ -73,7 +100,12 @@ const SparingPage = () => {
         </div>
         <div className="centerSection">
           {userdata ? <UserCharacter userdata={userdata} /> : <div>No profile data</div>}
-          <QuickButton userdata={userdata} />
+          <QuickButton            
+            userdata={userdata}
+            stompClient={stompClient}
+            setSessionID={setSessionID}
+            setConnectionToken={setConnectionToken}
+          />
         </div>
         <div className="rightSection">
           <MessageBox />

@@ -5,7 +5,7 @@ import Dragon from '../../assets/images/myPage/용 머리.png';
 import Tiger from '../../assets/images/myPage/호랑이 머리.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserUpdateProfileAsync, fetchUserProfileAsync } from '../../store/myPage/myPageUser.js';
+import { fetchUserUpdateProfileAsync, fetchUserProfileAsync, fetchUserDeleteProfileAsync } from '../../store/myPage/myPageUser.js';
 import axios from 'axios';
 
 const UserUpdatePage = ({ closeUpdate, language }) => {
