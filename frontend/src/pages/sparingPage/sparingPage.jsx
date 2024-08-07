@@ -13,10 +13,11 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useNavigate } from 'react-router-dom';
 
+let stompClient = null;
+
 const SparingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [stompClient, setStompClient] = useState(null);
   const [isOpenHelp, setIsOpenHelp] = useState(false);
   const { userdata, status: userdataStatus } = useSelector((state) => state.sparingUser);
   const [isConnected, setIsConnected] = useState(false);
