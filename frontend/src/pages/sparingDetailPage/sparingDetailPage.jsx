@@ -68,7 +68,7 @@ const SparingDetailPage = () => {
       <HpBar className="hpbarleft" />
       <HpBar className="hpbarright" />
       <Score />
-      <Character className="characterleft" />
+      <Character className="characterleft"/>
       <Character className="characterright" />
       <Mission />
       <Timer />
