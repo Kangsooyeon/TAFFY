@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 
 const Invitation = ({ stompClient }) => {
   const token = localStorage.getItem("accessToken");
-  const [nickname, setNickname] = useState("");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
   const [userStatus, setUserStatus] = useState("");
+  const [nickname, setNickname] = useState("");
   const { userdata } = useSelector((state) => state.sparingUser);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Invitation = ({ stompClient }) => {
         }
       );
 
-      console.log(response);
+      console.log(nickname);
 
       setOpenViduSessionId(response.data.data.sessionId);
       setConnectionToken(response.data.data.connectionToken);
@@ -51,9 +51,8 @@ const Invitation = ({ stompClient }) => {
 
       // Emit socket message after setting up session details
       const dataMessage = {
-        sessionId: response.data.data.sessionId, // Use the sessionId from response
-        status: response.data.data.status,      // Use the status from response
-        username: nickname.value,
+        sessionId: response.data.data.sessionId,
+        nickname: nickname,
       };
 
       if (stompClient && stompClient.connected) {
@@ -66,11 +65,8 @@ const Invitation = ({ stompClient }) => {
       console.error("Error sending invite:", error);
       alert("create session failed");
     }
-  }, [token, userdata, stompClient]);
+  }, [token, userdata, stompClient, nickname]);
 
-  const handleChange = (e) => {
-    setNickname(e.target.value);
-  };
 
   function InvitationCard() {
     return (
@@ -83,8 +79,8 @@ const Invitation = ({ stompClient }) => {
             <input
               className="nicknameinput"
               type="text"
-              value={nickname}
-              onChange={handleChange}
+              value={nickname} // Bind input value to nickname state
+              onChange={(e) => setNickname(e.target.value)} // Update state on change
             />
           </div>
           <p style={{ fontFamily: "HappinessM" }}>겨루자!</p>
