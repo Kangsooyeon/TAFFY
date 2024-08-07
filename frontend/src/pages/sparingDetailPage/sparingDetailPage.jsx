@@ -12,19 +12,14 @@ import GameUser from '../../components/sparingPage/sparinggame/gameuser.jsx';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { OpenVidu } from 'openvidu-browser';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
-
-let stompClient = null;
 
 const SparingDetailPage = () => {
   const location = useLocation();
-  const { sessionId, connectionToken, status } = location.state;
+  const { connectionToken, userdata } = location.state;
+  console.log('Received in SparingDetailPage:', { connectionToken, userdata });
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
-  const [subscriber, setSubscriber] = useState(null);
-  const [playerStatus, setPlayerStatus] = useState(status);
-  const [isConnected, setIsConnected] = useState(false);
+  const [subscribers, setSubscribers] = useState([]);
 
   useEffect(() => {
     const OV = new OpenVidu();
@@ -32,7 +27,12 @@ const SparingDetailPage = () => {
 
     session.on('streamCreated', (event) => {
       const subscriber = session.subscribe(event.stream, undefined);
-      setSubscriber(subscriber);
+      setSubscribers(prevSubscribers => [...prevSubscribers, subscriber]);
+    });
+
+    session.on('streamDestroyed', (event) => {
+      event.stream.streamManager?.dispose();
+      setSubscribers(prevSubscribers => prevSubscribers.filter(sub => sub !== event.stream.streamManager));
     });
 
     session.connect(connectionToken)
@@ -79,7 +79,7 @@ const SparingDetailPage = () => {
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken, sessionId]);
+  }, [connectionToken]);
 
   return (
     <div className="sparinggame">
@@ -88,17 +88,19 @@ const SparingDetailPage = () => {
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
-      <GameUser className="gameuserleft" />
-      <GameUser className="gameuserright" />
+      <GameUser className="gameuserleft" userdata={userdata} />
+      <GameUser className="gameuserright" userdata={userdata} />
       <HpBar className="hpbarleft" />
       <HpBar className="hpbarright" />
       <Score />
-      <Character className="characterleft" />
+      <Character className="characterleft"/>
       <Character className="characterright" />
       <Mission />
       <Timer />
-      <WebCam className="webcamright" streamManager={subscriber} />
       <WebCam className="webcamleft" streamManager={publisher} />
+      {subscribers.map((subscriber, index) => (
+        <WebCam key={index} className="webcamright" streamManager={subscriber} />
+      ))}
     </div>
   );
 };
