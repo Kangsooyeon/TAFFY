@@ -25,29 +25,24 @@ const SparingDetailPage = () => {
     const OV = new OpenVidu();
     const session = OV.initSession();
 
-    // 상대방의 스트림을 구독합니다.
     session.on('streamCreated', (event) => {
-      const newSubscriber = session.subscribe(event.stream, undefined);
-      setSubscriber(newSubscriber);
+      const subscriber = session.subscribe(event.stream, undefined);
+      setSubscriber(subscriber);
     });
 
-    // 세션에 연결합니다.
     session.connect(connectionToken)
       .then(() => {
-        if (status === 'waiting') {
-          // 퍼블리셔를 설정합니다.
-          const newPublisher = OV.initPublisher(undefined, {
-            insertMode: 'APPEND',
-            width: '100%',
-            height: '100%',
-          });
+        const publisher = OV.initPublisher(undefined, {
+          insertMode: 'APPEND',
+          width: '100%',
+          height: '100%',
+        });
 
-          session.publish(newPublisher);
-          setPublisher(newPublisher);
-        } else if (status === 'start') {
-          // 이미 streamCreated 이벤트로 구독자가 설정되므로 추가적으로 설정할 필요 없음
-        }
+        session.publish(publisher);
+        setPublisher(publisher);
         setSession(session);
+
+      
       })
       .catch(error => {
         console.error('Failed to connect to the session:', error);
@@ -56,7 +51,7 @@ const SparingDetailPage = () => {
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken, sessionId, status]);
+  }, [connectionToken, sessionId]);
 
   return (
     <div className="sparinggame">
