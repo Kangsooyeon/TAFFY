@@ -1,6 +1,6 @@
 import '../../styles/poomsaeEduPage/poomsaeEduAll.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
@@ -21,6 +21,7 @@ const PoomsaeEduOnePage = ({ language }) => {
 
   const { moveDetail, loading, error, completedMoves } = useSelector((state) => state.move);
   const token = localStorage.getItem('accessToken');
+  const audioRef = useRef(null);
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -31,6 +32,37 @@ const PoomsaeEduOnePage = ({ language }) => {
       dispatch(fetchMoveDetail({ mvSeq, psId: stageNum, token }));
     }
   }, [dispatch, mvSeq, stageNum, token]);
+
+  useEffect(() => {
+    if (moveDetail) {
+      const audioUrl = language === 'ko' ? moveDetail.mvKoVo : moveDetail.mvEnVo;
+      if (audioUrl) {
+        const playAudioTwice = () => {
+          if (audioRef.current) {
+            audioRef.current.src = audioUrl; // Set the correct audio source
+            audioRef.current.play();
+            audioRef.current.onended = () => {
+              setTimeout(() => {
+                if (audioRef.current) {
+                  audioRef.current.play();
+                }
+              }, 2000); // 2초 후에 다시 재생
+              audioRef.current.onended = null; // 두 번째 재생 후에는 이벤트 핸들러 제거
+            };
+          }
+        };
+
+        const timer = setTimeout(playAudioTwice, 5000); // 5초 후에 음성 재생
+
+        return () => {
+          clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
+          if (audioRef.current) {
+            audioRef.current.onended = null; // 이벤트 핸들러 제거
+          }
+        };
+      }
+    }
+  }, [moveDetail, language]);
 
   const handleCompletion = async () => {
     try {
@@ -47,6 +79,16 @@ const PoomsaeEduOnePage = ({ language }) => {
     setShowSuccessPopup(false);
     setShowFailurePopup(false);
     navigate(`/ps_edu`);
+  };
+
+  const handleAudioClick = () => {
+    if (audioRef.current) {
+      const audioUrl = language === 'ko' ? moveDetail.mvKoVo : moveDetail.mvEnVo;
+      if (audioUrl) {
+        audioRef.current.src = audioUrl;
+        audioRef.current.play();
+      }
+    }
   };
 
   if (loading) {
@@ -86,7 +128,7 @@ const PoomsaeEduOnePage = ({ language }) => {
           </div>
         </div>
         <div className='mvDescription'>
-          <img src={AudioImage} alt="audio" />
+          <img src={AudioImage} alt="audio" onClick={handleAudioClick} style={{ cursor: 'pointer' }} />
           <div className='mvPsDiv'>
             <div className='mvPs'>
               <h2 className='mvPsName'>{mvName}</h2>
@@ -110,6 +152,9 @@ const PoomsaeEduOnePage = ({ language }) => {
           )}
         </div>
       </div>
+      {(moveDetail.mvKoVo || moveDetail.mvEnVo) && (
+        <audio ref={audioRef} />
+      )}
       {showSuccessPopup && (
         <PopUp
           className="eduPopUp"

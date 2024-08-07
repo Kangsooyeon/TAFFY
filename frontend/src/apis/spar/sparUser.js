@@ -21,6 +21,6 @@ axiosInstance.interceptors.request.use(
 
 
 export const fetchSparingUser = async () => {
-  const response = await axiosInstance.get('/spar-rooms/join');
+  const response = await axiosInstance.get('/sparring/');
   return response.data;
 };
