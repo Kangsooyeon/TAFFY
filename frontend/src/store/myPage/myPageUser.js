@@ -1,6 +1,6 @@
 // store/myPage/myPageUser.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchUserProfile, fetchUserUpdateProfile } from '../../apis/user/user.js';
+import { fetchUserProfile, fetchUserUpdateProfile, fetchUserDeleteProfile } from '../../apis/user/user.js';
 import { fetchNicknameProfile } from '../../apis/user/nickname.js';
 
 export const fetchUserProfileAsync = createAsyncThunk(
@@ -26,6 +26,14 @@ export const fetchNicknameProfileAsync = createAsyncThunk(
     return data;
   }
 );
+
+export const fetchUserDeleteProfileAsync = createAsyncThunk(
+  'user/fetchUserDeleteProfile',
+  async () => {
+    const data = await fetchUserDeleteProfile()
+    return data
+  }
+)
 
 const userSlice = createSlice({
   name: 'user',
@@ -72,8 +80,19 @@ const userSlice = createSlice({
       .addCase(fetchNicknameProfileAsync.rejected, (state, action) => {
         state.nicknameStatus = 'failed';
         state.nicknameError = action.error.message;
-      });
-  },
-});
+      })
+      .addCase(fetchUserDeleteProfileAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUserDeleteProfileAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.profile = action.payload;  // true 또는 false 값
+      })
+      .addCase(fetchUserDeleteProfileAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+    },
+})
 
 export default userSlice.reducer;
