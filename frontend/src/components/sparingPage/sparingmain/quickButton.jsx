@@ -4,7 +4,7 @@ import Punch from '../../../assets/images/sparingPage/punch.png';
 import { useDispatch } from 'react-redux';
 import { fetchQuickSparingAsync } from '../../../store/sparing/quickStart';
 
-const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken }) => {
+const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, setStatus }) => {
   const dispatch = useDispatch();
 
   const handleQuickStart = async () => {
@@ -15,13 +15,14 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken }
 
       setSessionID(sessionId);
       setConnectionToken(connectionToken);
+      setStatus(status)
 
       if (status === 'waiting') {
         console.log('대기 상태입니다');
       } else if (status === 'start') {
         const dataMessage = {
           nickname: userdata.data.nickname,
-          sessionId: sessionId
+          sessionId: sessionId,
         };             
         console.log(dataMessage)
         stompClient.publish({

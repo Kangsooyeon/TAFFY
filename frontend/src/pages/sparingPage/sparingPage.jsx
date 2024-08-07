@@ -23,9 +23,12 @@ const SparingPage = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [sessionID, setSessionID] = useState(null);
   const [connectionToken, setConnectionToken] = useState(null);
+  const [status, setStatus] = useState(null);
 
-  // useRef를 사용하여 최신 상태값을 참조하도록 함
   const sessionIDRef = useRef(sessionID);
+  const connectionTokenRef = useRef(connectionToken);
+  const userdataRef = useRef(userdata);
+  const statusRef = useRef(status);
 
   useEffect(() => {
     dispatch(fetchSparingUserAsync());
@@ -57,21 +60,44 @@ const SparingPage = () => {
     };
   }, []);
 
-  // sessionIDRef.current를 최신 sessionID로 업데이트
   useEffect(() => {
     sessionIDRef.current = sessionID;
   }, [sessionID]);
+
+  useEffect(() => {
+    connectionTokenRef.current = connectionToken;
+  }, [connectionToken]);
+
+  useEffect(() => {
+    userdataRef.current = userdata;
+  }, [userdata]);
+
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   const joinGame = (message) => {
     const receivedData = JSON.parse(message.body);
     console.log('Game data received: ', receivedData);
     console.log('Received sessionId:', receivedData.sessionId);
     console.log('Current sessionID:', sessionIDRef.current);
-    if (receivedData.sessionId === sessionIDRef.current) {
-      console.log('game start!');
-      navigate(`/sp/game/${sessionIDRef.current}`, {
-        state: { sessionId: sessionIDRef.current, connectionToken, status: 'start' },
-      });
+
+    if (sessionIDRef.current && connectionTokenRef.current && userdataRef.current && statusRef.current) {
+      if (receivedData.sessionId === sessionIDRef.current) {
+        console.log('game start!');
+        console.log('Connection Token:', connectionTokenRef.current);
+        console.log('User Data:', userdataRef.current);
+        navigate(`/sp/game/${sessionIDRef.current}`, {
+          state: {
+            sessionId: sessionIDRef.current,
+            connectionToken: connectionTokenRef.current,
+            userdata: userdataRef.current,
+            status: statusRef.current,
+          },
+        });
+      }
+    } else {
+      console.error('One of the required refs is null');
     }
   };
 
@@ -100,11 +126,12 @@ const SparingPage = () => {
         </div>
         <div className="centerSection">
           {userdata ? <UserCharacter userdata={userdata} /> : <div>No profile data</div>}
-          <QuickButton            
+          <QuickButton
             userdata={userdata}
             stompClient={stompClient}
             setSessionID={setSessionID}
             setConnectionToken={setConnectionToken}
+            setStatus={setStatus}
           />
         </div>
         <div className="rightSection">
