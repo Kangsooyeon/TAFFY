@@ -19,7 +19,10 @@ import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
 import { logout, setAuthFromStorage } from './store/user/loginLogout';
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
+let stompClient = null;
 
 function App() {
   const navigate = useNavigate();
@@ -68,6 +71,49 @@ function App() {
     setShowPopUp(true); 
   };
 
+  // const [sessionId, setSessionId] = useState('');
+  // const [nickname, setNickname] = useState('');
+  // const [messages, setMessages] = useState([]);
+
+  // useEffect(() => {
+  //   const socket = new SockJS('https://i11e104.p.ssafy.io/ws');
+  //   stompClient = new Client({
+  //     webSocketFactory: () => socket,
+  //     debug: (str) => console.log(str),
+  //     reconnectDelay: 5000,
+  //     onConnect: () => {
+  //       console.log('Connected to WebSocket');
+  //       stompClient.subscribe('/topic/data', onMessageReceived);
+  //     },
+  //     onStompError: (error) => {
+  //       console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
+  //     },
+  //   });
+  //   stompClient.activate();
+  // }, []);
+
+  // const sendMessage = (e) => {
+  //   e.preventDefault();
+  //   if (sessionId.trim() && nickname.trim()) {
+  //     const dataMessage = {
+  //       sessionId,
+  //       nickname
+  //     };
+  //     stompClient.publish({
+  //       destination: '/app/data.send',
+  //       body: JSON.stringify(dataMessage)
+  //     });
+  //     setSessionId('');
+  //     setNickname('');
+  //   }
+  // };
+
+  // const onMessageReceived = (payload) => {
+  //   const message = JSON.parse(payload.body);
+  //   console.log('Message received: ', message); // 메시지 수신 확인
+  //   setMessages((prevMessages) => [...prevMessages, message]);
+  // };
+
   return (
     <div>
       {(!isTestPage && !isSparPage) && (
@@ -82,7 +128,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game" element={<SparingDetailPage />} />
+        <Route path="/sp/game/:sessionId" element={<SparingDetailPage />} />
         <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/mypage" element={<MyPage language={language}  />} />

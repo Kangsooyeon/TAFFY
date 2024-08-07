@@ -48,3 +48,8 @@ export const fetchUserUpdateProfile = async (profileData) => {
     throw error;
   }
 };
+
+export const fetchUserDeleteProfile = async () => {
+  const response = await axiosInstance.delete('/user');
+  return response.data
+}

@@ -46,31 +46,6 @@ const SparingDetailPage = () => {
         session.publish(publisher);
         setPublisher(publisher);
         setSession(session);
-
-        // Set up WebSocket connection
-        const socket = new SockJS('https://i11e104.p.ssafy.io/ws');
-        stompClient = new Client({
-          webSocketFactory: () => socket,
-          debug: (str) => {
-            console.log(str);
-          },
-          reconnectDelay: 5000,
-          onConnect: () => {
-            setIsConnected(true);
-            stompClient.subscribe(`/topic/game/${sessionId}`, (message) => {
-              const { event } = JSON.parse(message.body);
-              if (event === 'start') {
-                setPlayerStatus('start');
-              }
-            });
-
-            stompClient.publish({ destination: '/app/join', body: JSON.stringify({ sessionId, status }) });
-          },
-          onStompError: (error) => {
-            console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
-          },
-        });
-        stompClient.activate();
       })
       .catch(error => {
         console.error('Failed to connect to the session:', error);
