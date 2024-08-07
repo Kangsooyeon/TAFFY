@@ -1,8 +1,8 @@
 import "../../../styles/sparingPage/sparingmain/invitation.css";
 import Search from "../../../assets/images/sparingPage/search.png";
 import axios from "axios";
-import { useState, useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Invitation = ({ stompClient }) => {
   const token = localStorage.getItem("accessToken");
@@ -15,9 +15,16 @@ const Invitation = ({ stompClient }) => {
   useEffect(() => {
     if (stompClient && stompClient.connected) {
       // Subscribe to a topic to receive messages
-      const subscription = stompClient.subscribe('/topic/data', (message) => {
+      const subscription = stompClient.subscribe("/topic/data", (message) => {
         const receivedMessage = JSON.parse(message.body);
-        console.log('Received message:', receivedMessage);
+        console.log("Received message:", receivedMessage);
+
+        // Check if the received nickname matches userdata.nickname
+        console.log(`I am : ${userdata.data.nickname}`);
+        
+        if (receivedMessage.nickname === userdata.data.nickname) {
+          alert(`You have received a message from ${receivedMessage.nickname}`);
+        }
       });
 
       // Clean up subscription on unmount
@@ -25,7 +32,7 @@ const Invitation = ({ stompClient }) => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient]);
+  }, [stompClient, userdata.nickname]);
 
   const handleInvite = useCallback(async () => {
     // OpenVidu session create API
@@ -56,17 +63,18 @@ const Invitation = ({ stompClient }) => {
       };
 
       if (stompClient && stompClient.connected) {
-        stompClient.publish({ destination: '/app/data.send', body: JSON.stringify(dataMessage) });
-        alert('Message sent successfully');
+        stompClient.publish({
+          destination: "/app/data.send",
+          body: JSON.stringify(dataMessage),
+        });
+        alert("Message sent successfully");
         console.log(dataMessage);
-        
       }
     } catch (error) {
       console.error("Error sending invite:", error);
       alert("create session failed");
     }
   }, [token, userdata, stompClient, nickname]);
-
 
   function InvitationCard() {
     return (
@@ -108,13 +116,10 @@ const Invitation = ({ stompClient }) => {
     );
   }
 
-  let invitationContent = userStatus === "waiting" ? <WaitingCard /> : <InvitationCard />;
+  let invitationContent =
+    userStatus === "waiting" ? <WaitingCard /> : <InvitationCard />;
 
-  return (
-    <div className="invitation">
-      {invitationContent}
-    </div>
-  );
+  return <div className="invitation">{invitationContent}</div>;
 };
 
 export default Invitation;
