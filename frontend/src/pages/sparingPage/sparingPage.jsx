@@ -25,7 +25,7 @@ const SparingPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = new SockJS('http://i11e104.p.ssafy.io:8081/ws');
+    const socket = new SockJS('https://i11e104.p.ssafy.io:8081/ws');
     console.log(socket)
     stompClient = new Client({
       webSocketFactory: () => socket,
