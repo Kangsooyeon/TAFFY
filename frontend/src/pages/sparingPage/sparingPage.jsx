@@ -12,49 +12,45 @@ import { fetchSparingUserAsync } from '../../store/sparing/sparUser';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
-let stompClient = null;
-
 const SparingPage = () => {
   const dispatch = useDispatch();
+  const [stompClient, setStompClient] = useState(null);
   const [isOpenHelp, setIsOpenHelp] = useState(false);
   const { userdata, status: userdataStatus } = useSelector((state) => state.sparingUser);
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     dispatch(fetchSparingUserAsync());
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = new SockJS('http://i11e104.p.ssafy.io:8081/ws');
-    console.log(socket)
-    stompClient = new Client({
+    const socket = new SockJS('https://i11e104.p.ssafy.io/ws');
+    const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {
         console.log(str);
       },
       reconnectDelay: 5000,
-      onConnect: onConnected,
-      onStompError: onError,
+      onConnect: () => {
+        console.log('Connected to WebSocket');
+        setStompClient(client);
+      },
+      onStompError: (error) => {
+        console.error('WebSocket error:', error);
+      },
     });
-    stompClient.activate();
+
+    client.activate();
+
+    // Cleanup function
+    return () => {
+      if (client.connected) {
+        client.deactivate();
+      }
+    };
   }, []);
 
-  const onConnected = () => {
-    console.log('Connected to WebSocket');
-    setIsConnected(true);
-  };
-
-  const onError = (error) => {
-    console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
-  };
-
-  const openHelp = () => {
-    setIsOpenHelp(true);
-  };
-
-  const closeHelp = () => {
-    setIsOpenHelp(false);
-  };
+  const openHelp = () => setIsOpenHelp(true);
+  const closeHelp = () => setIsOpenHelp(false);
 
   if (userdataStatus === 'loading') {
     return <div>Loading...</div>;
@@ -76,8 +72,8 @@ const SparingPage = () => {
           <QuickButton userdata={userdata} />
         </div>
         <div className="rightSection">
-          <MessageBox />
-          <Invitation />
+          {/* <MessageBox /> 초대가 오면 뜸*/}
+          {stompClient && <Invitation stompClient={stompClient} />}
         </div>
       </div>
       <button className="helpbutton" onClick={openHelp}>?</button>
