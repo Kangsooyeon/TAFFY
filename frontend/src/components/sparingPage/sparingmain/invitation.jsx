@@ -61,6 +61,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
       const dataMessage = {
         sessionId: response.data.data.sessionId,
         nickname: nickname,
+        inviter : userdata.data.nickname,
       };
 
       if (stompClient && stompClient.connected) {

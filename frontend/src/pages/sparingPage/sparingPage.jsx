@@ -32,6 +32,23 @@ const SparingPage = () => {
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
 
+  const handleReceiveMessage = (message) => {
+    setReceivedMessage(message);
+    setShowMessageBox(true);
+  };
+
+  const handleAccept = () => {
+    console.log('Invitation accepted');
+    setShowMessageBox(false);
+    // Additional logic for accepting the invitation, e.g., starting a game or joining a session
+  };
+
+  const handleDeny = () => {
+    console.log('Invitation denied');
+    setShowMessageBox(false);
+    // Additional logic for denying the invitation, e.g., notifying the inviter
+  };
+
   useEffect(() => {
     dispatch(fetchSparingUserAsync());
   }, [dispatch]);
@@ -137,9 +154,8 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
-          {/* Show MessageBox when a message is received */}
-          {showMessageBox && <MessageBox message={receivedMessage} />}
-          {stompClient && <Invitation stompClient={stompClient} onReceiveMessage={(msg) => { setReceivedMessage(msg); setShowMessageBox(true); }} />}
+          {showMessageBox && <MessageBox inviter={receivedMessage.inviter} onAccept={handleAccept} onDeny={handleDeny} />}
+          {stompClient && <Invitation stompClient={stompClient} onReceiveMessage={handleReceiveMessage} />}
         </div>
       </div>
       <button className="helpbutton" onClick={openHelp}>?</button>
