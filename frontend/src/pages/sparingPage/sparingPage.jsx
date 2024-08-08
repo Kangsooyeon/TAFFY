@@ -24,6 +24,8 @@ const SparingPage = () => {
   const [sessionID, setSessionID] = useState(null);
   const [connectionToken, setConnectionToken] = useState(null);
   const [status, setStatus] = useState(null);
+  const [showMessageBox, setShowMessageBox] = useState(false);
+  const [receivedMessage, setReceivedMessage] = useState(null);
 
   const sessionIDRef = useRef(sessionID);
   const connectionTokenRef = useRef(connectionToken);
@@ -135,8 +137,9 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
-          {/* <MessageBox /> 초대가 오면 뜸*/}
-          {stompClient && <Invitation stompClient={stompClient} />}
+          {/* Show MessageBox when a message is received */}
+          {showMessageBox && <MessageBox message={receivedMessage} />}
+          {stompClient && <Invitation stompClient={stompClient} onReceiveMessage={(msg) => { setReceivedMessage(msg); setShowMessageBox(true); }} />}
         </div>
       </div>
       <button className="helpbutton" onClick={openHelp}>?</button>

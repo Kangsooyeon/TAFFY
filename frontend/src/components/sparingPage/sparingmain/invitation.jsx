@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const Invitation = ({ stompClient }) => {
+const Invitation = ({ stompClient, onReceiveMessage }) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
@@ -18,12 +18,13 @@ const Invitation = ({ stompClient }) => {
       const subscription = stompClient.subscribe("/topic/data", (message) => {
         const receivedMessage = JSON.parse(message.body);
         console.log("Received message:", receivedMessage);
-
-        // Check if the received nickname matches userdata.nickname
-        console.log(`I am : ${userdata.data.nickname}`);
         
         if (receivedMessage.nickname === userdata.data.nickname) {
           alert(`You have received a message from ${receivedMessage.nickname}`);
+          // Trigger the callback to show the message box
+          if (onReceiveMessage) {
+            onReceiveMessage(receivedMessage);
+          }
         }
       });
 
@@ -32,7 +33,7 @@ const Invitation = ({ stompClient }) => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient, userdata.nickname]);
+  }, [stompClient, userdata.nickname, onReceiveMessage]);
 
   const handleInvite = useCallback(async () => {
     // OpenVidu session create API
