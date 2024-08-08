@@ -5,10 +5,10 @@ import Dragon from '../../assets/images/myPage/용 머리.png';
 import Tiger from '../../assets/images/myPage/호랑이 머리.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserUpdateProfileAsync, fetchUserProfileAsync } from '../../store/myPage/myPageUser.js';
+import { fetchUserUpdateProfileAsync, fetchUserProfileAsync, fetchUserDeleteProfileAsync } from '../../store/myPage/myPageUser.js';
 import axios from 'axios';
 
-const UserUpdatePage = ({ closeUpdate }) => {
+const UserUpdatePage = ({ closeUpdate, language }) => {
   const dispatch = useDispatch();
   const { profile, status, error } = useSelector((state) => state.user);
 
@@ -37,7 +37,9 @@ const UserUpdatePage = ({ closeUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (profileData.nickName !== initialNickName && !isNicknameChecked) {
-      alert('닉네임 중복확인을 해주세요.');
+      {language === 'en' ?
+        alert('Please check for duplicate nicknames.') :
+        alert('닉네임 중복확인을 해주세요') }
       return;
     }
     try {
@@ -53,15 +55,21 @@ const UserUpdatePage = ({ closeUpdate }) => {
     try {
       const response = await axios.post('https://i11e104.p.ssafy.io/api/nickname', { nickName: profileData.nickName });
       if (response.status === 200) {
-        alert('사용 가능한 닉네임입니다');
+        {language === 'en' ?
+           alert('Available nickname') :
+           alert('사용 가능한 닉네임입니다') }
         setIsNicknameChecked(true); // 중복확인 완료로 설정
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        alert('이미 존재하는 닉네임입니다');
+        {language === 'en' ?
+          alert('This nickname already exists') :
+          alert('이미 존재하는 닉네임입니다') }
       } else {
         console.error('Error checking nickname:', error);
-        alert('닉네임 확인 중 오류가 발생했습니다.');
+        {language === 'en' ?
+          alert('An error occurred while resolving your nickname.') :
+          alert('닉네임 확인 중 오류가 발생했습니다') }
       }
       setIsNicknameChecked(false); // 중복확인 실패로 설정
     }
@@ -97,7 +105,7 @@ const UserUpdatePage = ({ closeUpdate }) => {
       <form onSubmit={handleSubmit} className="updateformbox">
         <div className="input-container">
           <div className="input-wrapper">
-            <label className="input-label">닉네임</label>
+            <label className="input-label">{language === 'en' ? 'Nickname' : '닉네임'}</label>
             <input
               type="text"
               value={profileData.nickName}
@@ -108,9 +116,9 @@ const UserUpdatePage = ({ closeUpdate }) => {
               <button className="clear-btn" onClick={clearInput}>&times;</button>
             )}
           </div>
-          <button type="button" className="submit-btn" onClick={handleNickname}>중복확인</button>
+          <button type="button" className="submit-btn" onClick={handleNickname}>{language === 'en' ? 'Double check' : '중복확인'}</button>
         </div>
-        <div className="character-label">캐릭터 선택</div>
+        <div className="character-label">{language === 'en' ? 'Character' : '캐릭터 선택'}</div>
         <div className="character-selection-container">
           <div className="character-options">
             {[
@@ -133,27 +141,27 @@ const UserUpdatePage = ({ closeUpdate }) => {
           </div>
         </div>
         <div className="nationcontainer">
-          <label className="nationlabel">국가 선택</label>
+          <label className="nationlabel">{language === 'en' ? 'Country' : '국가 선택'}</label>
           <select
             className="nationselect"
             name="country"
             value={profileData.countryName}
             onChange={handleCountryChange}
           >
-            <option value="USA">미국</option>
-            <option value="Korea">한국</option>
-            <option value="China">중국</option>
-            <option value="India">인도</option>
-            <option value="Canada">캐나다</option>
-            <option value="Australia">호주</option>
-            <option value="Indonesia">인도네시아</option>
-            <option value="Vietnam">베트남</option>
-            <option value="Morocco">모로코</option>
-            <option value="Malaysia">말레이시아</option>
+            <option value="USA">{language === 'en' ? 'USA' : '미국'}</option>
+            <option value="Korea">{language === 'en' ? 'Korea' : '한국'}</option>
+            <option value="China">{language === 'en' ? 'China' : '중국'}</option>
+            <option value="India">{language === 'en' ? 'India' : '인도'}</option>
+            <option value="Canada">{language === 'en' ? 'Canada' : '캐나다'}</option>
+            <option value="Australia">{language === 'en' ? 'Australia' : '호주'}</option>
+            <option value="Indonesia">{language === 'en' ? 'Indonesia' : '인도네시아'}</option>
+            <option value="Vietnam">{language === 'en' ? 'Vietnam' : '베트남'}</option>
+            <option value="Morocco">{language === 'en' ? 'Morocco' : '모로코'}</option>
+            <option value="Malaysia">{language === 'en' ? 'Malaysia' : '말레이시아'}</option>
           </select>
         </div>
-        <button type="button" className="userdeletebutton" onClick={handleUserDelete}>회원 탈퇴</button>
-        <button type="submit" className="updatesavebutton">저장</button>
+        <button type="button" className="userdeletebutton" onClick={handleUserDelete}>{language === 'en' ? 'Withdrawal' : '회원 탈퇴'}</button>
+        <button type="submit" className="updatesavebutton">{language === 'en' ? 'Save' : '저장'}</button>
       </form>
       {status === 'failed' && <p className="error-message">Error: {error}</p>}
     </div>

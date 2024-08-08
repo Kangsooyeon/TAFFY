@@ -1,6 +1,6 @@
-import { useState, useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
+import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import LandingPage from "./pages/landingPage/landingPage";
 import MainPage from "./pages/mainPage/mainPage";
@@ -18,7 +18,11 @@ import MyPage from "./pages/myPage/myPage"
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
-import { logout, setAuthFromStorage  } from './store/user/loginLogout'; 
+import { logout, setAuthFromStorage } from './store/user/loginLogout';
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+
+let stompClient = null;
 
 function App() {
   const navigate = useNavigate();
@@ -28,7 +32,6 @@ function App() {
   const isSparPage = location.pathname.startsWith('/sp/game');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
-
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
@@ -42,18 +45,19 @@ function App() {
     }
   }, [dispatch]);
 
-
   const handleLogin = () => {
     navigate('/login');
   };
-  
 
   const handleLogoutConfirm = () => {
-    // 쿠키 삭제
-    Cookies.remove('accessToken', { path: '/' });
-    Cookies.remove('refreshToken', { path: '/' });
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    // 모든 로컬 스토리지 항목 삭제
+    localStorage.clear();
+
+    // 모든 쿠키 삭제
+    const allCookies = Cookies.get(); // 모든 쿠키 가져오기
+    for (let cookie in allCookies) {
+      Cookies.remove(cookie, { path: '/' });
+    }
 
     // 리덕스 스토어 업데이트
     dispatch(logout());
@@ -66,6 +70,49 @@ function App() {
   const handleLogout = () => {
     setShowPopUp(true); 
   };
+
+  // const [sessionId, setSessionId] = useState('');
+  // const [nickname, setNickname] = useState('');
+  // const [messages, setMessages] = useState([]);
+
+  // useEffect(() => {
+  //   const socket = new SockJS('https://i11e104.p.ssafy.io/ws');
+  //   stompClient = new Client({
+  //     webSocketFactory: () => socket,
+  //     debug: (str) => console.log(str),
+  //     reconnectDelay: 5000,
+  //     onConnect: () => {
+  //       console.log('Connected to WebSocket');
+  //       stompClient.subscribe('/topic/data', onMessageReceived);
+  //     },
+  //     onStompError: (error) => {
+  //       console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
+  //     },
+  //   });
+  //   stompClient.activate();
+  // }, []);
+
+  // const sendMessage = (e) => {
+  //   e.preventDefault();
+  //   if (sessionId.trim() && nickname.trim()) {
+  //     const dataMessage = {
+  //       sessionId,
+  //       nickname
+  //     };
+  //     stompClient.publish({
+  //       destination: '/app/data.send',
+  //       body: JSON.stringify(dataMessage)
+  //     });
+  //     setSessionId('');
+  //     setNickname('');
+  //   }
+  // };
+
+  // const onMessageReceived = (payload) => {
+  //   const message = JSON.parse(payload.body);
+  //   console.log('Message received: ', message); // 메시지 수신 확인
+  //   setMessages((prevMessages) => [...prevMessages, message]);
+  // };
 
   return (
     <div>
@@ -81,12 +128,12 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game" element={<SparingDetailPage />} />
+        <Route path="/sp/game/:sessionId" element={<SparingDetailPage />} />
         <Route path="/sp/game/result" element={<SparingResultPage />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage language={language}  />} />
         <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
-        <Route path="/ps_edu/:stageNum/:moveId" element={<PoomsaeEduOnePage language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PoomsaeEduOnePage language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
         <Route path="/ps_test" element={<PoomsaeTestPage />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />

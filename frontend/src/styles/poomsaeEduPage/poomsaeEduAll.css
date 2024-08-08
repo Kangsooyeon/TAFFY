@@ -76,7 +76,7 @@
 }
 
 .mvPs{
-  width: 29%;
+  width: 31%;
   padding: 1.2%;
 }
 
@@ -88,7 +88,15 @@
   margin: 0;
   box-sizing: border-box;
   font-size: 19px;
-  margin-top: -31px;
+  margin-top: -2px;
+
+}
+
+.mvPsDiv{
+  display: flex;
+  width: 100%;
+  text-align: top;
+  gap: 2%;
 }
 
 .allEduFooter {

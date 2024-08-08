@@ -27,4 +27,14 @@
   border: 3px solid #000;
   background: #D9D9D9;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.camvideo {
+  height: 100%;
+  width: 140%;
+  object-fit: contain; 
 }

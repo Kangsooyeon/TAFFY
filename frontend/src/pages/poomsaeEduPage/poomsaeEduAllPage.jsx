@@ -112,7 +112,7 @@ const PoomsaeEduAllPage = ({ language }) => {
             <ProgressBar
               value={progress}
               title={language === 'ko' ? '진행률' : 'Progress'}
-              text={`${currentMoveIndex + 1} / ${moves.length}`}
+              text={`${currentMoveIndex} / ${moves.length}`}
             />
 
           </div>
@@ -121,13 +121,15 @@ const PoomsaeEduAllPage = ({ language }) => {
 
         <div className='mvDescription'>
           <img src={AudioImage} alt="audio" />
-          <div className='mvPs'>
-            <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
+          <div className='mvPsDiv'>
+            <div className='mvPs'>
+              <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
+            </div>
+            <PsDescription
+              className="mvPsDes"
+              description={description}
+            />
           </div>
-          <PsDescription
-            className="mvPsDes"
-            description={description}
-          />
         </div>
 
         <div className='allEduFooter'>

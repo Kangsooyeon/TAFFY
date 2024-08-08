@@ -11,7 +11,7 @@ import WhiteBelt from '../../../assets/images/common/belt/whiteBelt.png'
 import YellowBelt from '../../../assets/images/common/belt/yellowBelt.png'
 
 
-const userInfo = ({profile}) => {
+const userInfo = ({userdata}) => {
   const getSparBeltSrc = (beltname) => {
     switch (beltname) {
       case 'BlackBelt':
@@ -63,10 +63,10 @@ const userInfo = ({profile}) => {
   return (
     <div className="overlap-group">
       <div className="userInfoBox">
-        <div className="nickname">{profile.nickname}</div>
+        <div className="nickname">{userdata.data.nickname}</div>
         <div className="beltInfo">
-          <div className={`beltname ${getBeltNameClass(profile.beltName.split('/')[1].replace(/\s/g, ''))}`}>{profile.beltName.split('/')[0]}</div>
-          <img className="belt" src={getSparBeltSrc(profile.beltName.split('/')[1].replace(/\s/g, ''))} alt="Belt" />
+          <div className={`beltname ${getBeltNameClass(userdata.data.belt.split('/')[1].replace(/\s/g, ''))}`}>{userdata.data.belt.split('/')[0]}</div>
+          <img className="belt" src={getSparBeltSrc(userdata.data.belt.split('/')[1].replace(/\s/g, ''))} alt="Belt" />
         </div>
       </div>
       <img className="vector" alt="Vector" src={Vector} />

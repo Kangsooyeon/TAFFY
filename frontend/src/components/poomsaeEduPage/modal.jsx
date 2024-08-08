@@ -7,11 +7,14 @@ import MvItem from './mvItem';
 import { useNavigate } from 'react-router-dom';
 import RightButton from '../../assets/images/poomsaeEduPage/right.png';
 import LeftButton from '../../assets/images/poomsaeEduPage/left.png';
+import { useSelector } from 'react-redux';
 
 const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, moves, loading, error }) => {
   const [buttonText, setButtonText] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
+
+  const completedMoves = useSelector((state) => state.move.completedMoves);
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '전체 학습' : 'All Learning');
@@ -62,17 +65,22 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
               <img src={LeftButton} alt="left" />
             </button>
             <div className='mvItems'>
-              {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => (
-                <MvItem
-                  key={index}
-                  title={language === 'ko' ? move.mvKoName : move.mvEnName}
-                  image={move.mvThumb}
-                  language={language}
-                  moveId={move.mvId}
-                  stageNum={stageNum}
-                  index={currentPage * itemsPerPage + index}
-                />
-              ))}
+              {moves.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((move, index) => {
+                const isCompleted = completedMoves.some(cm => cm.psId === stageNum && cm.mvSeq === move.mvSeq);
+                return (
+                  <MvItem
+                    key={index}
+                    title={language === 'ko' ? move.mvKoName : move.mvEnName}
+                    image={move.mvThumb}
+                    language={language}
+                    mvSeq={move.mvSeq}
+                    stageNum={stageNum}
+                    index={currentPage * itemsPerPage + index}
+                    isCompleted={isCompleted} // 완료 상태 전달
+                    isDone={move.isDone}
+                  />
+              );
+            })}
             </div>
             <button className="navButton nextButton" onClick={handleNextPage}>
               <img src={RightButton} alt="right" />
@@ -102,9 +110,11 @@ Modal.propTypes = {
   language: PropTypes.string.isRequired,
   moves: PropTypes.arrayOf(PropTypes.shape({
     mvId: PropTypes.number.isRequired,
+    mvSeq: PropTypes.number.isRequired,
     mvThumb: PropTypes.string.isRequired,
     mvKoName: PropTypes.string.isRequired,
     mvEnName: PropTypes.string,
+    isDone: PropTypes.bool.isRequired,
   })).isRequired,
   loading: PropTypes.bool.isRequired,
   error: PropTypes.string,
