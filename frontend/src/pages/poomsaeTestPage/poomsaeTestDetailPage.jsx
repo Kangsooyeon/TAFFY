@@ -6,10 +6,10 @@ import PopUp from '../../components/common/popUp';
 import ProgressBar from '../../components/common/progressBar';
 import axios from 'axios';
 import Webcam from '../../components/poomsaeTestPage/Webcam';
-import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
-import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
-import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
-import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
+// import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
+// import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
+// import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
+// import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 
 const PoomsaeTestDetailPage = () => {
@@ -24,42 +24,44 @@ const PoomsaeTestDetailPage = () => {
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
 
     useEffect(() => {
-        const instructions = [
-            '차렷',
-            '경례',
-            '준비',
-            '시작'
-        ];
+        // const instructions = [
+        //     '차렷',
+        //     '경례',
+        //     '준비',
+        //     '시작'
+        // ];
 
-        let currentInstruction = 0;
+        // let currentInstruction = 0;
 
         const changeInstruction = () => {
-            if (currentInstruction < instructions.length) {
-                setInstruction(instructions[currentInstruction]);
+            // if (currentInstruction < instructions.length) {
+            //     setInstruction(instructions[currentInstruction]);
 
-                let audio;
-                if (instructions[currentInstruction] === '차렷') {
-                    audio = new Audio(attentionSound);
-                } else if (instructions[currentInstruction] === '경례') {
-                    audio = new Audio(saluteSound);
-                } else if (instructions[currentInstruction] === '준비') {
-                    audio = new Audio(preparationSound);
-                } else if (instructions[currentInstruction] === '시작') {
-                    audio = new Audio(startSound);
-                    audio.play().then(() => {
-                        setTimeout(() => {
-                            console.log('Predictions:', predictions);
-                        }, 5000);
-                    });
-                }
+            //     let audio;
+            //     if (instructions[currentInstruction] === '차렷') {
+            //         audio = new Audio(attentionSound);
+            //     } else if (instructions[currentInstruction] === '경례') {
+            //         audio = new Audio(saluteSound);
+            //     } else if (instructions[currentInstruction] === '준비') {
+            //         audio = new Audio(preparationSound);
+            //     } else if (instructions[currentInstruction] === '시작') {
+            //         audio = new Audio(startSound);
+            //         audio.play().then(() => {
+            //             setTimeout(() => {
+            //                 console.log('Predictions:', predictions);
+            //             }, 5000);
+            //         });
+            //     }
 
-                if (audio) {
-                    audio.play();
-                }
+            //     if (audio) {
+            //         audio.play();
+            //     }
 
-                currentInstruction++;
-                setTimeout(changeInstruction, 3000);
-            }
+            //     currentInstruction++;
+            //     if (instructions[currentInstruction - 1] !== '시작') {
+            //         setTimeout(changeInstruction, 3000);
+            //     }
+            // }
         };
 
         const timer = setTimeout(changeInstruction, 3000);
@@ -118,7 +120,12 @@ const PoomsaeTestDetailPage = () => {
 
     const handlePrediction = (predictions) => {
         // Handle the prediction result here
-        const predictionResults = predictions.map((p, index) => `Class ${index}: ${p.toFixed(2)}`);
+        const predictionArray = Array.from(predictions);
+        const top3Predictions = predictionArray
+            .map((p, index) => ({ class: index, probability: p }))
+            .sort((a, b) => b.probability - a.probability)
+            .slice(0, 3);
+        const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
     };
 

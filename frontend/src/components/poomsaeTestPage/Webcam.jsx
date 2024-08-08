@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
 const Webcam = ({ onPrediction }) => {
@@ -9,13 +9,17 @@ const Webcam = ({ onPrediction }) => {
 
     useEffect(() => {
         const init = async () => {
-            await tf.setBackend('webgl');
-            await tf.ready();
+            try {
+                await tf.setBackend('webgl');
+                await tf.ready();
+            } catch (error) {
+                console.warn("WebGL is not supported on this device. Switching to CPU backend.");
+                await tf.setBackend('cpu');
+                await tf.ready();
+            }
 
             const modelURL = URL + "model.json";
             model = await tf.loadLayersModel(modelURL);
-            // console.log("Model Loaded:", model);
-            // model.summary(); // 모델 구조를 출력하여 확인
 
             const video = webcamRef.current;
             const canvas = canvasRef.current;
@@ -34,11 +38,16 @@ const Webcam = ({ onPrediction }) => {
                 minTrackingConfidence: 0.5
             });
 
+            let predictionCount = 0;
+            const maxPredictions = 5;
+
             pose.onResults(async (results) => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-                window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 4 });
-                window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 2 });
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // 비디오 프레임 그리기
+
+                // 포즈 랜드마크 그리기
+                window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
+                window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
 
                 if (results.poseLandmarks) {
                     const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
@@ -46,7 +55,7 @@ const Webcam = ({ onPrediction }) => {
                         console.error("Keypoints length is incorrect:", keypoints.length);
                         return;
                     }
-                    
+
                     // 관절 좌표를 콘솔에 출력
                     console.log('Pose Landmarks:', results.poseLandmarks);
 
@@ -72,34 +81,49 @@ const Webcam = ({ onPrediction }) => {
                 height: 480
             });
 
-            camera.start();
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false // 오디오 비활성화
+                });
+                video.srcObject = stream;
+                video.play();
+                camera.start();
+
+                // 10초마다 예측 실행
+                const predictionInterval = setInterval(async () => {
+                    if (predictionCount >= maxPredictions) {
+                        clearInterval(predictionInterval);
+                        console.log('Prediction completed.');
+                        return;
+                    }
+                    await pose.send({ image: video });
+                    predictionCount++;
+                }, 10000); // 10000ms = 10초
+
+                // Cleanup
+                return () => {
+                    clearInterval(predictionInterval);
+                    if (webcamRef.current && webcamRef.current.srcObject) {
+                        const tracks = webcamRef.current.srcObject.getTracks();
+                        tracks.forEach(track => track.stop());
+                    }
+                };
+            } catch (error) {
+                alert("Failed to acquire camera feed: " + error.message);
+                console.error("Error accessing the camera: ", error);
+            }
         };
 
         init();
-
-        return () => {
-            if (webcamRef.current && webcamRef.current.srcObject) {
-                const tracks = webcamRef.current.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-            }
-        };
     }, [onPrediction]);
 
     return (
-        <div className="webcam">
+        <div className="webcam-container">
             <video
                 ref={webcamRef}
                 style={{
-                    position: 'absolute',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    left: 0,
-                    right: 0,
-                    textAlign: 'center',
-                    zIndex: 9,
-                    width: 640,
-                    height: 480,
-                    visibility: 'visible', // 웹캠 비디오 표시
+                    display: 'none', // 비디오를 숨기고 캔버스에 그릴 것이므로 숨김
                 }}
                 autoPlay
                 playsInline
@@ -107,13 +131,6 @@ const Webcam = ({ onPrediction }) => {
             <canvas
                 ref={canvasRef}
                 style={{
-                    position: 'absolute',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    left: 0,
-                    right: 0,
-                    textAlign: 'center',
-                    zIndex: 10,
                     width: 640,
                     height: 480,
                 }}
