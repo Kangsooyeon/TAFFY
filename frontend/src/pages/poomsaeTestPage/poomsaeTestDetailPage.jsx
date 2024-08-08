@@ -11,17 +11,34 @@ import Webcam from '../../components/poomsaeTestPage/Webcam';
 // import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
 // import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
+import { fetchAllStageDetails } from '../../apis/stageApi';
 
 const PoomsaeTestDetailPage = () => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null);
     const [instruction, setInstruction] = useState('영역 안에 몸 전체가 보이도록 위치를 조정해주세요.');
     const [predictions, setPredictions] = useState([]);
+    const [moves, setMoves] = useState([]);
+    const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
     const dispatch = useDispatch();
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
+
+    useEffect(() => {
+        const getStageDetails = async () => {
+            try {
+                const data = await fetchAllStageDetails(poomsaeId, token);
+                console.log('Fetched Data:', data); // 반환 값 확인
+                setMoves(data.data.mvDetails);
+            } catch (error) {
+                console.error('Error fetching stage details:', error);
+            }
+        };
+
+        getStageDetails();
+    }, [poomsaeId, token]);
 
     useEffect(() => {
         // const instructions = [
@@ -72,9 +89,10 @@ const PoomsaeTestDetailPage = () => {
 
     const handleProgressUpdate = (success) => {
         if (success) {
-            const newProgress = progress + 20;
+            const newProgress = (currentMoveIndex + 1) / moves.length * 100;
             setProgress(newProgress);
-            if (newProgress >= 100) {
+            setCurrentMoveIndex(currentMoveIndex + 1);
+            if (currentMoveIndex + 1 >= moves.length) {
                 setGameStatus('pass');
             }
         } else {
@@ -127,6 +145,11 @@ const PoomsaeTestDetailPage = () => {
             .slice(0, 3);
         const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
+
+        // 예측 결과가 80 이상인 경우 진행률을 업데이트
+        if (predictionArray[currentMoveIndex] >= 0.8) {
+            handleProgressUpdate();
+        }
     };
 
     return (
@@ -149,7 +172,7 @@ const PoomsaeTestDetailPage = () => {
                 <div className='progress-bar-container'>
                     <ProgressBar 
                         value={progress} 
-                        text={`${progress}%`} 
+                        text={`${currentMoveIndex} / ${moves.length}`} 
                         title="진행률" 
                     />
                 </div>
