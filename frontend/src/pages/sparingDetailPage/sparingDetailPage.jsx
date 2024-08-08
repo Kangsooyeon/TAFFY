@@ -12,22 +12,38 @@ import GameUser from '../../components/sparingPage/sparinggame/gameuser.jsx';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { OpenVidu } from 'openvidu-browser';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 
 const SparingDetailPage = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { connectionToken, userdata } = location.state;
   console.log('Received in SparingDetailPage:', { connectionToken, userdata });
+
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
   const [subscribers, setSubscribers] = useState([]);
   const [opponentData, setOpponentData] = useState(null);
+  const [round, setRound] = useState(0);
+  const [myMission, setMyMission] = useState('');
+  const [opponentMission, setOpponentMission] = useState('');
+  const [isAttack, setIsAttack] = useState(true); // 초기 상태: 공격
+
+  const atkData = useSelector(state => state.sparingMission.data?.ATK);
+  const defData = useSelector(state => state.sparingMission.data?.DEF);
+
+  useEffect(() => {
+    dispatch(fetchSparingMissionUserAsync('ATK'));
+    dispatch(fetchSparingMissionUserAsync('DEF'));
+  }, [dispatch]);
+
   const nickname = userdata.data.nickname;
 
   useEffect(() => {
     const OV = new OpenVidu();
     const session = OV.initSession();
 
-    // Signal event to receive opponent's data
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
@@ -35,6 +51,14 @@ const SparingDetailPage = () => {
         setOpponentData(data);
       } else {
         console.log('Ignored own signal:userData');
+      }
+    });
+
+    session.on('signal:mission', (event) => {
+      const { mission, isAttack: senderIsAttack } = JSON.parse(event.data);
+      console.log('Received mission signal:', mission, senderIsAttack);
+      if (senderIsAttack !== isAttack) {
+        setOpponentMission(mission);
       }
     });
 
@@ -76,7 +100,25 @@ const SparingDetailPage = () => {
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken, userdata]);
+  }, [connectionToken, userdata, nickname]);
+
+  const nextRound = () => {
+    const missionList = isAttack ? atkData : defData;
+    if (!missionList) return; // missionList가 없을 경우 바로 반환
+    console.log(Math.random() * missionList.length)
+    const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
+    console.log(mission);
+    setMyMission(mission.moKoName);
+
+    session.signal({
+      data: JSON.stringify({ mission: mission.moKoName, isAttack }),
+      to: [],
+      type: 'mission'
+    });
+
+    setRound(round + 1);
+    setIsAttack(!isAttack); // 공수를 변경
+  };
 
   const renderGameUsers = () => {
     if (publisher && opponentData) {
@@ -97,6 +139,7 @@ const SparingDetailPage = () => {
       return null;
     }
   };
+
   const renderGameCharacters = () => {
     if (publisher && opponentData) {
       return (
@@ -119,7 +162,7 @@ const SparingDetailPage = () => {
 
   return (
     <div className="sparinggame">
-      <img src={Left} className="sparinggameleft" alt="" />
+      {/* <img src={Left} className="sparinggameleft" alt="" /> */}
       <img src={Right} className="sparinggameright" alt="" />
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
@@ -129,14 +172,13 @@ const SparingDetailPage = () => {
       <HpBar className="hpbarright" />
       <Score />
       {renderGameCharacters()}
-      {/* <Character className="characterleft"/>
-      <Character className="characterright" /> */}
-      <Mission />
+      <Mission myMission={myMission} opponentMission={opponentMission} />
       <Timer />
       <WebCam className="webcamleft" streamManager={publisher} />
       {subscribers.map((subscriber, index) => (
         <WebCam key={index} className="webcamright" streamManager={subscriber} />
       ))}
+      <button onClick={nextRound}>Next Round</button>
     </div>
   );
 };

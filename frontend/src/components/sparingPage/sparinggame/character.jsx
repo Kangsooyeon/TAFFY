@@ -32,7 +32,7 @@ const characterImages = {
   Bear: {
     basic: [Bear_basic_1, Bear_basic_2, Bear_basic_3],
     attack_fail: Bear_attack_fail,
-    depence: Bear_depence,
+    defense: Bear_depence,
     leg: [Bear_leg_1, Bear_leg_2],
     punch: Bear_punch,
     fail: Bear_fail,
@@ -40,7 +40,7 @@ const characterImages = {
   Tiger: {
     basic: [Tiger_basic_1, Tiger_basic_2, Tiger_basic_3],
     attack_fail: Tiger_attack_fail,
-    depence: Tiger_depence,
+    defense: Tiger_depence,
     leg: [Tiger_leg_1, Tiger_leg_2],
     punch: Tiger_punch,
     fail: Tiger_fail,
@@ -48,7 +48,7 @@ const characterImages = {
   Dragon: {
     basic: [Dragon_basic_1, Dragon_basic_2, Dragon_basic_3],
     attack_fail: Dragon_attack_fail,
-    depence: Dragon_depence,
+    defense: Dragon_depence,
     leg: [Dragon_leg_1, Dragon_leg_2],
     punch: Dragon_punch,
     fail: Dragon_fail,

@@ -9,6 +9,7 @@ import poomsaeTestReducer from './poomsaeTest/poomsaeTest';
 import moveReducer from './poomsaeEdu/moveSlice';
 import quickStartReducer from './sparing/quickStart'
 import sparingUserReducer from './sparing/sparUser'
+import sparingMissionReducer from './sparing/sparMission'
 
 // Redux store 설정
 const store = configureStore({
@@ -22,7 +23,8 @@ const store = configureStore({
     userRecord: userRecordReducer,
     move: moveReducer,
     quickStart: quickStartReducer,
-    sparingUser: sparingUserReducer
+    sparingUser: sparingUserReducer,
+    sparingMission: sparingMissionReducer,
   }
 });
 
