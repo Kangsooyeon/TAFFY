@@ -19,7 +19,7 @@ const SparingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpenHelp, setIsOpenHelp] = useState(false);
-  const { userdata, status: userdataStatus } = useSelector((state) => state.sparingUser);
+  const { userdata } = useSelector((state) => state.sparingUser);
   const [isConnected, setIsConnected] = useState(false);
   const [sessionID, setSessionID] = useState(null);
   const [connectionToken, setConnectionToken] = useState(null);
@@ -29,6 +29,7 @@ const SparingPage = () => {
   const connectionTokenRef = useRef(connectionToken);
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
+
 
   useEffect(() => {
     dispatch(fetchSparingUserAsync());
@@ -109,14 +110,6 @@ const SparingPage = () => {
     setIsOpenHelp(false);
   };
 
-  if (userdataStatus === 'loading') {
-    return <div>Loading...</div>;
-  }
-
-  if (userdataStatus === 'failed') {
-    return <div>Error loading data</div>;
-  }
-
   return (
     <div className="sparingtoppage">
       <div className="sparingPage">
@@ -135,8 +128,8 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
-          {/* <MessageBox /> 초대가 오면 뜸*/}
-          {stompClient && <Invitation stompClient={stompClient} />}
+          {/* <MessageBox /> 초대가 오면 뜸
+          {stompClient && <Invitation stompClient={stompClient} />} */}
         </div>
       </div>
       <button className="helpbutton" onClick={openHelp}>?</button>

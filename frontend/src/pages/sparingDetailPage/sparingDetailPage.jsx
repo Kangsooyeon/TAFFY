@@ -20,10 +20,23 @@ const SparingDetailPage = () => {
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
   const [subscribers, setSubscribers] = useState([]);
+  const [opponentData, setOpponentData] = useState(null);
+  const nickname = userdata.data.nickname;
 
   useEffect(() => {
     const OV = new OpenVidu();
     const session = OV.initSession();
+
+    // Signal event to receive opponent's data
+    session.on('signal:userData', (event) => {
+      const data = JSON.parse(event.data);
+      if (data.nickname !== nickname) {
+        console.log('Received signal:userData:', data);
+        setOpponentData(data);
+      } else {
+        console.log('Ignored own signal:userData');
+      }
+    });
 
     session.on('streamCreated', (event) => {
       const subscriber = session.subscribe(event.stream, undefined);
@@ -41,11 +54,20 @@ const SparingDetailPage = () => {
           insertMode: 'APPEND',
           width: '100%',
           height: '100%',
+          publishAudio: false,
         });
 
         session.publish(publisher);
         setPublisher(publisher);
         setSession(session);
+
+        const userDataWithNickname = { ...userdata, nickname };
+        console.log('Sending userData signal:', userDataWithNickname);
+        session.signal({
+          data: JSON.stringify(userDataWithNickname),
+          to: [],
+          type: 'userData'
+        });
       })
       .catch(error => {
         console.error('Failed to connect to the session:', error);
@@ -54,7 +76,27 @@ const SparingDetailPage = () => {
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken]);
+  }, [connectionToken, userdata]);
+
+  const renderGameUsers = () => {
+    if (publisher && opponentData) {
+      return (
+        <>
+          <GameUser className="gameuserleft" userdata={userdata} />
+          <GameUser className="gameuserright" userdata={opponentData} />
+        </>
+      );
+    } else if (subscribers && opponentData) {
+      return (
+        <>
+          <GameUser className="gameuserleft" userdata={opponentData} />
+          <GameUser className="gameuserright" userdata={userdata} />
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className="sparinggame">
@@ -63,8 +105,7 @@ const SparingDetailPage = () => {
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
-      <GameUser className="gameuserleft" userdata={userdata} />
-      <GameUser className="gameuserright" userdata={userdata} />
+      {renderGameUsers()}
       <HpBar className="hpbarleft" />
       <HpBar className="hpbarright" />
       <Score />
