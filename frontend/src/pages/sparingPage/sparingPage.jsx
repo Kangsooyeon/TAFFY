@@ -12,6 +12,7 @@ import { fetchSparingUserAsync } from '../../store/sparing/sparUser';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../apis/axiosInstance';
 
 let stompClient = null;
 
@@ -37,12 +38,44 @@ const SparingPage = () => {
     setShowMessageBox(true);
   };
 
-  const handleAccept = () => {
+
+  const handleAccept = async () => {
     console.log('Invitation accepted');
     setShowMessageBox(false);
-    // Additional logic for accepting the invitation, e.g., starting a game or joining a session
+  
+    if (receivedMessage && receivedMessage.sessionId) {
+      try {
+        // Construct the URL with query string
+        const url = `/sparring/game-invitations?sessionId=${encodeURIComponent(receivedMessage.sessionId)}`;
+  
+        // Make the POST request with the sessionId as a query parameter
+        const response = await axiosInstance.post(url);
+  
+        console.log('Session ID being sent as query:', receivedMessage.sessionId);
+        console.log('Game invitation accepted:', response.data);
+  
+        // Navigate to the game session if successful
+        navigate(`/sp/game/${receivedMessage.sessionId}`, {
+          state: {
+            connectionToken: connectionTokenRef.current,
+            userdata: userdataRef.current,
+          },
+        });
+      } catch (error) {
+        console.error('Error accepting game invitation:', error);
+        // Handle error (e.g., show a notification to the user)
+        if (error.response) {
+          console.error('Error data:', error.response.data);
+          console.error('Error status:', error.response.status);
+          console.error('Error headers:', error.response.headers);
+        }
+      }
+    } else {
+      console.error('No valid session ID found in received message');
+    }
   };
-
+  
+  
   const handleDeny = () => {
     console.log('Invitation denied');
     setShowMessageBox(false);
