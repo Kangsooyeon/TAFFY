@@ -1,4 +1,5 @@
 package com.taffy.backend.fight.service;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taffy.backend.fight.controller.FightController;
 import com.taffy.backend.fight.dto.ConnectionInfoDto;
 import io.openvidu.java.client.Connection;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class FightService {
     private static final Logger log = LoggerFactory.getLogger(FightController.class);
     private final MemberRepository memberRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-
+    private final ObjectMapper objectMapper;
     private static final String ROOM_PREFIX = "taffy:";
     private final LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
@@ -120,6 +122,12 @@ public class FightService {
         return joinRoom(memberId,sessionId);
     }
 
+    public String exitRoom(Long memberId, String sessionId){
+        // 1. sessionId 로 room 가져오기.
+        //getUsers(sessionId);
+        return null;
+    }
+
     public String findAvailableRoom(){
         Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match("*").build());
         while (cursor.hasNext()) {
@@ -134,7 +142,7 @@ public class FightService {
     public Map<String, Object> getOnePeopleRome() {
         Map<String, Object> keys = new HashMap<>();
         Map<String, Object> filteredKeys = new HashMap<>();
-        Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match("*").build());
+        Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match("ses_*").build());
         while (cursor.hasNext()) {
             String key = new String(cursor.next());
             List<Object> value = redisTemplate.opsForList().range(key, 0, -1);
@@ -145,12 +153,37 @@ public class FightService {
         }
         return filteredKeys;
     }
+//
     @Transactional(readOnly = true)
-    public void getSpecificKey(String key) {
-        Object value = redisTemplate.opsForList().range(key,0,-1);
-        System.out.println("Key: " + key + ", Value: " + value);
+    public List<RedisHashUser>  getUsers(String sessionId) {
+        List<Object> list = redisTemplate.opsForList().range(sessionId, 0, -1);
+        return list.stream().map(obj -> objectMapper.convertValue(obj, RedisHashUser.class)).collect(Collectors.toList());
     }
+//
+public void deleteInviter(Long memberId, String sessionId) {
+    List<RedisHashUser> users = getUsers(sessionId);
+    RedisHashUser userToRemove = users.stream()
+            .filter(user -> user.getId().equals(memberId))
+            .findFirst()
+            .orElse(null);
 
+    System.out.println(userToRemove);
+
+    if (userToRemove != null) {
+        try {
+            // ObjectMapper를 사용해 RedisHashUser 객체를 JSON 문자열로 직렬화
+            ObjectMapper objectMapper = new ObjectMapper();
+            String userToRemoveJson = objectMapper.writeValueAsString(userToRemove);
+
+            // JSON 문자열로 remove 메서드 호출
+            System.out.println(userToRemoveJson);
+            Long result = redisTemplate.opsForList().remove(sessionId, 1, userToRemoveJson);
+            System.out.println("result = " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
 
     private RedisHashUser createRedisHashUser(Long memberId) {
         // 해당 member의 존재여부 체크

@@ -1,5 +1,6 @@
 package com.taffy.backend.fight.service;
 
+import com.taffy.backend.fight.dto.RedisHashUser;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -21,8 +23,16 @@ public class FightServiceTest {
     public void testSearch(){
 //        fightService.testConnection();
 
-        System.out.println(    fightService.getAllKeys()     );
+        List<RedisHashUser> users = fightService.getUsers("ses_JaDvDNFa2l");
+
+       // System.out.println(  users.get(0)   );
         System.out.println("asfasdfsafsadfsadfsadfsadfesadfsad");
-      fightService.getSpecificKey("ses_BYceIdFFRX");
+
+    //  fightService.getSpecificKey("ses_BYceIdFFRX");
+    }
+
+    @Test
+    public void testDelete(){
+        fightService.deleteInviter(22L,"ses_RT28DU1PmT");
     }
 }
