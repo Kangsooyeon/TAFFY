@@ -97,6 +97,25 @@ const SparingDetailPage = () => {
       return null;
     }
   };
+  const renderGameCharacters = () => {
+    if (publisher && opponentData) {
+      return (
+        <>
+          <Character className="characterleft" userdata={userdata} action="leg" />
+          <Character className="characterright" userdata={opponentData} action="leg" />
+        </>
+      );
+    } else if (subscribers && opponentData) {
+      return (
+        <>
+          <Character className="characterleft" userdata={opponentData} action="leg" />
+          <Character className="characterright" userdata={userdata} action="leg" />
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className="sparinggame">
@@ -109,8 +128,9 @@ const SparingDetailPage = () => {
       <HpBar className="hpbarleft" />
       <HpBar className="hpbarright" />
       <Score />
-      <Character className="characterleft"/>
-      <Character className="characterright" />
+      {renderGameCharacters()}
+      {/* <Character className="characterleft"/>
+      <Character className="characterright" /> */}
       <Mission />
       <Timer />
       <WebCam className="webcamleft" streamManager={publisher} />

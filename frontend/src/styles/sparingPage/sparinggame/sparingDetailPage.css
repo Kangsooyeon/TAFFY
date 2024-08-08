@@ -90,11 +90,11 @@
 }
 
 .characterleft {
-  left: 35%;
+  left: 28%;
   transform: scaleX(-1)
 }
 
 .characterright {
-  right: 35%;
+  right: 28%;
 
 }
