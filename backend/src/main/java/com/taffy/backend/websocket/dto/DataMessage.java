@@ -7,7 +7,5 @@ public class DataMessage {
     private String sessionId;
     private String nickname;
     private String inviter;
-
-
     // getters and setters
 }

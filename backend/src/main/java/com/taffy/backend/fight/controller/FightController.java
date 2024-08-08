@@ -49,7 +49,7 @@ public class FightController {
     }
 
     @PostMapping("/game-invitations")
-    public ResponseEntity<ResponseDto> enterRoom(@AuthenticationPrincipal Long memberId, @RequestParam  String sessionId)
+    public ResponseEntity<ResponseDto> enterRoom(@AuthenticationPrincipal Long memberId, @RequestBody  String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException {
         ConnectionInfoDto connectionInfoDto = fightService.joinRoom(memberId, sessionId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value() , "방 가입 완료", connectionInfoDto));
