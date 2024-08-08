@@ -1,6 +1,6 @@
 import '../../styles/poomsaeEduPage/poomsaeEduAll.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import PsDescription from '../../components/poomsaeEduPage/psDescription';
 import ProgressBar from '../../components/common/progressBar';
@@ -23,8 +23,10 @@ const PoomsaeEduAllPage = ({ language }) => {
   const { stageNum } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const token = useSelector((state) => state.auth.token); // 사용자 토큰 가져오기
   const token = localStorage.getItem('accessToken');
+  const audioRef = useRef(null);
+  const audioTimeoutRef = useRef(null);
+
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -40,7 +42,8 @@ const PoomsaeEduAllPage = ({ language }) => {
         const data = await fetchAllStageDetails(stageNum);
         setStageDetails(data.data.ps);
         setMoves(data.data.mvDetails);
-        setDescription(language === 'ko' ? data.data.mvDetails[0].mvKoDesc : data.data.mvDetails[0].mvEnDesc); // 첫번째 동작 설명
+        setDescription(language === 'ko' ? data.data.mvDetails[0].mvKoDesc : data.data.mvDetails[0].mvEnDesc);
+        playAudio(language === 'ko' ? data.data.mvDetails[0].mvKoVo : data.data.mvDetails[0].mvEnVo);
       } catch (error) {
         console.error("Failed to fetch stage details:", error);
       }
@@ -49,12 +52,54 @@ const PoomsaeEduAllPage = ({ language }) => {
     fetchData();
   }, [stageNum, language]);
 
+  const playAudio = (audioUrl) => {
+    if (audioRef.current && audioUrl) {
+      // 기존 오디오 중단
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      if (audioTimeoutRef.current) {
+        clearTimeout(audioTimeoutRef.current);
+      }
+
+      audioTimeoutRef.current = setTimeout(() => {
+        audioRef.current.src = audioUrl;
+        audioRef.current.play().then(() => {
+          audioRef.current.onended = () => {
+            setTimeout(() => {
+              audioRef.current.play();
+              audioRef.current.onended = null;
+            }, 2000);
+          };
+        }).catch(error => {
+          console.error('Audio playback failed:', error);
+        });
+      }, 3000);
+    }
+  };
+
+  const handleAudioClick = () => {
+    if (audioRef.current && moves[currentMoveIndex]) {
+      const audioUrl = language === 'ko' ? moves[currentMoveIndex].mvKoVo : moves[currentMoveIndex].mvEnVo;
+      if (audioUrl) {
+        audioRef.current.pause();
+        audioRef.current.src = audioUrl;
+        audioRef.current.play().catch(error => {
+          console.error('Audio playback failed:', error);
+        });
+      }
+    }
+  };
+
   const handleNextMove = () => {
     if (currentMoveIndex < moves.length - 1) {
       setCurrentMoveIndex(currentMoveIndex + 1);
       setDescription(language === 'ko' ? moves[currentMoveIndex + 1].mvKoDesc : moves[currentMoveIndex + 1].mvEnDesc);
       setProgress(((currentMoveIndex + 1) / moves.length) * 100);
       setAccuracy(75); // 예시값
+
+      // 다음 동작으로 이동할 때 자동 재생
+      const audioUrl = language === 'ko' ? moves[currentMoveIndex + 1].mvKoVo : moves[currentMoveIndex + 1].mvEnVo;
+      playAudio(audioUrl);
     } else {
       setProgress(100);
       setAccuracy(100);
@@ -99,28 +144,25 @@ const PoomsaeEduAllPage = ({ language }) => {
           </div>
           <div className='userCam'></div>
           <div className='progress'>
-            {/* 1. 정확도 */}
             <ProgressBar
               value={accuracy}
-              title={language === 'ko' ? '정확도' : 'Accuracy'}              
+              title={language === 'ko' ? '정확도' : 'Accuracy'}
               text={accuracy.toString()}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"
             />
-            {/* 2. 진행률 */}
             <ProgressBar
               value={progress}
               title={language === 'ko' ? '진행률' : 'Progress'}
               text={`${currentMoveIndex} / ${moves.length}`}
             />
-
           </div>
-          <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button> {/* 임시 버튼 */}
+          <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button>
         </div>
 
         <div className='mvDescription'>
-          <img src={AudioImage} alt="audio" />
+          <img src={AudioImage} alt="audio" onClick={handleAudioClick} style={{ cursor: 'pointer' }} />
           <div className='mvPsDiv'>
             <div className='mvPs'>
               <h2 className='mvPsName'>{language === 'ko' ? moves[currentMoveIndex]?.mvKoName : moves[currentMoveIndex]?.mvEnName}</h2>
@@ -139,6 +181,7 @@ const PoomsaeEduAllPage = ({ language }) => {
           </button>
         </div>
       </div>
+      <audio ref={audioRef} />
       {showSuccessPopup && (
         <PopUp
           className="eduPopUp"
