@@ -60,7 +60,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
       // Emit socket message after setting up session details
       const dataMessage = {
         sessionId: response.data.data.sessionId,
-        nickname: nickname,
+        nickname: nickname, // invitee's nickname
         inviter : userdata.data.nickname,
       };
 
