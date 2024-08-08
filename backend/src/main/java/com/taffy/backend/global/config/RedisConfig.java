@@ -17,10 +17,11 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public class RedisConfig {
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> userRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
 
@@ -35,7 +36,7 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisTemplate<String, Member> uesrRedisTemplate(RedisConnectionFactory connectionFactory) {
+    RedisTemplate<String, Member> redisTemplate(RedisConnectionFactory connectionFactory) {
         var objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModule(new JavaTimeModule())
