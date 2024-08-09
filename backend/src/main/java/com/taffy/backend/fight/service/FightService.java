@@ -78,7 +78,7 @@ public class FightService {
 
 
     @Transactional(readOnly = true)
-    public ConnectionInfoDto createRoom(Long memberId)
+    public ConnectionInfoDto createRoom(Long memberId, String status)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Map<String, Object> map =new HashMap<>();
         //member 존재여부 체크
@@ -90,6 +90,9 @@ public class FightService {
         map.put("sessionId", sessionId);
         map.put("memberId", memberId);
         //redis에 저장
+        if(status.equals("private:")){
+            sessionId = status + sessionId;
+        }
         redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         //openvidu 미디어서버로 connection
         String connectionToken = joinSession(map);
@@ -97,8 +100,11 @@ public class FightService {
     }
 
     @Transactional(readOnly = true)
-    public ConnectionInfoDto joinRoom(Long memberId, String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ConnectionInfoDto joinRoom(Long memberId, String sessionId, String status) throws OpenViduJavaClientException, OpenViduHttpException {
         RedisHashUser redisHashUser = createRedisHashUser(memberId);
+        if(status.equals("private")){
+            sessionId= "private:"+sessionId;
+        }
         redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         Map<String, Object> map =new HashMap<>();
         map.put("sessionId", sessionId);
@@ -111,13 +117,14 @@ public class FightService {
     public ConnectionInfoDto quickStart(Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
         // 빠른참여
         //일단 redis에 빈 방 있는지부터 찾아
+        String status = "quick";
         String sessionId = findAvailableRoom();
-        System.out.println("quickStart method  sessoinId  : " + sessionId);
+        System.out.println("quickStart method sessionId  : " + sessionId);
         if(sessionId.equals("notfound")){ //참여가능한 게임방을 찾지 못한 경우
             // 자신이 새로 게임방을 만든 후, 다른 사람이 들어올 때 까지 대기하게 됨
-            return createRoom(memberId);
+            return createRoom(memberId,status);
         }
-        return joinRoom(memberId,sessionId);
+        return joinRoom(memberId,sessionId,status);
     }
 
     public String exitRoom(Long memberId, String sessionId){

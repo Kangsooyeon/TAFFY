@@ -44,14 +44,16 @@ public class FightController {
     }
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
-        ConnectionInfoDto connectionInfoDto = fightService.createRoom(memberId);
+        String status = "private";
+        ConnectionInfoDto connectionInfoDto = fightService.createRoom(memberId,status);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", connectionInfoDto));
     }
 
     @PostMapping("/game-invitations")
     public ResponseEntity<ResponseDto> enterRoom(@AuthenticationPrincipal Long memberId, @RequestParam  String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException {
-        ConnectionInfoDto connectionInfoDto = fightService.joinRoom(memberId, sessionId);
+        String status = "private";
+        ConnectionInfoDto connectionInfoDto = fightService.joinRoom(memberId, sessionId, status);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value() , "방 가입 완료", connectionInfoDto));
     }
 
