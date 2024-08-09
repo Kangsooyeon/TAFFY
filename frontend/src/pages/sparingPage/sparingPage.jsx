@@ -41,24 +41,30 @@ const SparingPage = () => {
   };
 
   const handleAccept = async () => {
-    console.log("Invitation accepted");
     setShowMessageBox(false);
 
     if (receivedMessage && receivedMessage.sessionId) {
       try {
-        // Construct the URL with query string
         const url = `/sparring/game-invitations?sessionId=${encodeURIComponent(
           receivedMessage.sessionId
         )}`;
 
-        // Make the POST request with the sessionId as a query parameter
+        // 초대수락 API 호출
         const response = await axiosInstance.post(url);
+        console.log(
+          "피초대자 connectionToken:",
+          response.data.data.connectionToken
+        );
+
+        // connectionToken 저장
+        setConnectionToken(response.data.data.connectionToken);
 
         console.log(
           "Session ID being sent as query:",
           receivedMessage.sessionId
         );
-        console.log("Game invitation accepted:", response.data);
+
+        console.log("Game invitation Accepted:", response.data);
 
         // Send a message back to the inviter
         if (stompClient && stompClient.connected) {
@@ -68,21 +74,17 @@ const SparingPage = () => {
             inviter: receivedMessage.inviter, // inviter's nickname
             status: "accepted",
           };
-  
 
           stompClient.publish({
             destination: "/app/data.send",
             body: JSON.stringify(acceptanceMessage),
           });
-          alert("Send to Inviter the acceptance message");
-
-          console.log("Acceptance message sent:", acceptanceMessage);
         }
 
         // Navigate to the game session if successful
         navigate(`/sp/game/${receivedMessage.sessionId}`, {
           state: {
-            connectionToken: connectionTokenRef.current,
+            connectionToken: response.data.data.connectionToken,
             userdata: userdataRef.current,
           },
         });
@@ -119,26 +121,15 @@ const SparingPage = () => {
       onConnect: () => {
         console.log("Connected to WebSocket");
 
-      // Subscribe to accept messages
-      stompClient.subscribe("/topic/data", (message) => {
-        const receivedData = JSON.parse(message.body);
-        
-        // 초대 메시지 수신
-        if (!receivedData.status) joinGame(message);
+        // Subscribe to accept messages
+        stompClient.subscribe("/topic/data", (message) => {
+          const receivedData = JSON.parse(message.body);
 
-        // 수락 메시지 수신
-        if (receivedData.status === "accepted") {
-          console.log("Acceptance message received:", receivedData);
-
-          // Navigate to the game session
-          navigate(`/sp/game/${receivedData.sessionId}`, {
-            state: {
-              connectionToken: connectionTokenRef.current,
-              userdata: userdataRef.current,
-            },
-          });
-        }
-      });
+          // 빠른대전
+          if (!receivedData.status) {
+            joinGame(message);
+          }
+        });
 
         setIsConnected(true);
       },
@@ -198,6 +189,10 @@ const SparingPage = () => {
             // status: statusRef.current,
           },
         });
+        alert("join game");
+        alert(
+          `connectionToken: ${connectionTokenRef.current} sessionID: ${receivedMessage.sessionId}`
+        );
       }
     } else {
       console.error("One of the required refs is null");

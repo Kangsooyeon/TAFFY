@@ -3,6 +3,7 @@ import Search from "../../../assets/images/sparingPage/search.png";
 import axios from "axios";
 import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Invitation = ({ stompClient, onReceiveMessage }) => {
   const token = localStorage.getItem("accessToken");
@@ -11,20 +12,49 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
   const [userStatus, setUserStatus] = useState("");
   const [nickname, setNickname] = useState("");
   const { userdata } = useSelector((state) => state.sparingUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (stompClient && stompClient.connected) {
-      // Subscribe to a topic to receive messages
+      // 겨루자 초대 메시지 구독
       const subscription = stompClient.subscribe("/topic/data", (message) => {
         const receivedMessage = JSON.parse(message.body);
         console.log("Received message:", receivedMessage);
-        
-        if (receivedMessage.nickname === userdata.data.nickname) {
-          alert(`You have received a message from ${receivedMessage.nickname}`);
-          // Trigger the callback to show the message box
+
+        // `status`가 여기서 존재하는지 확인
+        console.log("수신한 상태:", receivedMessage.status);
+
+        if (
+          receivedMessage.nickname === userdata.data.nickname &&
+          receivedMessage.status === "invite"
+        ) {
+          alert(`초대한 사람이 있습니다: ${receivedMessage.inviter}`);
           if (onReceiveMessage) {
             onReceiveMessage(receivedMessage);
           }
+        } else if (
+          receivedMessage.status === "accepted" &&
+          receivedMessage.inviter === userdata.data.nickname
+        ) {
+          console.log("Acceptance message received:", receivedMessage);
+
+          alert(
+            `connectionToken: ${connectionToken} sessionID: ${receivedMessage.sessionId}`
+          );
+
+          // Navigate to the game session
+          // 게임 세션으로 이동
+          console.log(`conenctionToken : ${connectionToken}`);
+          
+          navigate(
+            `/sp/game/${receivedMessage.sessionId}`,
+            {
+              state: {
+                connectionToken: connectionToken,
+                userdata: userdata,
+              },
+            }
+          );
         }
       });
 
@@ -33,7 +63,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient, userdata.nickname, onReceiveMessage]);
+  }, [stompClient, userdata, onReceiveMessage, connectionToken, navigate]);
 
   const handleInvite = useCallback(async () => {
     // OpenVidu session create API
@@ -61,7 +91,8 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
       const dataMessage = {
         sessionId: response.data.data.sessionId,
         nickname: nickname, // invitee's nickname
-        inviter : userdata.data.nickname,
+        inviter: userdata.data.nickname,
+        status: "invite",
       };
 
       if (stompClient && stompClient.connected) {
@@ -70,7 +101,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           body: JSON.stringify(dataMessage),
         });
         alert("Message sent successfully");
-        console.log(dataMessage);
+        console.log("Message sent:", dataMessage);
       }
     } catch (error) {
       console.error("Error sending invite:", error);
