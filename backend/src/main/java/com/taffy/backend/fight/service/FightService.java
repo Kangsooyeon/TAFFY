@@ -132,10 +132,14 @@ public class FightService {
         return joinRoom(memberId,sessionId,status);
     }
 
-    public String exitRoom(Long memberId, String sessionId){
+    public void exitRoom(Long memberId, String sessionId, String roomType){
         // 1. sessionId 로 room 가져오기.
         //getUsers(sessionId);
-        return null;
+        if(roomType.equals("private")){
+            deleteInviter(memberId, "private:"+sessionId);
+        }else{
+            deleteInviter(memberId, sessionId);
+        }
     }
 
     public String findAvailableRoom(){

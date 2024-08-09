@@ -54,8 +54,8 @@ public class FightController {
     }
 
     @DeleteMapping("/exit")
-    public ResponseEntity<ResponseDto> exitRoom(@Autowired Long memberId, @RequestParam String sessionId){
-        fightService.exitRoom(memberId, sessionId);
+    public ResponseEntity<ResponseDto> exitRoom(@Autowired Long memberId, @RequestParam String sessionId, @RequestParam String roomType){
+        fightService.exitRoom(memberId, sessionId, roomType);
         return null;
     }
 }

@@ -58,4 +58,9 @@ public class FightServiceTest {
         System.out.println(list);
     }
 
+    @Test
+    public void deleteTest(){
+        fightService.expiredRoom("ses_K9oer6p8Pj");
+    }
+
 }
