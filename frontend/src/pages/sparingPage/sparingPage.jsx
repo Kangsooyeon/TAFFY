@@ -93,7 +93,7 @@ const SparingPage = () => {
             // sessionId: sessionIDRef.current,
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
-            // status: statusRef.current,
+            status: statusRef.current,
           },
         });
       }

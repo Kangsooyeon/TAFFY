@@ -65,21 +65,27 @@ const Character = ({ className, userdata, action }) => {
       setCurrentAction(action);
       const timeout = setTimeout(() => {
         setCurrentAction('basic');
-      }, 5000); // 4초 후에 기본 동작으로 돌아감
+      }, 5000); // 5초 후에 기본 동작으로 돌아감
 
       return () => clearTimeout(timeout); // 컴포넌트 언마운트 시 타임아웃 정리
     }
   }, [action]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % characterImages[avatar][currentAction].length);
-    }, 500); // 500ms마다 이미지 변경
+    if (Array.isArray(characterImages[avatar][currentAction])) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % characterImages[avatar][currentAction].length);
+      }, 500); // 500ms마다 이미지 변경
 
-    return () => clearInterval(interval);
+      return () => clearInterval(interval);
+    } else {
+      setCurrentIndex(0); // 단일 이미지의 경우 인덱스를 0으로 설정
+    }
   }, [avatar, currentAction]);
 
-  const characterImage = characterImages[avatar][currentAction][currentIndex];
+  const characterImage = Array.isArray(characterImages[avatar][currentAction])
+    ? characterImages[avatar][currentAction][currentIndex]
+    : characterImages[avatar][currentAction];
 
   return (
     <div className={`character-box ${className}`}>

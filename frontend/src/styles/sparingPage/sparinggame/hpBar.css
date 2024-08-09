@@ -5,9 +5,12 @@
   width: 41%;
   height: 6%;
   clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 0% 100%);
-  background: linear-gradient(to right, red, orange, yellow);
   z-index: 5000
 }
 
+.gaugebar {
+  height: 100%;
+  background: linear-gradient(to right, red, orange, yellow);
+  transition: width 0.3s ease; /* 부드러운 감소 효과 */
+}
 
-/* width: ${(props) => props.dealt + "%"}; */

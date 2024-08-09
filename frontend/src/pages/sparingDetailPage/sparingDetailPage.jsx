@@ -9,7 +9,7 @@ import Score from '../../components/sparingPage/sparinggame/score.jsx';
 import Timer from '../../components/sparingPage/sparinggame/timer.jsx';
 import WebCam from '../../components/sparingPage/sparinggame/webCam.jsx';
 import GameUser from '../../components/sparingPage/sparinggame/gameuser.jsx';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,7 +18,8 @@ import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 const SparingDetailPage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { connectionToken, userdata } = location.state;
+  const navigate = useNavigate();
+  const { connectionToken, userdata, status } = location.state;
   console.log('Received in SparingDetailPage:', { connectionToken, userdata });
 
   const [session, setSession] = useState(null);
@@ -28,8 +29,41 @@ const SparingDetailPage = () => {
   const [round, setRound] = useState(0);
   const [myMission, setMyMission] = useState('');
   const [opponentMission, setOpponentMission] = useState('');
-  const [isAttack, setIsAttack] = useState(true); // 초기 상태: 공격
+  const [isAttack, setIsAttack] = useState(status === 'start' ? true : false);
+  const [myHp, setMyHp] = useState(100);
+  const [opponentHp, setOpponentHp] = useState(100);
+  const [myAction, setMyAction] = useState('basic');
+  const [opponentAction, setOpponentAction] = useState('basic');
+  
+  const nickname = userdata.data.nickname;
 
+  useEffect(() => {
+    if (myHp <= 0 || opponentHp <= 0) {
+      const isMyWin = myHp > 0;
+      const isOpponentWin = opponentHp > 0;
+  
+      session.signal({
+        data: JSON.stringify({
+          nickname,
+          myResult: isMyWin ? 'win' : 'lose',
+          opponentResult: isOpponentWin ? 'win' : 'lose',
+          myData: userdata,
+          opponentData: opponentData
+        }),
+        to: [],
+        type: 'result'
+      });
+  
+      navigate('/sp/game/result', {
+        state: {
+          myData: userdata,
+          opponentData: opponentData,
+          myResult: isMyWin ? 'win' : 'lose',
+          opponentResult: isOpponentWin ? 'win' : 'lose'
+        }
+      });
+    }
+  }, [myHp, opponentHp, session, navigate, userdata, opponentData, nickname]);
   const atkData = useSelector(state => state.sparingMission.data?.ATK);
   const defData = useSelector(state => state.sparingMission.data?.DEF);
 
@@ -37,8 +71,7 @@ const SparingDetailPage = () => {
     dispatch(fetchSparingMissionUserAsync('ATK'));
     dispatch(fetchSparingMissionUserAsync('DEF'));
   }, [dispatch]);
-
-  const nickname = userdata.data.nickname;
+  
 
   useEffect(() => {
     const OV = new OpenVidu();
@@ -47,18 +80,38 @@ const SparingDetailPage = () => {
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        console.log('Received signal:userData:', data);
         setOpponentData(data);
-      } else {
-        console.log('Ignored own signal:userData');
       }
     });
 
     session.on('signal:mission', (event) => {
-      const { mission, isAttack: senderIsAttack } = JSON.parse(event.data);
-      console.log('Received mission signal:', mission, senderIsAttack);
-      if (senderIsAttack !== isAttack) {
-        setOpponentMission(mission);
+      const data = JSON.parse(event.data);
+      if (data.nickname !== nickname) {
+        setOpponentMission(data.mission);
+      }
+    });
+
+    session.on('signal:action', (event) => {
+      const data = JSON.parse(event.data);
+      if (data.nickname !== nickname) {
+        setOpponentAction(data.myAction);
+        setMyAction(data.opponentAction);
+        if (data.opponentHp !== undefined) setOpponentHp(data.myHp);
+        if (data.myHp !== undefined) setMyHp(data.opponentHp);
+      }
+    });
+    
+    session.on('signal:result', (event) => {
+      const data = JSON.parse(event.data);
+      if (data.nickname !== nickname) {
+        navigate('/sp/game/result', {
+          state: {
+            myData: data.opponentData,
+            opponentData: data.myData,
+            myResult: data.opponentResult,
+            opponentResult: data.myResult
+          }
+        });
       }
     });
 
@@ -86,12 +139,12 @@ const SparingDetailPage = () => {
         setSession(session);
 
         const userDataWithNickname = { ...userdata, nickname };
-        console.log('Sending userData signal:', userDataWithNickname);
         session.signal({
           data: JSON.stringify(userDataWithNickname),
           to: [],
           type: 'userData'
         });
+
       })
       .catch(error => {
         console.error('Failed to connect to the session:', error);
@@ -102,22 +155,56 @@ const SparingDetailPage = () => {
     };
   }, [connectionToken, userdata, nickname]);
 
+  const handleWin = (winner) => {
+    let newMyAction, newOpponentAction;
+    let newMyHp = myHp;
+    let newOpponentHp = opponentHp;
+
+    if (winner === 'left') {
+      newOpponentHp = Math.max(newOpponentHp - 34, 0)
+      newMyAction = 'leg';
+      newOpponentAction = 'defense';
+    } else if (winner === 'right') {
+      newMyHp = Math.max(newMyHp - 34, 0)
+      newMyAction = 'defense';
+      newOpponentAction = 'leg';
+    }
+
+    setMyHp(newMyHp);
+    setOpponentHp(newOpponentHp);
+    setMyAction(newMyAction);
+    setOpponentAction(newOpponentAction);
+
+    session.signal({
+      data: JSON.stringify({
+        myAction: newMyAction,
+        opponentAction: newOpponentAction,
+        myHp: newMyHp,
+        opponentHp: newOpponentHp,
+        nickname,
+      }),
+      to: [],
+      type: 'action'
+    });
+  };
+
   const nextRound = () => {
     const missionList = isAttack ? atkData : defData;
-    if (!missionList) return; // missionList가 없을 경우 바로 반환
-    console.log(Math.random() * missionList.length)
+    if (!missionList) return;
+
     const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
-    console.log(mission);
     setMyMission(mission.moKoName);
 
     session.signal({
-      data: JSON.stringify({ mission: mission.moKoName, isAttack }),
+      data: JSON.stringify({ mission: mission.moKoName, isAttack, nickname }),
       to: [],
       type: 'mission'
     });
 
-    setRound(round + 1);
-    setIsAttack(!isAttack); // 공수를 변경
+    const newRound = round + 1;
+    const newIsAttack = !isAttack;
+    setRound(newRound);
+    setIsAttack(newIsAttack);
   };
 
   const renderGameUsers = () => {
@@ -144,15 +231,15 @@ const SparingDetailPage = () => {
     if (publisher && opponentData) {
       return (
         <>
-          <Character className="characterleft" userdata={userdata} action="leg" />
-          <Character className="characterright" userdata={opponentData} action="leg" />
+          <Character className="characterleft" userdata={userdata} action={myAction} />
+          <Character className="characterright" userdata={opponentData} action={opponentAction} />
         </>
       );
     } else if (subscribers && opponentData) {
       return (
         <>
-          <Character className="characterleft" userdata={opponentData} action="leg" />
-          <Character className="characterright" userdata={userdata} action="leg" />
+          <Character className="characterleft" userdata={opponentData} action={opponentAction} />
+          <Character className="characterright" userdata={userdata} action={myAction} />
         </>
       );
     } else {
@@ -162,15 +249,14 @@ const SparingDetailPage = () => {
 
   return (
     <div className="sparinggame">
-      {/* <img src={Left} className="sparinggameleft" alt="" /> */}
       <img src={Right} className="sparinggameright" alt="" />
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
       {renderGameUsers()}
-      <HpBar className="hpbarleft" />
-      <HpBar className="hpbarright" />
-      <Score />
+      <HpBar className="hpbarleft" hp={myHp} />
+      <HpBar className="hpbarright" hp={opponentHp} />
+      {/* <Score /> */}
       {renderGameCharacters()}
       <Mission myMission={myMission} opponentMission={opponentMission} />
       <Timer />
@@ -179,6 +265,8 @@ const SparingDetailPage = () => {
         <WebCam key={index} className="webcamright" streamManager={subscriber} />
       ))}
       <button onClick={nextRound}>Next Round</button>
+      <button onClick={() => handleWin('left')}>left win</button>
+      <button onClick={() => handleWin('right')}>right win</button>
     </div>
   );
 };
