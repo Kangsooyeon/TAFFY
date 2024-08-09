@@ -5,7 +5,7 @@ import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
 import PopUp from '../../components/common/popUp';
 import ProgressBar from '../../components/common/progressBar';
 import axios from 'axios';
-import Webcam from '../../components/poomsaeTestPage/Webcam';
+import Webcam from '../../components/common/Webcam';
 // import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
 // import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
 // import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
@@ -160,7 +160,7 @@ const PoomsaeTestDetailPage = () => {
             </div>
             <div className="detail-content">
                 <p>{instruction}</p>
-                <Webcam onPrediction={handlePrediction} />
+                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} />
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
                 </div>
