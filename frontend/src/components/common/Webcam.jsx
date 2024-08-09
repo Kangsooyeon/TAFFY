@@ -1,11 +1,15 @@
 import { useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
-const Webcam = ({ onPrediction }) => {
+const Webcam = ({ onPrediction, poomsaeId }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
-    const URL = "/models/opencv/"; // 모델 URL
+    const URL = `/models/${poomsaeId}jang/`; // poomsaeId를 사용해 모델 URL 설정
     let model;
+
+    const location = useLocation();
 
     useEffect(() => {
         const init = async () => {
@@ -54,15 +58,11 @@ const Webcam = ({ onPrediction }) => {
                             return;
                         }
 
-                        // 관절 좌표를 콘솔에 출력
-                        console.log('Pose Landmarks:', results.poseLandmarks);
-
                         const inputTensor = tf.tensor2d([keypoints]);
                         console.log('Input Tensor:', inputTensor.arraySync()); // 입력 데이터 확인
 
                         try {
                             const predictions = await model.predict(inputTensor).data();
-                            // 예측값을 콘솔에 출력
                             console.log('Predictions:', predictions);
                             onPrediction(predictions);
                         } catch (error) {
@@ -71,7 +71,6 @@ const Webcam = ({ onPrediction }) => {
                     }
                 });
 
-                // startCamera 함수 정의 및 호출
                 const startCamera = async () => {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { width: 640, height: 480, frameRate: { max: 15 } },
@@ -94,21 +93,23 @@ const Webcam = ({ onPrediction }) => {
 
                 startCamera();
 
-                // Cleanup
                 return () => {
                     if (webcamRef.current && webcamRef.current.srcObject) {
                         const tracks = webcamRef.current.srcObject.getTracks();
-                        tracks.forEach(track => track.stop());
+                        tracks.forEach(track => track.stop()); // Stop all video tracks
+                        webcamRef.current.srcObject = null; // Remove the stream to release the camera
+                        console.log("Webcam stopped and camera access released due to page navigation.");
                     }
                 };
             } catch (error) {
                 console.error("Error initializing pose detection:", error);
-                alert("An error occurred during the initialization of pose detection. Please try again.");
             }
         };
 
         init();
-    }, [onPrediction]);
+
+        // Clean up webcam when location changes (page navigation)
+    }, [onPrediction, URL, location]);
 
     return (
         <div className="webcam-container">
@@ -129,6 +130,11 @@ const Webcam = ({ onPrediction }) => {
             />
         </div>
     );
+};
+
+Webcam.propTypes = {
+    onPrediction: PropTypes.func.isRequired, 
+    poomsaeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
 };
 
 export default Webcam;
