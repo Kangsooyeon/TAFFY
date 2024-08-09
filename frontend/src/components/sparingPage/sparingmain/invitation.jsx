@@ -1,7 +1,7 @@
 import "../../../styles/sparingPage/sparingmain/invitation.css";
 import Search from "../../../assets/images/sparingPage/search.png";
 import axios from "axios";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
   const [userStatus, setUserStatus] = useState("");
-  const [nickname, setNickname] = useState("");
+  const nickname = useRef("");
   const { userdata } = useSelector((state) => state.sparingUser);
   const navigate = useNavigate();
 
@@ -79,7 +79,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         }
       );
 
-      console.log(nickname);
+      console.log(nickname.current);
 
       setOpenViduSessionId(response.data.data.sessionId);
       setConnectionToken(response.data.data.connectionToken);
@@ -90,7 +90,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
       // Emit socket message after setting up session details
       const dataMessage = {
         sessionId: response.data.data.sessionId,
-        nickname: nickname, // invitee's nickname
+        nickname: nickname.current, // invitee's nickname
         inviter: userdata.data.nickname,
         status: "invite",
       };
@@ -120,8 +120,8 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
             <input
               className="nicknameinput"
               type="text"
-              value={nickname} // Bind input value to nickname state
-              onChange={(e) => setNickname(e.target.value)} // Update state on change
+              defaultValue={nickname.current} // Bind input value to nickname state
+              onChange={(e) => (nickname.current = e.target.value)} // Update state on change
             />
           </div>
           <p style={{ fontFamily: "HappinessM" }}>겨루자!</p>
@@ -139,7 +139,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
     return (
       <div className="waitingbox">
         <div className="waitingtitle">
-          <h3>{nickname} 님의</h3>
+          <h3>{nickname.current} 님의</h3>
           <h3> 승낙을 기다리고 있습니다.</h3>
         </div>
         <div className="timer">
