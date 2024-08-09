@@ -92,6 +92,8 @@ public class FightService {
         //redis에 저장
         if(status.equals("private")){
             redisTemplate.opsForList().rightPush("private:"+sessionId, redisHashUser);
+        }else{
+            redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         }
 
         //openvidu 미디어서버로 connection
@@ -108,6 +110,8 @@ public class FightService {
 
         if(status.equals("private")){
             redisTemplate.opsForList().rightPush("private:"+sessionId, redisHashUser);
+        }else{
+            redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         }
 
         String connectionToken = joinSession(map);
