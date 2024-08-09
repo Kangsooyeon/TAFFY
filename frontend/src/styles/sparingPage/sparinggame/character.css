@@ -1,5 +1,11 @@
 .character-box {
   box-sizing: border-box;
   z-index: 9999;
-  position: absolute
+  position: absolute;
+  height: 40%
+}
+
+.character-box img {
+  height: 100%;
+  width: 100%
 }

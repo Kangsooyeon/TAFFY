@@ -12,15 +12,18 @@
 }
 
 .sparinggameleft {
+  position: absolute;
   width: 12%;
   height: 26%;
+  z-index: 9999;
 }
 
 .sparinggameright {
   position: absolute;
   width: 12%;
   height: 26%;
-  right: 0px
+  right: 0px;
+  z-index: 9999
 }
 
 .sparingstage {
@@ -90,11 +93,12 @@
 }
 
 .characterleft {
-  left: 35%;
-  transform: scaleX(-1)
+  left: 28%;
+  transform: scaleX(-1);
+  bottom: 35%
 }
 
 .characterright {
-  right: 35%;
-
+  right: 28%;
+  bottom: 35%
 }

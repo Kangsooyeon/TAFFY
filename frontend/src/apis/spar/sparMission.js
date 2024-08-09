@@ -19,20 +19,13 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-
-export const fetchUserRecord = async () => {
-  const response = await axiosInstance.get('/record');
-  return response.data;
-};
-
-export const fetchUserRecordUpdate = async (winorlose) => {
+export const fetchSparingMissionUser = async (type) => {
   try {
-    const response = await axiosInstance.put(`/record`, null,{
+    const response = await axiosInstance.get(`/spar/mission`, {
       params: {
-        result: winorlose
+        type: type
       }
     });
-    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error('Error fetching sparing mission user data:', error);

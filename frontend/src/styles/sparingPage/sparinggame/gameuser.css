@@ -5,6 +5,9 @@
   font-size: 20px;
   width: 15%;
   z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gameuserinfobox {
@@ -18,4 +21,5 @@
   top: 40%;
   left: 60%;
   transform: translate(-50%, -50%);
+  text-align: center;
 }

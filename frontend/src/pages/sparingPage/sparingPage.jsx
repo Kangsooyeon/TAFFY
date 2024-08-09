@@ -35,6 +35,7 @@ const SparingPage = () => {
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
 
+
   const handleReceiveMessage = (message) => {
     setReceivedMessage(message);
     setShowMessageBox(true);
@@ -186,7 +187,7 @@ const SparingPage = () => {
             // sessionId: sessionIDRef.current,
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
-            // status: statusRef.current,
+            status: statusRef.current,
           },
         });
         alert("join game");
@@ -245,6 +246,7 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
+
           {showMessageBox && (
             <MessageBox
               inviter={receivedMessage.inviter}
