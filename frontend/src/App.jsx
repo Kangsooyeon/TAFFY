@@ -14,12 +14,16 @@ import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage";
 import SparingResultPage from "./pages/sparingResultPage/sparingResultPage";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
-import MyPage from "./pages/myPage/myPage"
+import MyPage from "./pages/myPage/myPage";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
+import PrivateRoute from './components/common/privateRoute';
 import { logout, setAuthFromStorage } from './store/user/loginLogout';
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
+let stompClient = null;
 
 function App() {
   const navigate = useNavigate();
@@ -29,6 +33,7 @@ function App() {
   const isSparPage = location.pathname.startsWith('/sp/game');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
@@ -40,6 +45,7 @@ function App() {
         refreshToken
       }));
     }
+    setIsLoading(false);
   }, [dispatch]);
 
   const handleLogin = () => {
@@ -68,6 +74,53 @@ function App() {
     setShowPopUp(true); 
   };
 
+  if (isLoading) {
+    return null; // 로딩 중에는 아무것도 렌더링하지 않음
+  }
+
+  // const [sessionId, setSessionId] = useState('');
+  // const [nickname, setNickname] = useState('');
+  // const [messages, setMessages] = useState([]);
+
+  // useEffect(() => {
+  //   const socket = new SockJS('https://i11e104.p.ssafy.io/ws');
+  //   stompClient = new Client({
+  //     webSocketFactory: () => socket,
+  //     debug: (str) => console.log(str),
+  //     reconnectDelay: 5000,
+  //     onConnect: () => {
+  //       console.log('Connected to WebSocket');
+  //       stompClient.subscribe('/topic/data', onMessageReceived);
+  //     },
+  //     onStompError: (error) => {
+  //       console.error('Could not connect to WebSocket server. Please refresh this page to try again!', error);
+  //     },
+  //   });
+  //   stompClient.activate();
+  // }, []);
+
+  // const sendMessage = (e) => {
+  //   e.preventDefault();
+  //   if (sessionId.trim() && nickname.trim()) {
+  //     const dataMessage = {
+  //       sessionId,
+  //       nickname
+  //     };
+  //     stompClient.publish({
+  //       destination: '/app/data.send',
+  //       body: JSON.stringify(dataMessage)
+  //     });
+  //     setSessionId('');
+  //     setNickname('');
+  //   }
+  // };
+
+  // const onMessageReceived = (payload) => {
+  //   const message = JSON.parse(payload.body);
+  //   console.log('Message received: ', message); // 메시지 수신 확인
+  //   setMessages((prevMessages) => [...prevMessages, message]);
+  // };
+
   return (
     <div>
       {(!isTestPage && !isSparPage) && (
@@ -81,16 +134,16 @@ function App() {
       )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game" element={<SparingDetailPage />} />
-        <Route path="/sp/game/result" element={<SparingResultPage />} />
+        <Route path="/sp" element={<PrivateRoute element={SparingPage} />} />
+        <Route path="/sp/game/:sessionId" element={<PrivateRoute element={SparingDetailPage} />} />
+        <Route path="/sp/game/result" element={<PrivateRoute element={SparingResultPage} />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage language={language}  />} />
-        <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
-        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PoomsaeEduOnePage language={language}/>} />
-        <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
-        <Route path="/ps_test" element={<PoomsaeTestPage />} />
-        <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
+        <Route path="/mypage" element={<PrivateRoute element={MyPage} language={language} />} />
+        <Route path="/ps_edu" element={<PrivateRoute element={PoomsaeEduPage} language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PrivateRoute element={PoomsaeEduOnePage} language={language}/>} />
+        <Route path="/ps_edu/:stageNum" element={<PrivateRoute element={PoomsaeEduAllPage} language={language}/>} />
+        <Route path="/ps_test" element={<PrivateRoute element={PoomsaeTestPage} />} />
+        <Route path="/ps_test/detail/:poomsaeId" element={<PrivateRoute element={PoomsaeTestDetailPage} />} />
         <Route path="/login" element={<LoginPage navigate={navigate} />} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
