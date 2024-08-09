@@ -1,24 +1,20 @@
 package com.taffy.backend.fight.controller;
 
 import com.taffy.backend.fight.dto.ConnectionInfoDto;
-import com.taffy.backend.fight.dto.InviteRoomRequestDto;
 import com.taffy.backend.fight.dto.ResponseDto;
 import com.taffy.backend.fight.dto.UserInfoDto;
 import com.taffy.backend.fight.service.FightService;
 import com.taffy.backend.member.service.MemberService;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 
 @RestController

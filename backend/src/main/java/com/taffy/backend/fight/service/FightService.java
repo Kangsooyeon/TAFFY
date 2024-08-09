@@ -90,10 +90,10 @@ public class FightService {
         map.put("sessionId", sessionId);
         map.put("memberId", memberId);
         //redis에 저장
-        if(status.equals("private:")){
-            sessionId = status + sessionId;
+        if(status.equals("private")){
+            redisTemplate.opsForList().rightPush("private:"+sessionId, redisHashUser);
         }
-        redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
+
         //openvidu 미디어서버로 connection
         String connectionToken = joinSession(map);
         return  new ConnectionInfoDto(sessionId, connectionToken, "waiting");
@@ -102,13 +102,14 @@ public class FightService {
     @Transactional(readOnly = true)
     public ConnectionInfoDto joinRoom(Long memberId, String sessionId, String status) throws OpenViduJavaClientException, OpenViduHttpException {
         RedisHashUser redisHashUser = createRedisHashUser(memberId);
-        if(status.equals("private")){
-            sessionId= "private:"+sessionId;
-        }
-        redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         Map<String, Object> map =new HashMap<>();
         map.put("sessionId", sessionId);
         map.put("memberId", memberId);
+
+        if(status.equals("private")){
+            redisTemplate.opsForList().rightPush("private:"+sessionId, redisHashUser);
+        }
+
         String connectionToken = joinSession(map);
         return new ConnectionInfoDto(sessionId, connectionToken, "start");
     }
@@ -182,22 +183,34 @@ public class FightService {
         return list.stream().map(obj -> objectMapper.convertValue(obj, RedisHashUser.class)).collect(Collectors.toList());
     }
 
-public void deleteInviter(Long memberId, String sessionId) {
-    List<RedisHashUser> users = getUsers(sessionId);
-    RedisHashUser userToRemove = users.stream()
-            .filter(user -> user.getId().equals(memberId))
-            .findFirst()
-            .orElse(null);
-
-    if (userToRemove != null) {
-        try {
-            Long remove = redisTemplate.opsForList().remove(sessionId, 1,userToRemove);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public boolean deleteInviter(Long memberId, String sessionId) {
+        List<RedisHashUser> users = getUsers(sessionId);
+        if(users.size()==1){ //방에 나 혼자 남았을 때, 방 자체를 삭제함
+            return expiredRoom(sessionId);
         }
+        RedisHashUser userToRemove = users.stream()//방에 두 명 이상 있을 때. 해당 유저가 redis sesion에서 삭제됨
+                .filter(user -> user.getId().equals(memberId))
+                .findFirst()
+                .orElse(null);
+        return deleteUser(memberId, sessionId, userToRemove);
     }
-}
 
+    private boolean deleteUser(Long memberId, String sessionId, RedisHashUser user) {
+
+        if (user != null) {
+            try {
+                Long remove = redisTemplate.opsForList().remove(sessionId, 1,user);
+                return true;
+           } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean expiredRoom(String sessionId){
+       return redisTemplate.delete(sessionId);
+    }
     private RedisHashUser createRedisHashUser(Long memberId) {
         // 해당 member의 존재여부 체크
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new TaffyException(ErrorCode.MEMBER_NOT_FOUND));
