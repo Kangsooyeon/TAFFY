@@ -13,14 +13,14 @@ import { useState } from 'react'
 const sparingResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { myData, opponentData, myResult, opponentResult } = location.state;
+  const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult } = location.state;
 
-  // const [oldMyData, setOldMyData] = useState(null)
-  // const [oldOpponentData, setOldMyData] = useState(null)
-
+  console.log(oldMyData)
+  console.log(oldOpponentData)
   const goToSparingMain = () => {
     navigate("/sp")
   }
+
   return (
     <div className="sparingresultpage">
       <div className="resultbox">
@@ -30,12 +30,12 @@ const sparingResultPage = () => {
         <img src={Title} className="resulttitle" alt="" />
       </div>
       <p>{myResult}</p>
-      <CharacterFace className="characterfaceleft" userdata={myData}/>
-      <CharacterFace className="characterfaceright" userdata={opponentData}/>
+      <CharacterFace className="characterfaceleft" userdata={oldMyData}/>
+      <CharacterFace className="characterfaceright" userdata={oldOpponentData}/>
       <VicOrLose className="vicorloseleft" winorlose={myResult}/>
       <VicOrLose className="vicorloseright" winorlose={opponentResult}/>
-      <VicRateAfter className="vicrateafterleft" userdata={myData}/>
-      <VicRateAfter className="vicrateafterright" userdata={opponentData}/>
+      <VicRateAfter className="vicrateafterleft" oldData={oldMyData} newData={newMyData}/>
+      <VicRateAfter className="vicrateafterright" oldData={oldOpponentData} newData={newOpponentData}/>
       <p className="me">ME</p>
       <p className="you">YOU</p>
       <button className="exitbutton" onClick={goToSparingMain}>나가기</button>

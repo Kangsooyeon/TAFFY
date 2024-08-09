@@ -27,11 +27,12 @@ export const fetchUserRecord = async () => {
 
 export const fetchUserRecordUpdate = async (winorlose) => {
   try {
-    const response = await axiosInstance.put(`/record`, {
+    const response = await axiosInstance.put(`/record`, null,{
       params: {
-        winorlose: winorlose
+        result: winorlose
       }
     });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error('Error fetching sparing mission user data:', error);

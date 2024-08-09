@@ -5,14 +5,14 @@ import Mat from '../../assets/images/sparingPage/sparingmat.png';
 import Character from '../../components/sparingPage/sparinggame/character.jsx';
 import HpBar from '../../components/sparingPage/sparinggame/hpBar.jsx';
 import Mission from '../../components/sparingPage/sparinggame/mission.jsx';
-import Score from '../../components/sparingPage/sparinggame/score.jsx';
 import Timer from '../../components/sparingPage/sparinggame/timer.jsx';
 import WebCam from '../../components/sparingPage/sparinggame/webCam.jsx';
 import GameUser from '../../components/sparingPage/sparinggame/gameuser.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 
 const SparingDetailPage = () => {
@@ -34,36 +34,58 @@ const SparingDetailPage = () => {
   const [opponentHp, setOpponentHp] = useState(100);
   const [myAction, setMyAction] = useState('basic');
   const [opponentAction, setOpponentAction] = useState('basic');
-  
+  const [oldMyData, setOldMyData] = useState(null);
+  const [newMyData, setNewMyData] = useState(null);
+  const [myResult, setMyResult] = useState(null)
   const nickname = userdata.data.nickname;
 
+  const oldMyDataRef = useRef(oldMyData);
+  const newMyDataRef = useRef(newMyData);
+  const myResultRef = useRef(myResult);
+
   useEffect(() => {
-    if (myHp <= 0 || opponentHp <= 0) {
-      const isMyWin = myHp > 0;
-      const isOpponentWin = opponentHp > 0;
-  
-      session.signal({
-        data: JSON.stringify({
-          nickname,
-          myResult: isMyWin ? 'win' : 'lose',
-          opponentResult: isOpponentWin ? 'win' : 'lose',
-          myData: userdata,
-          opponentData: opponentData
-        }),
-        to: [],
-        type: 'result'
-      });
-  
-      navigate('/sp/game/result', {
-        state: {
-          myData: userdata,
-          opponentData: opponentData,
-          myResult: isMyWin ? 'win' : 'lose',
-          opponentResult: isOpponentWin ? 'win' : 'lose'
-        }
-      });
+    oldMyDataRef.current = oldMyData;
+  }, [oldMyData]);
+
+  useEffect(() => {
+    newMyDataRef.current = newMyData;
+  }, [newMyData]);
+
+  useEffect(() => {
+    myResultRef.current = myResult;
+  }, [myResult]);
+
+  const updateRecordAndNavigate = async (isMyWin) => {
+    const myResult = isMyWin ? 'win' : 'lose';
+    setMyResult(myResult);
+
+    // 이전 데이터 저장
+    const oldData = userdata;
+    setOldMyData(oldData);
+
+    // 최신 데이터 업데이트
+    try {
+        await dispatch(fetchUserRecordUpdateAsync(myResult)).unwrap();
+        const updatedRecord = await dispatch(fetchUserRecordAsync()).unwrap();
+        setNewMyData(updatedRecord);
+        console.log(newMyData)
+        
+        session.signal({
+          data: JSON.stringify({
+              nickname,
+              myResult: myResult,
+              oldMyData: oldData,
+              newMyData: updatedRecord,
+          }),
+          to: [],
+          type: 'result'
+        });
+
+    } catch (error) {
+        console.error('Error updating record:', error);
     }
-  }, [myHp, opponentHp, session, navigate, userdata, opponentData, nickname]);
+  };
+
   const atkData = useSelector(state => state.sparingMission.data?.ATK);
   const defData = useSelector(state => state.sparingMission.data?.DEF);
 
@@ -71,7 +93,13 @@ const SparingDetailPage = () => {
     dispatch(fetchSparingMissionUserAsync('ATK'));
     dispatch(fetchSparingMissionUserAsync('DEF'));
   }, [dispatch]);
-  
+
+  useEffect(() => {
+    if (myHp <= 0 || opponentHp <= 0) {
+      const isMyWin = myHp > 0;
+      updateRecordAndNavigate(isMyWin);
+    }
+  }, [myHp, opponentHp]);
 
   useEffect(() => {
     const OV = new OpenVidu();
@@ -100,16 +128,24 @@ const SparingDetailPage = () => {
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
       }
     });
-    
+
     session.on('signal:result', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
+        console.log(oldMyDataRef.current)
+        console.log(newMyDataRef.current)
+        console.log(data.oldMyData)
+        console.log(data.newMyData)
+        console.log(myResultRef.current)
+        console.log(data.myResult)
         navigate('/sp/game/result', {
           state: {
-            myData: data.opponentData,
-            opponentData: data.myData,
-            myResult: data.opponentResult,
-            opponentResult: data.myResult
+            oldMyData: oldMyDataRef.current,
+            newMyData: newMyDataRef.current,
+            oldOpponentData: data.oldMyData,
+            newOpponentData: data.newMyData,
+            myResult: myResultRef.current,
+            opponentResult: data.myResult,
           }
         });
       }
@@ -153,7 +189,7 @@ const SparingDetailPage = () => {
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken, userdata, nickname]);
+  }, [connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
 
   const handleWin = (winner) => {
     let newMyAction, newOpponentAction;
@@ -161,11 +197,11 @@ const SparingDetailPage = () => {
     let newOpponentHp = opponentHp;
 
     if (winner === 'left') {
-      newOpponentHp = Math.max(newOpponentHp - 34, 0)
+      newOpponentHp = Math.max(newOpponentHp - 34, 0);
       newMyAction = 'leg';
       newOpponentAction = 'defense';
     } else if (winner === 'right') {
-      newMyHp = Math.max(newMyHp - 34, 0)
+      newMyHp = Math.max(newMyHp - 34, 0);
       newMyAction = 'defense';
       newOpponentAction = 'leg';
     }
@@ -256,7 +292,6 @@ const SparingDetailPage = () => {
       {renderGameUsers()}
       <HpBar className="hpbarleft" hp={myHp} />
       <HpBar className="hpbarright" hp={opponentHp} />
-      {/* <Score /> */}
       {renderGameCharacters()}
       <Mission myMission={myMission} opponentMission={opponentMission} />
       <Timer />

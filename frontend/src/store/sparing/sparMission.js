@@ -5,7 +5,7 @@ export const fetchSparingMissionUserAsync = createAsyncThunk(
   'sparingMission/fetchSparingMissionUser',
   async (type) => {
     const data = await fetchSparingMissionUser(type);
-    console.log('Fetched data:', data);
+    // console.log('Fetched data:', data);
     return data;
   }
 );
