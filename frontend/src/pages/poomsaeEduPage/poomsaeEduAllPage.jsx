@@ -9,7 +9,7 @@ import { completePoomsae, fetchAllStageDetails } from '../../apis/stageApi';
 import { useDispatch } from 'react-redux';
 import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
-import Webcam from '../../components/common/Webcam';
+import Webcam from '../../components/common/modelWebcam';
 
 
 const PoomsaeEduAllPage = ({ language }) => {

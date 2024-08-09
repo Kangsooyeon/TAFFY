@@ -8,7 +8,7 @@ import AudioImage from '../../assets/images/common/audio.png';
 import ProgressBar from '../../components/common/progressBar';
 import { fetchMoveDetail, completeMovement, setMoveCompletion } from '../../store/poomsaeEdu/moveSlice';
 import PopUp from '../../components/common/popUp';
-import Webcam from '../../components/common/Webcam';
+import Webcam from '../../components/common/modelWebcam';
 
 const PoomsaeEduOnePage = ({ language }) => {
   const { stageNum, mvSeq } = useParams();
