@@ -65,9 +65,9 @@ const PoomsaeEduAllPage = ({ language }) => {
     const calculatedAccuracy = Math.round(nextMovePrediction * 100)
     setAccuracy(calculatedAccuracy);  // 예측값을 퍼센트로 변환하여 설정
 
-    if (calculatedAccuracy >= 80) {
-      handleNextMove();
-    }
+    // if (calculatedAccuracy >= 80) {
+    //   handleNextMove();
+    // }
   };
 
   const handleNextMove = () => {

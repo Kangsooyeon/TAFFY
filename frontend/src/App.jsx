@@ -14,10 +14,11 @@ import SparingDetailPage from "./pages/sparingDetailPage/sparingDetailPage";
 import SparingResultPage from "./pages/sparingResultPage/sparingResultPage";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
-import MyPage from "./pages/myPage/myPage"
+import MyPage from "./pages/myPage/myPage";
 import './styles/fonts/font.css';
 import Navbar from './components/common/navbar';
 import PopUp from './components/common/popUp';
+import PrivateRoute from './components/common/privateRoute';
 import { logout, setAuthFromStorage } from './store/user/loginLogout';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
@@ -127,16 +128,16 @@ function App() {
       )}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/sp" element={<SparingPage />} />
-        <Route path="/sp/game/:sessionId" element={<SparingDetailPage />} />
-        <Route path="/sp/game/result" element={<SparingResultPage />} />
+        <Route path="/sp" element={<PrivateRoute element={SparingPage} />} />
+        <Route path="/sp/game/:sessionId" element={<PrivateRoute element={SparingDetailPage} />} />
+        <Route path="/sp/game/result" element={<PrivateRoute element={SparingResultPage} />} />
         <Route path="/main" element={<MainPage language={language}/>} />
-        <Route path="/mypage" element={<MyPage language={language}  />} />
-        <Route path="/ps_edu" element={<PoomsaeEduPage language={language}/>} />
-        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PoomsaeEduOnePage language={language}/>} />
-        <Route path="/ps_edu/:stageNum" element={<PoomsaeEduAllPage language={language}/>} />
-        <Route path="/ps_test" element={<PoomsaeTestPage />} />
-        <Route path="/ps_test/detail/:poomsaeId" element={<PoomsaeTestDetailPage />} />
+        <Route path="/mypage" element={<PrivateRoute element={MyPage} language={language} />} />
+        <Route path="/ps_edu" element={<PrivateRoute element={PoomsaeEduPage} language={language}/>} />
+        <Route path="/ps_edu/:stageNum/:mvSeq" element={<PrivateRoute element={PoomsaeEduOnePage} language={language}/>} />
+        <Route path="/ps_edu/:stageNum" element={<PrivateRoute element={PoomsaeEduAllPage} language={language}/>} />
+        <Route path="/ps_test" element={<PrivateRoute element={PoomsaeTestPage} />} />
+        <Route path="/ps_test/detail/:poomsaeId" element={<PrivateRoute element={PoomsaeTestDetailPage} />} />
         <Route path="/login" element={<LoginPage navigate={navigate} />} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
