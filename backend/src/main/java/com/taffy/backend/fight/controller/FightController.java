@@ -55,7 +55,7 @@ public class FightController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value() , "방 가입 완료", connectionInfoDto));
     }
 
-    @DeleteMapping("/game-invitations")
+    @DeleteMapping("/exit")
     public ResponseEntity<ResponseDto> exitRoom(@Autowired Long memberId, @RequestParam String sessionId){
         fightService.exitRoom(memberId, sessionId);
         return null;
