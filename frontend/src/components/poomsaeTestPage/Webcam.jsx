@@ -4,7 +4,7 @@ import * as tf from '@tensorflow/tfjs';
 const Webcam = ({ onPrediction }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
-    const URL = "/src/assets/models/opencv/"; // 모델 URL
+    const URL = "https://i11e104.p.ssafy.io/src/assets/models/opencv/"; // 모델 URL
     let model;
 
     useEffect(() => {
