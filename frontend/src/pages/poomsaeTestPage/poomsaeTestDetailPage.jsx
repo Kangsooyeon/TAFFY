@@ -147,9 +147,9 @@ const PoomsaeTestDetailPage = () => {
         setPredictions(predictionResults);
 
         // 예측 결과가 80 이상인 경우 진행률을 업데이트
-        if (predictionArray[currentMoveIndex] >= 0.8) {
-            handleProgressUpdate();
-        }
+        // if (predictionArray[currentMoveIndex] >= 0.7) {
+        //     handleProgressUpdate(true);
+        // }
     };
 
     return (
