@@ -84,17 +84,16 @@ public class FightService {
         //member 존재여부 체크
         RedisHashUser redisHashUser = createRedisHashUser(memberId);
         //sessionId 생성
-        String sessionId = generateSessionId();
         //openvidu 방 생성
-       String sessionId2=  initializeSession(map);
+       String sessionId=  initializeSession(map);
 
-        map.put("sessionId", sessionId2);
+        map.put("sessionId", sessionId);
         map.put("memberId", memberId);
         //redis에 저장
-        redisTemplate.opsForList().rightPush(sessionId2, redisHashUser);
+        redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         //openvidu 미디어서버로 connection
         String connectionToken = joinSession(map);
-        return  new ConnectionInfoDto(sessionId2, connectionToken, "waiting");
+        return  new ConnectionInfoDto(sessionId, connectionToken, "waiting");
     }
 
     @Transactional(readOnly = true)
@@ -175,7 +174,7 @@ public class FightService {
         List<Object> list = redisTemplate.opsForList().range(sessionId, 0, -1);
         return list.stream().map(obj -> objectMapper.convertValue(obj, RedisHashUser.class)).collect(Collectors.toList());
     }
-//
+
 public void deleteInviter(Long memberId, String sessionId) {
     List<RedisHashUser> users = getUsers(sessionId);
     RedisHashUser userToRemove = users.stream()
@@ -211,10 +210,6 @@ public void deleteInviter(Long memberId, String sessionId) {
 
     public void addMember(String sessionId, RedisHashUser member) {
         redisTemplate.opsForList().rightPush(sessionId, member);
-    }
-
-    public String generateSessionId(){
-        return ROOM_PREFIX +  UUID.randomUUID().toString();
     }
 
 }
