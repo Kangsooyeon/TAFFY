@@ -33,6 +33,7 @@ function App() {
   const isSparPage = location.pathname.startsWith('/sp/game');
   const [language, setLanguage] = useState('en');
   const [showPopUp, setShowPopUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
@@ -44,6 +45,7 @@ function App() {
         refreshToken
       }));
     }
+    setIsLoading(false);
   }, [dispatch]);
 
   const handleLogin = () => {
@@ -71,6 +73,10 @@ function App() {
   const handleLogout = () => {
     setShowPopUp(true); 
   };
+
+  if (isLoading) {
+    return null; // 로딩 중에는 아무것도 렌더링하지 않음
+  }
 
   // const [sessionId, setSessionId] = useState('');
   // const [nickname, setNickname] = useState('');
