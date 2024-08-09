@@ -11,6 +11,7 @@ public class DataController {
     @MessageMapping("/data.send")
     @SendTo("/topic/data")
     public DataMessage sendMessage(DataMessage dataMessage) {
+        System.out.println(dataMessage);
         return dataMessage;
     }
 }
