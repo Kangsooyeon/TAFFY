@@ -60,11 +60,10 @@ const PoomsaeEduAllPage = ({ language }) => {
   // };
 
   const handlePrediction = (predictions) => {
-    // predictions 배열에서 (currentMoveIndex + 1) 인덱스에 해당하는 값을 찾음
-    const nextMovePrediction = predictions[currentMoveIndex + 1] || predictions[currentMoveIndex];
-    const calculatedAccuracy = Math.round(nextMovePrediction * 100)
-    setAccuracy(calculatedAccuracy);  // 예측값을 퍼센트로 변환하여 설정
-
+    const MovePrediction = predictions[currentMoveIndex + 1];
+    const calculatedAccuracy = Math.round(MovePrediction * 100)
+    setAccuracy(calculatedAccuracy); 
+    
     // if (calculatedAccuracy >= 80) {
     //   handleNextMove();
     // }
