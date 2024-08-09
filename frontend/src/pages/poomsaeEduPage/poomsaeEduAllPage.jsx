@@ -9,6 +9,8 @@ import { completePoomsae, fetchAllStageDetails } from '../../apis/stageApi';
 import { useDispatch } from 'react-redux';
 import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
+import Webcam from '../../components/common/modelWebcam';
+
 
 const PoomsaeEduAllPage = ({ language }) => {
   const [buttonText, setButtonText] = useState('');
@@ -48,6 +50,24 @@ const PoomsaeEduAllPage = ({ language }) => {
 
     fetchData();
   }, [stageNum, language]);
+
+  // const handlePrediction = (predictions) => {
+  //   // predictions 배열에서 가장 높은 값을 찾음
+  //   const maxPrediction = Math.max(...predictions);
+  //   const calculatedAccuracy  = Math.round(maxPrediction * 100)
+  //   setAccuracy(calculatedAccuracy);  // 예측값을 퍼센트로 변환하여 설정
+
+  // };
+
+  const handlePrediction = (predictions) => {
+    const MovePrediction = predictions[currentMoveIndex + 1];
+    const calculatedAccuracy = Math.round(MovePrediction * 100)
+    setAccuracy(calculatedAccuracy); 
+    
+    // if (calculatedAccuracy >= 80) {
+    //   handleNextMove();
+    // }
+  };
 
   const handleNextMove = () => {
     if (currentMoveIndex < moves.length - 1) {
@@ -97,13 +117,15 @@ const PoomsaeEduAllPage = ({ language }) => {
           <div className='mvGif'>
             <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage" />
           </div>
-          <div className='userCam'></div>
+          <div className='userCam'>
+          <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} />
+          </div>
           <div className='progress'>
             {/* 1. 정확도 */}
             <ProgressBar
               value={accuracy}
               title={language === 'ko' ? '정확도' : 'Accuracy'}              
-              text={accuracy.toString()}
+              text={`${accuracy.toFixed(2)}%`}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"

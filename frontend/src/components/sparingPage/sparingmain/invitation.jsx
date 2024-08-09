@@ -1,29 +1,60 @@
 import "../../../styles/sparingPage/sparingmain/invitation.css";
 import Search from "../../../assets/images/sparingPage/search.png";
 import axios from "axios";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Invitation = ({ stompClient }) => {
+const Invitation = ({ stompClient, onReceiveMessage }) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
   const [userStatus, setUserStatus] = useState("");
-  const [nickname, setNickname] = useState("");
+  const nickname = useRef("");
   const { userdata } = useSelector((state) => state.sparingUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (stompClient && stompClient.connected) {
-      // Subscribe to a topic to receive messages
+      // 겨루자 초대 메시지 구독
       const subscription = stompClient.subscribe("/topic/data", (message) => {
         const receivedMessage = JSON.parse(message.body);
         console.log("Received message:", receivedMessage);
 
-        // Check if the received nickname matches userdata.nickname
-        console.log(`I am : ${userdata.data.nickname}`);
-        
-        if (receivedMessage.nickname === userdata.data.nickname) {
-          alert(`You have received a message from ${receivedMessage.nickname}`);
+        // `status`가 여기서 존재하는지 확인
+        console.log("수신한 상태:", receivedMessage.status);
+
+        if (
+          receivedMessage.nickname === userdata.data.nickname &&
+          receivedMessage.status === "invite"
+        ) {
+          alert(`초대한 사람이 있습니다: ${receivedMessage.inviter}`);
+          if (onReceiveMessage) {
+            onReceiveMessage(receivedMessage);
+          }
+        } else if (
+          receivedMessage.status === "accepted" &&
+          receivedMessage.inviter === userdata.data.nickname
+        ) {
+          console.log("Acceptance message received:", receivedMessage);
+
+          alert(
+            `connectionToken: ${connectionToken} sessionID: ${receivedMessage.sessionId}`
+          );
+
+          // Navigate to the game session
+          // 게임 세션으로 이동
+          console.log(`conenctionToken : ${connectionToken}`);
+          
+          navigate(
+            `/sp/game/${receivedMessage.sessionId}`,
+            {
+              state: {
+                connectionToken: connectionToken,
+                userdata: userdata,
+              },
+            }
+          );
         }
       });
 
@@ -32,7 +63,7 @@ const Invitation = ({ stompClient }) => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient, userdata.nickname]);
+  }, [stompClient, userdata, onReceiveMessage, connectionToken, navigate]);
 
   const handleInvite = useCallback(async () => {
     // OpenVidu session create API
@@ -48,7 +79,7 @@ const Invitation = ({ stompClient }) => {
         }
       );
 
-      console.log(nickname);
+      console.log(nickname.current);
 
       setOpenViduSessionId(response.data.data.sessionId);
       setConnectionToken(response.data.data.connectionToken);
@@ -59,7 +90,9 @@ const Invitation = ({ stompClient }) => {
       // Emit socket message after setting up session details
       const dataMessage = {
         sessionId: response.data.data.sessionId,
-        nickname: nickname,
+        nickname: nickname.current, // invitee's nickname
+        inviter: userdata.data.nickname,
+        status: "invite",
       };
 
       if (stompClient && stompClient.connected) {
@@ -68,7 +101,7 @@ const Invitation = ({ stompClient }) => {
           body: JSON.stringify(dataMessage),
         });
         alert("Message sent successfully");
-        console.log(dataMessage);
+        console.log("Message sent:", dataMessage);
       }
     } catch (error) {
       console.error("Error sending invite:", error);
@@ -87,8 +120,8 @@ const Invitation = ({ stompClient }) => {
             <input
               className="nicknameinput"
               type="text"
-              value={nickname} // Bind input value to nickname state
-              onChange={(e) => setNickname(e.target.value)} // Update state on change
+              defaultValue={nickname.current} // Bind input value to nickname state
+              onChange={(e) => (nickname.current = e.target.value)} // Update state on change
             />
           </div>
           <p style={{ fontFamily: "HappinessM" }}>겨루자!</p>
@@ -106,7 +139,7 @@ const Invitation = ({ stompClient }) => {
     return (
       <div className="waitingbox">
         <div className="waitingtitle">
-          <h3>{nickname} 님의</h3>
+          <h3>{nickname.current} 님의</h3>
           <h3> 승낙을 기다리고 있습니다.</h3>
         </div>
         <div className="timer">
