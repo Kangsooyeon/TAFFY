@@ -4,14 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 import '../../styles/landingPage/landingPage.css';
 import { setActiveItem } from '../../store/landing/landingSlice';
+
+// Import images directly
 import Image1 from '../../assets/images/landingPage/poomsaePage.png';
 import Image2 from '../../assets/images/landingPage/gyeorugiPage.png';
 
+// Define the items array within the component
 const items = [
   { type: 'video', src: '/videos/Landing.mp4', text: '', className: 'videoPage' },
   { type: 'image', src: Image1, text: 'Harmony of Body and Mind', className: 'poomsaePage' },
   { type: 'image', src: Image2, text: 'Gyeorugi Together, Grow Together', className: 'gyeorugiPage' },
-  { type: 'video', src: '/videos/Landing4.mp4', text: '', className: 'videoPage' },
+  { type: 'video', src: '/videos/LandingLast.mp4', text: '', className: 'videoPage' },
 ];
 
 const defaultStyle = {
@@ -27,7 +30,7 @@ const transitionStyles = {
 };
 
 const LandingPage = () => {
-  const activeItem = useSelector((state) => state.landing.activeItem); // slice의 이름에 맞게 변경
+  const activeItem = useSelector((state) => state.landing.activeItem);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const nodeRef = useRef(null);
@@ -62,9 +65,9 @@ const LandingPage = () => {
               }}
             >
               {item.type === 'image' ? (
-                <img src={item.src} alt={item.text} className="backgroundMedia" />
+                <img src={item.src} alt={item.text} className="backgroundMedia" loading="lazy" />
               ) : (
-                <video autoPlay loop muted controls className="backgroundMedia">
+                <video autoPlay loop muted controls className="backgroundMedia" preload="none">
                   <source src={item.src} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
