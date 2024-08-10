@@ -9,6 +9,8 @@ import { completePoomsae, fetchAllStageDetails } from '../../apis/stageApi';
 import { useDispatch } from 'react-redux';
 import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
+import Webcam from '../../components/common/modelWebcam';
+
 
 const PoomsaeEduAllPage = ({ language }) => {
   const [buttonText, setButtonText] = useState('');
@@ -90,6 +92,12 @@ const PoomsaeEduAllPage = ({ language }) => {
     }
   };
 
+  const handlePrediction = (predictions) => {
+    const MovePrediction = predictions[currentMoveIndex + 1];
+    const calculatedAccuracy = Math.round(MovePrediction * 100)
+    setAccuracy(calculatedAccuracy); 
+  };
+
   const handleNextMove = () => {
     if (currentMoveIndex < moves.length - 1) {
       setCurrentMoveIndex(currentMoveIndex + 1);
@@ -142,12 +150,14 @@ const PoomsaeEduAllPage = ({ language }) => {
           <div className='mvGif'>
             <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage" />
           </div>
-          <div className='userCam'></div>
+          <div className='userCam'>
+          <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} />
+          </div>
           <div className='progress'>
             <ProgressBar
               value={accuracy}
-              title={language === 'ko' ? '정확도' : 'Accuracy'}
-              text={accuracy.toString()}
+              title={language === 'ko' ? '정확도' : 'Accuracy'}              
+              text={`${accuracy.toFixed(2)}%`}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"

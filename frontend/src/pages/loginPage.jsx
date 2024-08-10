@@ -24,7 +24,7 @@ const Login = ({ navigate }) => {
             alert('로그인 완료');
         } catch (error) {
             console.error('Error during login:', error);
-            alert('An error occurred during login. Please try again.');
+            alert('이메일이나 비밀번호를 다시 확인해주세요.');
         }
     };
 

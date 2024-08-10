@@ -8,6 +8,7 @@ import AudioImage from '../../assets/images/common/audio.png';
 import ProgressBar from '../../components/common/progressBar';
 import { fetchMoveDetail, completeMovement, setMoveCompletion } from '../../store/poomsaeEdu/moveSlice';
 import PopUp from '../../components/common/popUp';
+import Webcam from '../../components/common/modelWebcam';
 
 const PoomsaeEduOnePage = ({ language }) => {
   const { stageNum, mvSeq } = useParams();
@@ -75,6 +76,20 @@ const PoomsaeEduOnePage = ({ language }) => {
     }
   };
 
+  // const handlePrediction = (predictions) => {
+  //   // predictions 배열에서 가장 높은 값을 찾음
+  //   const maxPrediction = Math.max(...predictions);
+  //   const calculatedAccuracy  = Math.round(maxPrediction * 100)
+  //   setAccuracy(calculatedAccuracy);  // 예측값을 퍼센트로 변환하여 설정
+
+  // };
+
+  const handlePrediction = (predictions) => {
+    const MovePrediction = predictions[mvSeq];
+    const calculatedAccuracy = Math.round(MovePrediction * 100)
+    setAccuracy(calculatedAccuracy);  
+  };
+
   const handleClosePopup = () => {
     setShowSuccessPopup(false);
     setShowFailurePopup(false);
@@ -110,12 +125,14 @@ const PoomsaeEduOnePage = ({ language }) => {
           <div className='mvGif'>
             <img src={moveDetail.mvUrl} alt={mvName} className="mvGifImage" />
           </div>
-          <div className='userCam'></div>
+          <div className='userCam'>
+            <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} />
+          </div>
           <div className='progress'>
             <ProgressBar
               value={accuracy}
               title={language === 'ko' ? '정확도' : 'Accuracy'}
-              text={accuracy.toString()}
+              text={`${accuracy.toFixed(2)}%`}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"
