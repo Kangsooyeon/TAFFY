@@ -45,16 +45,13 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           // Navigate to the game session
           // 게임 세션으로 이동
           console.log(`conenctionToken : ${connectionToken}`);
-          
-          navigate(
-            `/sp/game/${receivedMessage.sessionId}`,
-            {
-              state: {
-                connectionToken: connectionToken,
-                userdata: userdata,
-              },
-            }
-          );
+
+          navigate(`/sp/game/${receivedMessage.sessionId}`, {
+            state: {
+              connectionToken: connectionToken,
+              userdata: userdata,
+            },
+          });
         }
       });
 
@@ -124,12 +121,9 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
               onChange={(e) => (nickname.current = e.target.value)} // Update state on change
             />
           </div>
-          <p style={{ fontFamily: "HappinessM" }}>겨루자!</p>
-        </div>
-        <div className="invitationbutton">
-          <button className="invitebutton" onClick={handleInvite}>
-            초대하기
-          </button>
+          <p onClick={handleInvite} style={{ fontFamily: "HappinessM" }}>
+            겨루자!
+          </p>
         </div>
       </div>
     );
