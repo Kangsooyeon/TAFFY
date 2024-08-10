@@ -190,10 +190,10 @@ const SparingPage = () => {
             status: statusRef.current,
           },
         });
-        alert("join game");
-        alert(
-          `connectionToken: ${connectionTokenRef.current} sessionID: ${receivedMessage.sessionId}`
-        );
+        // alert("join game");
+        // alert(
+        //   `connectionToken: ${connectionTokenRef.current} sessionID: ${receivedMessage.sessionId}`
+        // );
       }
     } else {
       console.error("One of the required refs is null");
