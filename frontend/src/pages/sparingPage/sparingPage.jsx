@@ -35,7 +35,6 @@ const SparingPage = () => {
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
 
-
   const handleReceiveMessage = (message) => {
     setReceivedMessage(message);
     setShowMessageBox(true);
@@ -87,6 +86,7 @@ const SparingPage = () => {
           state: {
             connectionToken: response.data.data.connectionToken,
             userdata: userdataRef.current,
+            roomType: "private",
           },
         });
       } catch (error) {
@@ -246,7 +246,6 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
-
           {showMessageBox && (
             <MessageBox
               inviter={receivedMessage.inviter}

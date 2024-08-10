@@ -47,6 +47,7 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
             state: {
               connectionToken: connectionToken,
               userdata: userdata,
+              roomType: "private",
             },
           });
         }
