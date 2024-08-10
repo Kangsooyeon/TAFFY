@@ -40,8 +40,7 @@
 }
 
 .mvItem:hover .mvItemImage {
-  opacity: 0.7;
-  transform: scale(1.1);
+  animation: flipHorizontal 0.8s ease-in-out; /* 좌우로 뒤집기 애니메이션 적용, 속도 조절 */
 }
 
 .mvItemImage {
@@ -52,6 +51,7 @@
   border: none;
   outline: none;
   transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: scaleX(-1); /* 수평으로 이미지 뒤집기 */
 }
 
 .completedImage {
@@ -63,4 +63,26 @@
   height: 70px;
   z-index: 1;
   pointer-events: none; /* 이미지 클릭 불가능하게 설정 */
+}
+
+@keyframes flipHorizontal {
+  0% {
+    transform: scaleX(-1) scale(1);
+  }
+  25% {
+    transform: scaleX(0) scale(1.1);
+  }
+  50% {
+    transform: scaleX(1) scale(1.1);
+  }
+  75% {
+    transform: scaleX(0) scale(1.1); 
+  }
+  100% {
+    transform: scaleX(-1) scale(1);
+  }
+}
+
+.element {
+  animation: flipHorizontal 5s infinite;
 }

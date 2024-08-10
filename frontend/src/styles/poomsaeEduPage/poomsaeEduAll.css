@@ -49,6 +49,7 @@
   width: auto;
   height: 100%;
   object-fit: contain; /* 이미지 비율을 유지하며 크기에 맞추기 */
+  transform: scaleX(-1); /* 수평으로 이미지 뒤집기 */
 }
 
 .userCam {
