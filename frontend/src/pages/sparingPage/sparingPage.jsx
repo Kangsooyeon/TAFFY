@@ -51,20 +51,20 @@ const SparingPage = () => {
 
         // 초대수락 API 호출
         const response = await axiosInstance.post(url);
-        console.log(
-          "피초대자 connectionToken:",
-          response.data.data.connectionToken
-        );
+        // console.log(
+        //   "피초대자 connectionToken:",
+        //   response.data.data.connectionToken
+        // );
 
         // connectionToken 저장
         setConnectionToken(response.data.data.connectionToken);
 
-        console.log(
-          "Session ID being sent as query:",
-          receivedMessage.sessionId
-        );
+        // console.log(
+        //   "Session ID being sent as query:",
+        //   receivedMessage.sessionId
+        // );
 
-        console.log("Game invitation Accepted:", response.data);
+        // console.log("Game invitation Accepted:", response.data);
 
         // Send a message back to the inviter
         if (stompClient && stompClient.connected) {
@@ -104,7 +104,7 @@ const SparingPage = () => {
   };
 
   const handleDeny = () => {
-    console.log("Invitation denied");
+    // console.log("Invitation denied");
     setShowMessageBox(false);
     // Additional logic for denying the invitation, e.g., notifying the inviter
   };
@@ -190,10 +190,6 @@ const SparingPage = () => {
             status: statusRef.current,
           },
         });
-        // alert("join game");
-        // alert(
-        //   `connectionToken: ${connectionTokenRef.current} sessionID: ${receivedMessage.sessionId}`
-        // );
       }
     } else {
       console.error("One of the required refs is null");

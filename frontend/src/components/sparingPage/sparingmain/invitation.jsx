@@ -21,16 +21,15 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
       // 겨루자 초대 메시지 구독
       const subscription = stompClient.subscribe("/topic/data", (message) => {
         const receivedMessage = JSON.parse(message.body);
-        console.log("Received message:", receivedMessage);
+        // console.log("Received message:", receivedMessage);
 
         // `status`가 여기서 존재하는지 확인
-        console.log("수신한 상태:", receivedMessage.status);
+        // console.log("수신한 상태:", receivedMessage.status);
 
         if (
           receivedMessage.nickname === userdata.data.nickname &&
           receivedMessage.status === "invite"
         ) {
-          alert(`초대한 사람이 있습니다: ${receivedMessage.inviter}`);
           if (onReceiveMessage) {
             onReceiveMessage(receivedMessage);
           }
@@ -38,10 +37,10 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           receivedMessage.status === "accepted" &&
           receivedMessage.inviter === userdata.data.nickname
         ) {
-          console.log("Acceptance message received:", receivedMessage);
+          // console.log("Acceptance message received:", receivedMessage);
 
           // 게임 세션으로 이동
-          console.log(`conenctionToken : ${connectionToken}`);
+          // console.log(`conenctionToken : ${connectionToken}`);
 
           navigate(`/sp/game/${receivedMessage.sessionId}`, {
             state: {
@@ -74,13 +73,11 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         }
       );
 
-      console.log(nickname.current);
+      // console.log(nickname.current);
 
       setOpenViduSessionId(response.data.data.sessionId);
       setConnectionToken(response.data.data.connectionToken);
       setUserStatus(response.data.data.status);
-
-      alert("create session success");
 
       // Emit socket message after setting up session details
       const dataMessage = {
@@ -95,12 +92,10 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           destination: "/app/data.send",
           body: JSON.stringify(dataMessage),
         });
-        alert("Message sent successfully");
-        console.log("Message sent:", dataMessage);
+        // console.log("Message sent:", dataMessage);
       }
     } catch (error) {
       console.error("Error sending invite:", error);
-      alert("create session failed");
     }
   }, [token, userdata, stompClient, nickname]);
 
