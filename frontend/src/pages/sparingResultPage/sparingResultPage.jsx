@@ -15,8 +15,8 @@ const sparingResultPage = () => {
   const location = useLocation();
   const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult } = location.state;
 
-  console.log(oldMyData)
-  console.log(oldOpponentData)
+  console.log("oldMyData : ",oldMyData)
+  console.log("oldOpponentData : " , oldOpponentData)
   const goToSparingMain = () => {
     navigate("/sp")
   }

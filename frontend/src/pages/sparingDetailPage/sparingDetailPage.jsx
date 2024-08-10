@@ -37,6 +37,9 @@ const SparingDetailPage = () => {
   const [oldMyData, setOldMyData] = useState(null);
   const [newMyData, setNewMyData] = useState(null);
   const [myResult, setMyResult] = useState(null)
+  const [bothPlayersReady, setBothPlayersReady] = useState(false);
+  const [opponentResult, setOpponentResult] = useState(null);
+  const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
 
   const oldMyDataRef = useRef(oldMyData);
@@ -55,7 +58,7 @@ const SparingDetailPage = () => {
     myResultRef.current = myResult;
   }, [myResult]);
 
-  const updateRecordAndNavigate = async (isMyWin) => {
+  const updateRecordAndSignal  = async (isMyWin) => {
     const myResult = isMyWin ? 'win' : 'lose';
     setMyResult(myResult);
 
@@ -69,22 +72,80 @@ const SparingDetailPage = () => {
         const updatedRecord = await dispatch(fetchUserRecordAsync()).unwrap();
         setNewMyData(updatedRecord);
         console.log(newMyData)
-        
+
+        resultRef.current.myResult = {
+          myResult: myResult,
+          oldMyData: oldData,
+          newMyData: updatedRecord,
+        };
+
+        console.log("My Result:", resultRef.current.myResult);
+
         session.signal({
           data: JSON.stringify({
-              nickname,
-              myResult: myResult,
-              oldMyData: oldData,
-              newMyData: updatedRecord,
+            ...resultRef.current.myResult,
+            nickname: nickname,  
           }),
           to: [],
           type: 'result'
         });
 
+        checkBothPlayersReady();
+
     } catch (error) {
         console.error('Error updating record:', error);
     }
   };
+
+  const checkBothPlayersReady = () => {
+    if (resultRef.current.myResult && resultRef.current.opponentResult) {
+      setBothPlayersReady(true);
+    }
+  };
+
+  useEffect(() => {
+    if (session) {
+      session.on('signal:result', (event) => {
+        const data = JSON.parse(event.data);
+        if (data.nickname !== nickname) {
+          resultRef.current.opponentResult = {
+            oldOpponentData: data.oldMyData,
+            newOpponentData: data.newMyData,
+            opponentResult: data.myResult,
+          };
+          console.log("Opponent Result:", resultRef.current.opponentResult);
+
+          checkBothPlayersReady();
+        }
+      });
+    }
+  }, [session, nickname]);
+
+  // useEffect(() => {
+  //   if (myResult && opponentResult) {
+  //     setBothPlayersReady(true);
+  //   }
+  // }, [myResult, opponentResult]);
+
+  useEffect(() => {
+    if (bothPlayersReady) {
+      console.log("Final My Result:", resultRef.current.myResult);
+      console.log("Final Opponent Result:", resultRef.current.opponentResult);
+      navigate('/sp/game/result', {
+        state: {
+          oldMyData: resultRef.current.myResult.oldMyData,
+          newMyData: resultRef.current.myResult.newMyData,
+          oldOpponentData: resultRef.current.opponentResult.oldOpponentData,
+          newOpponentData: resultRef.current.opponentResult.newOpponentData,
+          myResult: resultRef.current.myResult.myResult,
+          opponentResult: resultRef.current.opponentResult.opponentResult,
+        }
+      });
+    }
+  }, [bothPlayersReady, navigate]);
+
+
+
 
   const atkData = useSelector(state => state.sparingMission.data?.ATK);
   const defData = useSelector(state => state.sparingMission.data?.DEF);
@@ -97,7 +158,7 @@ const SparingDetailPage = () => {
   useEffect(() => {
     if (myHp <= 0 || opponentHp <= 0) {
       const isMyWin = myHp > 0;
-      updateRecordAndNavigate(isMyWin);
+      updateRecordAndSignal(isMyWin);
     }
   }, [myHp, opponentHp]);
 
@@ -108,6 +169,7 @@ const SparingDetailPage = () => {
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
+        console.log("Opponent data received: ", data);
         setOpponentData(data);
       }
     });
@@ -132,22 +194,12 @@ const SparingDetailPage = () => {
     session.on('signal:result', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        console.log(oldMyDataRef.current)
-        console.log(newMyDataRef.current)
-        console.log(data.oldMyData)
-        console.log(data.newMyData)
-        console.log(myResultRef.current)
-        console.log(data.myResult)
-        navigate('/sp/game/result', {
-          state: {
-            oldMyData: oldMyDataRef.current,
-            newMyData: newMyDataRef.current,
-            oldOpponentData: data.oldMyData,
-            newOpponentData: data.newMyData,
-            myResult: myResultRef.current,
-            opponentResult: data.myResult,
-          }
-        });
+        resultRef.current.opponentResult = {
+          oldOpponentData: data.oldMyData,  
+          newOpponentData: data.newMyData,  
+          opponentResult: data.myResult,    
+        };
+        checkBothPlayersReady();
       }
     });
 
@@ -247,15 +299,15 @@ const SparingDetailPage = () => {
     if (publisher && opponentData) {
       return (
         <>
-          <GameUser className="gameuserleft" userdata={userdata} />
-          <GameUser className="gameuserright" userdata={opponentData} />
+          <GameUser className="gameuserleft" userdata={userdata} isOpponent={false}/>
+          <GameUser className="gameuserright" userdata={opponentData} isOpponent={true}/>
         </>
       );
-    } else if (subscribers && opponentData) {
+    } else if (subscribers.length > 0 && opponentData) {
       return (
         <>
-          <GameUser className="gameuserleft" userdata={opponentData} />
-          <GameUser className="gameuserright" userdata={userdata} />
+          <GameUser className="gameuserleft" userdata={opponentData} isOpponent={true}/>
+          <GameUser className="gameuserright" userdata={userdata} isOpponent={false}/>
         </>
       );
     } else {
