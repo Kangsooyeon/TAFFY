@@ -7,16 +7,6 @@
   text-align: center;
 }
 
-.carouselItem {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transition: opacity 0.5s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .backgroundMedia {
   width: 100%;
   height: auto;
@@ -26,106 +16,17 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: -1;
+  z-index: -2; 
 }
 
-.overlay {
-  position: relative;
-  color: white;
-  text-align: center;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.carouselControls {
+.videoOverlay {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  z-index: 1;
-}
-
-.carouselControls button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  margin: 0 5px;
-  color: rgba(0, 0, 0, 0.7);
-}
-
-.carouselControls button.active {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.poomsaeContent,
-.gyeorugiContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin: 20px 0;
-}
-
-.poomsaeSegments {
-  display: flex;
-  justify-content: space-around;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 1000px;
-  margin-top: 150px;
-  color: black;
-}
-
-.poomsaeSegments div {
-  max-width: 38%;
-  text-align: center;
-}
-
-.gyeorugiContent {
-  width: 100%;
-  text-align: center;
-}
-
-.hrDivider {
-  width: 100%;
-  max-width: 500px;
-  margin: 10px auto;
-}
-
-.harmonyText,
-.gyeorugiText {
-  font-size: 36px;
-  margin-bottom: 20px;
-}
-
-.harmonyText{
-  margin-top: 70px;
-  margin-bottom: -30px;
-}
-.startButton {
-  padding: 15px 30px;
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #333;
-  font-size: 20px;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-
-.startButton:hover {
-  background-color: rgba(255, 255, 255, 1);
-  transform: scale(1.1);
-}
-
-.startButton:focus {
-  outline: none;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  height: 100%;
+  /* background-color: rgba(0, 0, 0, 0.2); */
+  z-index: -1; /* Ensure it is behind the content but above the video */
 }
 
 button {
@@ -137,38 +38,32 @@ button {
   border: solid 1px;
 }
 
-video {
-  background-size: cover;
-  background-position: center;
-  min-height: 106vh;
+.scrollBarContainer {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 23%;  /* Reduce the width of the entire track */
+  height: 10px;  /* Slightly reduce the height */
+  background-color: rgba(129, 129, 129, 0.277);  /* Soft dark background for contrast */
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);  /* Soft shadow for depth */
+  z-index: 1;
 }
 
-.antonio {
-  font-family: 'Antonio';
-  font-size: 42px;
-  letter-spacing: 0.5px;
+.scrollBar {
+  position: absolute;
+  height: 100%;  /* Full height to match the container */
+  background: rgba(255, 255, 255, 0.709);  /* Subtle gradient for the moving bar */
+  border-radius: 10px;
+  width: 20%;  /* Increase the width of the moving bar */
+  transition: left 0.3s ease-in-out;  /* Smooth transition */
+  left: 0%;  /* Start position at the far left */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);  /* Soft shadow for the moving bar */
+  cursor: grab;  /* Change cursor to indicate draggable area */
 }
 
-.h3 {
-  font-family: 'Antoniol';
-  font-weight: 400;
-  font-size: 28px;
-  letter-spacing: 1px;
-  margin-bottom: 30px;
-  margin-top: -10px;
-}
-
-.h3g {
-  font-family: 'Noto Sans';
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin: 5px 0;
-}
-
-.poomsaeP {
-  font-family: 'Noto Sans';
-  font-weight: 500;
-  letter-spacing: 0.7px;
-  line-height: 25px;
-  font-size: 17px;
+.scrollBar:active {
+  cursor: grabbing;  /* Change cursor to indicate dragging */
+  background: linear-gradient(90deg, #ddd, #bbb);  /* Slightly darker when active */
 }

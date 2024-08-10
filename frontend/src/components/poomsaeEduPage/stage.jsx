@@ -33,6 +33,12 @@ const Stage = ({ stageNum, image, text, locked, language, videoUrl, description 
     setModalOpen(false);
   };
 
+  // Ensure the description is always an object with both psKoDesc and psEnDesc
+  const selectedDescription = {
+    psKoDesc: stageDetails?.psKoDesc || description.psKoDesc || 'No description available in Korean.',
+    psEnDesc: stageDetails?.psEnDesc || description.psEnDesc || 'No description available in English.',
+  };
+
   return (
     <div className={`stage ${locked ? 'locked' : 'unlocked'}`}>
       <img 
@@ -59,7 +65,7 @@ const Stage = ({ stageNum, image, text, locked, language, videoUrl, description 
           stageNum={stageNum}
           text={text}
           videoUrl={stageDetails?.psUrl || videoUrl}
-          description={stageDetails?.psKoDesc || description}
+          description={selectedDescription} // Pass the selected description as an object
           modalClose={handleCloseModal}
           language={language}
           moves={stageDetails?.movements || []}
@@ -78,7 +84,10 @@ Stage.propTypes = {
   locked: PropTypes.bool.isRequired,
   language: PropTypes.string.isRequired,
   videoUrl: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.shape({
+    psKoDesc: PropTypes.string.isRequired,
+    psEnDesc: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Stage;

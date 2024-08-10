@@ -51,7 +51,10 @@ const PoomsaeEduPage = ({ language }) => {
             text={language === 'ko' ? stage.psKoName : stage.psEnName}
             locked={stage.psId > activeStage}
             videoUrl={stage.psUrl}
-            description={language === 'ko' ? stage.psKoDesc : stage.psEnDesc}
+            description={{
+              psKoDesc: stage.psKoDesc || '',  // Ensure description is always an object
+              psEnDesc: stage.psEnDesc || '',  // Ensure description is always an object
+            }}
             language={language}
           />
         ))}
