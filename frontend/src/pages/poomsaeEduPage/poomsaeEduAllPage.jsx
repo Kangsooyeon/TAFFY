@@ -9,8 +9,7 @@ import { completePoomsae, fetchAllStageDetails } from '../../apis/stageApi';
 import { useDispatch } from 'react-redux';
 import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
-import Webcam from '../../components/common/modelWebcam';
-
+import Webcam from '../../components/poomsaeEduPage/modelEduAll';
 
 const PoomsaeEduAllPage = ({ language }) => {
   const [buttonText, setButtonText] = useState('');
@@ -150,7 +149,7 @@ const PoomsaeEduAllPage = ({ language }) => {
           <div className='mvGif'>
             <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage" />
           </div>
-          <div className='userCam'>
+          <div>
           <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} />
           </div>
           <div className='progress'>
