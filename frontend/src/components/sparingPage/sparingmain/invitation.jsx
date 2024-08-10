@@ -38,9 +38,9 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         ) {
           console.log("Acceptance message received:", receivedMessage);
 
-          alert(
-            `connectionToken: ${connectionToken} sessionID: ${receivedMessage.sessionId}`
-          );
+          // alert(
+          //   `connectionToken: ${connectionToken} sessionID: ${receivedMessage.sessionId}`
+          // );
 
           // Navigate to the game session
           // 게임 세션으로 이동

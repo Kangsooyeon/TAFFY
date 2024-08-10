@@ -46,6 +46,8 @@ const SparingDetailPage = () => {
   const newMyDataRef = useRef(newMyData);
   const myResultRef = useRef(myResult);
 
+  const dataQueueRef = useRef([]);
+
   useEffect(() => {
     oldMyDataRef.current = oldMyData;
   }, [oldMyData]);
@@ -161,26 +163,27 @@ const SparingDetailPage = () => {
       updateRecordAndSignal(isMyWin);
     }
   }, [myHp, opponentHp]);
-
+  
   useEffect(() => {
     const OV = new OpenVidu();
     const session = OV.initSession();
-
+    const userDataWithNickname = { ...userdata, nickname };
+    
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
+      console.log("Opponent data received: ", data);
       if (data.nickname !== nickname) {
-        console.log("Opponent data received: ", data);
         setOpponentData(data);
       }
     });
-
+    
     session.on('signal:mission', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
         setOpponentMission(data.mission);
       }
     });
-
+    
     session.on('signal:action', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
@@ -190,7 +193,7 @@ const SparingDetailPage = () => {
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
       }
     });
-
+    
     session.on('signal:result', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
@@ -202,52 +205,53 @@ const SparingDetailPage = () => {
         checkBothPlayersReady();
       }
     });
-
+    
     session.on('streamCreated', (event) => {
       const subscriber = session.subscribe(event.stream, undefined);
       setSubscribers(prevSubscribers => [...prevSubscribers, subscriber]);
     });
-
+    
     session.on('streamDestroyed', (event) => {
       event.stream.streamManager?.dispose();
       setSubscribers(prevSubscribers => prevSubscribers.filter(sub => sub !== event.stream.streamManager));
     });
-
+    
+    
     session.connect(connectionToken)
-      .then(() => {
-        const publisher = OV.initPublisher(undefined, {
-          insertMode: 'APPEND',
-          width: '100%',
-          height: '100%',
-          publishAudio: false,
-        });
-
-        session.publish(publisher);
-        setPublisher(publisher);
-        setSession(session);
-
-        const userDataWithNickname = { ...userdata, nickname };
-        session.signal({
-          data: JSON.stringify(userDataWithNickname),
-          to: [],
-          type: 'userData'
-        });
-
-      })
-      .catch(error => {
-        console.error('Failed to connect to the session:', error);
+    .then(() => {
+      const publisher = OV.initPublisher(undefined, {
+        insertMode: 'APPEND',
+        width: '100%',
+        height: '100%',
+        publishAudio: false,
       });
-
+      
+      session.publish(publisher);
+      setPublisher(publisher);
+      setSession(session);
+      
+      session.signal({
+        data: JSON.stringify(userDataWithNickname),
+        to: [],
+        type: 'userData'
+      });
+      console.log('userdata 전송')
+      
+    })
+    .catch(error => {
+      console.error('Failed to connect to the session:', error);
+    });
+    
     return () => {
       if (session) session.disconnect();
     };
-  }, [connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
-
+  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
+  
   const handleWin = (winner) => {
     let newMyAction, newOpponentAction;
     let newMyHp = myHp;
     let newOpponentHp = opponentHp;
-
+    
     if (winner === 'left') {
       newOpponentHp = Math.max(newOpponentHp - 34, 0);
       newMyAction = 'leg';
@@ -294,27 +298,7 @@ const SparingDetailPage = () => {
     setRound(newRound);
     setIsAttack(newIsAttack);
   };
-
-  const renderGameUsers = () => {
-    if (publisher && opponentData) {
-      return (
-        <>
-          <GameUser className="gameuserleft" userdata={userdata} isOpponent={false}/>
-          <GameUser className="gameuserright" userdata={opponentData} isOpponent={true}/>
-        </>
-      );
-    } else if (subscribers.length > 0 && opponentData) {
-      return (
-        <>
-          <GameUser className="gameuserleft" userdata={opponentData} isOpponent={true}/>
-          <GameUser className="gameuserright" userdata={userdata} isOpponent={false}/>
-        </>
-      );
-    } else {
-      return null;
-    }
-  };
-
+  
   const renderGameCharacters = () => {
     if (publisher && opponentData) {
       return (
@@ -341,7 +325,8 @@ const SparingDetailPage = () => {
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
-      {renderGameUsers()}
+      <GameUser className="gameuserleft" userdata={userdata} isOpponent={false}/>
+      <GameUser className="gameuserright" userdata={opponentData} isOpponent={true}/>
       <HpBar className="hpbarleft" hp={myHp} />
       <HpBar className="hpbarright" hp={opponentHp} />
       {renderGameCharacters()}
