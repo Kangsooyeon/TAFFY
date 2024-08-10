@@ -3,12 +3,13 @@
   justify-content: space-between;
   align-items: center;
   min-height: 100vh;
-  background-image: url('/src/assets/images/poomsaeEduPage/bgc.png');
+  background: linear-gradient(rgba(229, 229, 229, 0.2), rgba(229, 229, 229, 0.2)),
+              url('/src/assets/images/poomsaeEduPage/bgc.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   box-sizing: border-box;
-  overflow: hidden ;
+  overflow: hidden;
   padding: 5%;
 }
