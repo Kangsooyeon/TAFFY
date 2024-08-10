@@ -79,8 +79,13 @@ const SparingDetailPage = () => {
           newMyData: updatedRecord,
         };
 
+        console.log("My Result:", resultRef.current.myResult);
+
         session.signal({
-          data: JSON.stringify(resultRef.current.myResult),
+          data: JSON.stringify({
+            ...resultRef.current.myResult,
+            nickname: nickname,  
+          }),
           to: [],
           type: 'result'
         });
@@ -104,10 +109,12 @@ const SparingDetailPage = () => {
         const data = JSON.parse(event.data);
         if (data.nickname !== nickname) {
           resultRef.current.opponentResult = {
-            oldMyData: data.oldMyData,
-            newMyData: data.newMyData,
-            myResult: data.myResult,
+            oldOpponentData: data.oldMyData,
+            newOpponentData: data.newMyData,
+            opponentResult: data.myResult,
           };
+          console.log("Opponent Result:", resultRef.current.opponentResult);
+
           checkBothPlayersReady();
         }
       });
@@ -122,14 +129,16 @@ const SparingDetailPage = () => {
 
   useEffect(() => {
     if (bothPlayersReady) {
+      console.log("Final My Result:", resultRef.current.myResult);
+      console.log("Final Opponent Result:", resultRef.current.opponentResult);
       navigate('/sp/game/result', {
         state: {
           oldMyData: resultRef.current.myResult.oldMyData,
           newMyData: resultRef.current.myResult.newMyData,
-          oldOpponentData: resultRef.current.opponentResult.oldMyData,
-          newOpponentData: resultRef.current.opponentResult.newMyData,
+          oldOpponentData: resultRef.current.opponentResult.oldOpponentData,
+          newOpponentData: resultRef.current.opponentResult.newOpponentData,
           myResult: resultRef.current.myResult.myResult,
-          opponentResult: resultRef.current.opponentResult.myResult,
+          opponentResult: resultRef.current.opponentResult.opponentResult,
         }
       });
     }
@@ -186,9 +195,9 @@ const SparingDetailPage = () => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
         resultRef.current.opponentResult = {
-          oldMyData: data.oldMyData,
-          newMyData: data.newMyData,
-          myResult: data.myResult,
+          oldOpponentData: data.oldMyData,  
+          newOpponentData: data.newMyData,  
+          opponentResult: data.myResult,    
         };
         checkBothPlayersReady();
       }
