@@ -10,6 +10,8 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
   const [userStatus, setUserStatus] = useState("");
+  const [minutes, setMinutes] = useState(3);
+  const [seconds, setSeconds] = useState(0);
   const nickname = useRef("");
   const { userdata } = useSelector((state) => state.sparingUser);
   const navigate = useNavigate();
@@ -38,11 +40,6 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         ) {
           console.log("Acceptance message received:", receivedMessage);
 
-          // alert(
-          //   `connectionToken: ${connectionToken} sessionID: ${receivedMessage.sessionId}`
-          // );
-
-          // Navigate to the game session
           // 게임 세션으로 이동
           console.log(`conenctionToken : ${connectionToken}`);
 
@@ -106,6 +103,33 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
     }
   }, [token, userdata, stompClient, nickname]);
 
+  // Countdown timer logic
+  useEffect(() => {
+    let timer;
+    if (userStatus === "waiting") {
+      timer = setInterval(() => {
+        setSeconds((prevSeconds) => {
+          if (prevSeconds === 0) {
+            if (minutes === 0) {
+              clearInterval(timer);
+              setUserStatus("");
+              return 0;
+            } else {
+              setMinutes((prevMinutes) => prevMinutes - 1);
+              return 59;
+            }
+          } else {
+            return prevSeconds - 1;
+          }
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [userStatus, minutes]);
+
   function InvitationCard() {
     return (
       <div className="invitationcardbox">
@@ -137,7 +161,10 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           <h3> 승낙을 기다리고 있습니다.</h3>
         </div>
         <div className="timer">
-          <p>10:11</p>
+          <p>
+            {minutes.toString().padStart(2, "0")}:
+            {seconds.toString().padStart(2, "0")}
+          </p>
         </div>
       </div>
     );
