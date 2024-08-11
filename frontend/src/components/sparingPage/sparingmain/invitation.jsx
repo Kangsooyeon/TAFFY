@@ -5,13 +5,18 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const Invitation = ({ stompClient, onReceiveMessage }) => {
+// 초기 시간 상수
+const INIT_MINUTE = 0;
+const INIT_SECOND = 10;
+
+const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox }) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
   const [userStatus, setUserStatus] = useState("");
-  const [minutes, setMinutes] = useState(3);
-  const [seconds, setSeconds] = useState(0);
+  const [invitee, setInvitee] = useState("");
+  const [minutes, setMinutes] = useState(INIT_MINUTE);
+  const [seconds, setSeconds] = useState(INIT_SECOND);
   const nickname = useRef("");
   const { userdata } = useSelector((state) => state.sparingUser);
   const navigate = useNavigate();
@@ -21,14 +26,10 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
       // 겨루자 초대 메시지 구독
       const subscription = stompClient.subscribe("/topic/data", (message) => {
         const receivedMessage = JSON.parse(message.body);
-        // console.log("Received message:", receivedMessage);
-
-        // `status`가 여기서 존재하는지 확인
-        // console.log("수신한 상태:", receivedMessage.status);
 
         if (
-          receivedMessage.nickname === userdata.data.nickname &&
-          receivedMessage.status === "invite"
+          receivedMessage.status === "invite" &&
+          receivedMessage.nickname === userdata.data.nickname
         ) {
           if (onReceiveMessage) {
             onReceiveMessage(receivedMessage);
@@ -37,11 +38,6 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           receivedMessage.status === "accepted" &&
           receivedMessage.inviter === userdata.data.nickname
         ) {
-          // console.log("Acceptance message received:", receivedMessage);
-
-          // 게임 세션으로 이동
-          // console.log(`conenctionToken : ${connectionToken}`);
-
           navigate(`/sp/game/${receivedMessage.sessionId}`, {
             state: {
               connectionToken: connectionToken,
@@ -51,10 +47,19 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           });
         } else if (
           receivedMessage.status === "denied" &&
-          receivedMessage.inviter === userdata.data.nickname
+          receivedMessage.nickname === userdata.data.nickname
         ) {
           setUserStatus("");
+          setInvitee("");
           alert("상대방이 초대를 거절했습니다.");
+        } else if (
+          receivedMessage.status === "timeout" &&
+          receivedMessage.nickname === userdata.data.nickname
+        ) {
+          console.log("받은 초대장의 시간이 만료되었습니다.");
+          setShowMessageBox(false);
+        } else {
+          console.log("Received message:", receivedMessage);
         }
       });
 
@@ -63,7 +68,14 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient, userdata, onReceiveMessage, connectionToken, navigate]);
+  }, [
+    stompClient,
+    userdata,
+    onReceiveMessage,
+    connectionToken,
+    navigate,
+    setShowMessageBox,
+  ]);
 
   const handleInvite = useCallback(async () => {
     // OpenVidu session create API
@@ -100,6 +112,8 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
         });
         // console.log("Message sent:", dataMessage);
       }
+
+      setInvitee(nickname.current);
     } catch (error) {
       console.error("Error sending invite:", error);
     }
@@ -114,7 +128,26 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
           if (prevSeconds === 0) {
             if (minutes === 0) {
               clearInterval(timer);
+              setInvitee("");
+              setMinutes(INIT_MINUTE);
+              setSeconds(INIT_SECOND);
               setUserStatus("");
+
+              // 초대 시간 만료 메시지 전송
+              if (stompClient && stompClient.connected) {
+                const timeoutMessage = {
+                  sessionId: openViduSessionId,
+                  nickname: invitee,
+                  inviter: userdata.data.nickname,
+                  status: "timeout",
+                };
+
+                stompClient.publish({
+                  destination: "/app/data.send",
+                  body: JSON.stringify(timeoutMessage),
+                });
+              }
+
               return 0;
             } else {
               setMinutes((prevMinutes) => prevMinutes - 1);

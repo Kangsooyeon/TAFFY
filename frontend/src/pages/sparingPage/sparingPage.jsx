@@ -266,6 +266,7 @@ const SparingPage = () => {
             <Invitation
               stompClient={stompClient}
               onReceiveMessage={handleReceiveMessage}
+              setShowMessageBox={setShowMessageBox}
             />
           )}
         </div>
