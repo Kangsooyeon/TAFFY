@@ -14,13 +14,14 @@ import { OpenVidu } from 'openvidu-browser';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
+import { fetchGameExitAsync } from '../../store/sparing/gameExit'
 
 const SparingDetailPage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { connectionToken, userdata, status } = location.state;
-  console.log('Received in SparingDetailPage:', { connectionToken, userdata });
+  const { sessionId, connectionToken, userdata, status, roomType } = location.state;
+  console.log('Received in SparingDetailPage:', { connectionToken, userdata, status, roomType, sessionId });
 
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
@@ -38,15 +39,16 @@ const SparingDetailPage = () => {
   const [newMyData, setNewMyData] = useState(null);
   const [myResult, setMyResult] = useState(null)
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
-  const [opponentResult, setOpponentResult] = useState(null);
+  // const [opponentResult, setOpponentResult] = useState(null);
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
+
+  console.log(userdata)
+  console.log(opponentData)
 
   const oldMyDataRef = useRef(oldMyData);
   const newMyDataRef = useRef(newMyData);
   const myResultRef = useRef(myResult);
-
-  const dataQueueRef = useRef([]);
 
   useEffect(() => {
     oldMyDataRef.current = oldMyData;
@@ -123,16 +125,12 @@ const SparingDetailPage = () => {
     }
   }, [session, nickname]);
 
-  // useEffect(() => {
-  //   if (myResult && opponentResult) {
-  //     setBothPlayersReady(true);
-  //   }
-  // }, [myResult, opponentResult]);
-
   useEffect(() => {
     if (bothPlayersReady) {
+      console.log(sessionId, roomType)
       console.log("Final My Result:", resultRef.current.myResult);
       console.log("Final Opponent Result:", resultRef.current.opponentResult);
+      dispatch(fetchGameExitAsync({sessionId, roomType}))
       navigate('/sp/game/result', {
         state: {
           oldMyData: resultRef.current.myResult.oldMyData,
@@ -145,9 +143,6 @@ const SparingDetailPage = () => {
       });
     }
   }, [bothPlayersReady, navigate]);
-
-
-
 
   const atkData = useSelector(state => state.sparingMission.data?.ATK);
   const defData = useSelector(state => state.sparingMission.data?.DEF);
@@ -325,17 +320,24 @@ const SparingDetailPage = () => {
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
-      <GameUser className="gameuserleft" userdata={userdata} isOpponent={false}/>
-      <GameUser className="gameuserright" userdata={opponentData} isOpponent={true}/>
+      <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack}/>
+      <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack}/>
+
       <HpBar className="hpbarleft" hp={myHp} />
       <HpBar className="hpbarright" hp={opponentHp} />
+
+      {/* <Character className="characterleft" userdata={userdata} action={myAction} /> */}
+      {/* <Character className="characterright" userdata={opponentData} action={opponentAction} /> */}
       {renderGameCharacters()}
+
       <Mission myMission={myMission} opponentMission={opponentMission} />
       <Timer />
+
       <WebCam className="webcamleft" streamManager={publisher} />
       {subscribers.map((subscriber, index) => (
         <WebCam key={index} className="webcamright" streamManager={subscriber} />
       ))}
+
       <button onClick={nextRound}>Next Round</button>
       <button onClick={() => handleWin('left')}>left win</button>
       <button onClick={() => handleWin('right')}>right win</button>

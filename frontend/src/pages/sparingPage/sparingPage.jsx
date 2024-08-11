@@ -29,11 +29,13 @@ const SparingPage = () => {
   const [status, setStatus] = useState(null);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [roomType, setRoomType] = useState(null);
 
   const sessionIDRef = useRef(sessionID);
   const connectionTokenRef = useRef(connectionToken);
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
+  const roomTypeRef = useRef(roomType)
 
   const handleReceiveMessage = (message) => {
     setReceivedMessage(message);
@@ -179,28 +181,38 @@ const SparingPage = () => {
     statusRef.current = status;
   }, [status]);
 
+  useEffect(() => {
+    roomTypeRef.current = roomType
+  }, [roomType]);
+
   const joinGame = (message) => {
     const receivedData = JSON.parse(message.body);
     console.log("Game data received: ", receivedData);
     console.log("Received sessionId:", receivedData.sessionId);
     console.log("Current sessionID:", sessionIDRef.current);
-
+    console.log("roomType:", roomTypeRef.current);
+    console.log("status:", statusRef.current);
+    console.log("connectionToken:", connectionTokenRef.current);
+    console.log('userdata:', userdataRef.current)
+    
     if (
       sessionIDRef.current &&
       connectionTokenRef.current &&
       userdataRef.current &&
-      statusRef.current
+      statusRef.current &&
+      roomTypeRef.current
     ) {
       if (receivedData.sessionId === sessionIDRef.current) {
         console.log("game start!");
-        console.log("Connection Token:", connectionTokenRef.current);
-        console.log("User Data:", userdataRef.current);
+        // console.log("Connection Token:", connectionTokenRef.current);
+        // console.log("User Data:", userdataRef.current);
         navigate(`/sp/game/${sessionIDRef.current}`, {
           state: {
-            // sessionId: sessionIDRef.current,
+            sessionId: sessionIDRef.current,
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
             status: statusRef.current,
+            roomType: roomTypeRef.current,
           },
         });
       }
@@ -252,6 +264,7 @@ const SparingPage = () => {
             setSessionID={setSessionID}
             setConnectionToken={setConnectionToken}
             setStatus={setStatus}
+            setRoomType={setRoomType}
           />
         </div>
         <div className="rightSection">
