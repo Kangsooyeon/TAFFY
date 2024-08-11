@@ -102,3 +102,12 @@
   right: 28%;
   bottom: 35%
 }
+
+.finishimg {
+  z-index: 9999;
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%
+}

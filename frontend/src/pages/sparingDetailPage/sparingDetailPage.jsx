@@ -2,12 +2,15 @@ import '../../styles/sparingPage/sparinggame/sparingDetailPage.css';
 import Left from '../../assets/images/sparingPage/game-left.png';
 import Right from '../../assets/images/sparingPage/game-right.png';
 import Mat from '../../assets/images/sparingPage/sparingmat.png';
+import GameFinish_English from '../../assets/images/sparingPage/gamefinish_eng.png'
+import GameFinish_Korea from '../../assets/images/sparingPage/gamefinish_kor.png'
 import Character from '../../components/sparingPage/sparinggame/character.jsx';
 import HpBar from '../../components/sparingPage/sparinggame/hpBar.jsx';
 import Mission from '../../components/sparingPage/sparinggame/mission.jsx';
 import Timer from '../../components/sparingPage/sparinggame/timer.jsx';
 import WebCam from '../../components/sparingPage/sparinggame/webCam.jsx';
 import GameUser from '../../components/sparingPage/sparinggame/gameuser.jsx';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { OpenVidu } from 'openvidu-browser';
@@ -39,6 +42,7 @@ const SparingDetailPage = () => {
   const [newMyData, setNewMyData] = useState(null);
   const [myResult, setMyResult] = useState(null)
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
+  const [finishOn, setFinishOn] = useState(false)
   // const [opponentResult, setOpponentResult] = useState(null);
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
@@ -131,16 +135,19 @@ const SparingDetailPage = () => {
       console.log("Final My Result:", resultRef.current.myResult);
       console.log("Final Opponent Result:", resultRef.current.opponentResult);
       dispatch(fetchGameExitAsync({sessionId, roomType}))
-      navigate('/sp/game/result', {
-        state: {
-          oldMyData: resultRef.current.myResult.oldMyData,
-          newMyData: resultRef.current.myResult.newMyData,
-          oldOpponentData: resultRef.current.opponentResult.oldOpponentData,
-          newOpponentData: resultRef.current.opponentResult.newOpponentData,
-          myResult: resultRef.current.myResult.myResult,
-          opponentResult: resultRef.current.opponentResult.opponentResult,
-        }
-      });
+      setFinishOn(true)
+      setTimeout(() => {
+        navigate('/sp/game/result', {
+          state: {
+            oldMyData: resultRef.current.myResult.oldMyData,
+            newMyData: resultRef.current.myResult.newMyData,
+            oldOpponentData: resultRef.current.opponentResult.oldOpponentData,
+            newOpponentData: resultRef.current.opponentResult.newOpponentData,
+            myResult: resultRef.current.myResult.myResult,
+            opponentResult: resultRef.current.opponentResult.opponentResult,
+          }
+        });
+      }, 5000)
     }
   }, [bothPlayersReady, navigate]);
 
@@ -294,49 +301,37 @@ const SparingDetailPage = () => {
     setIsAttack(newIsAttack);
   };
   
-  const renderGameCharacters = () => {
-    if (publisher && opponentData) {
-      return (
-        <>
-          <Character className="characterleft" userdata={userdata} action={myAction} />
-          <Character className="characterright" userdata={opponentData} action={opponentAction} />
-        </>
-      );
-    } else if (subscribers && opponentData) {
-      return (
-        <>
-          <Character className="characterleft" userdata={opponentData} action={opponentAction} />
-          <Character className="characterright" userdata={userdata} action={myAction} />
-        </>
-      );
-    } else {
-      return null;
-    }
-  };
-
   return (
     <div className="sparinggame">
+      {finishOn === true ?
+        <img src={GameFinish_Korea} className="finishimg"/>:
+        null} 
       <img src={Right} className="sparinggameright" alt="" />
+      
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
+
       <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack}/>
       <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack}/>
 
       <HpBar className="hpbarleft" hp={myHp} />
       <HpBar className="hpbarright" hp={opponentHp} />
 
-      {/* <Character className="characterleft" userdata={userdata} action={myAction} /> */}
-      {/* <Character className="characterright" userdata={opponentData} action={opponentAction} /> */}
-      {renderGameCharacters()}
+      <Character className="characterleft" userdata={userdata} action={myAction} />
+      <Character className="characterright" userdata={opponentData} action={opponentAction} />
 
-      <Mission myMission={myMission} opponentMission={opponentMission} />
-      <Timer />
 
-      <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack}/>
-      {subscribers.map((subscriber, index) => (
-        <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} />
-      ))}
+      {finishOn === false ?
+        <div>
+          <Mission myMission={myMission} opponentMission={opponentMission} />
+          <Timer />
+          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack}/>
+          {subscribers.map((subscriber, index) => (
+            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack}/>
+          ))}
+        </div>
+      : null }
 
       <button onClick={nextRound}>Next Round</button>
       <button onClick={() => handleWin('left')}>left win</button>

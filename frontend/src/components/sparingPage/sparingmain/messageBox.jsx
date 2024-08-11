@@ -12,7 +12,9 @@ const messageBox = ({ inviter, onAccept, onDeny }) => {
         <img src={letterImage} alt="Letter" className="letterimg" />
       </div>
       <div></div>
-      <Message inviter={inviter} onAccept={onAccept} onDeny={onDeny} />
+      {inviter && (
+        <Message inviter={inviter} onAccept={onAccept} onDeny={onDeny} />
+      )}
       <div
         style={{ margin: "-3.5px", width: "97.5%" }}
         className="messageimgbottom"

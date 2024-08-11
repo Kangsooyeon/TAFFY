@@ -18,16 +18,7 @@ import RedBelt from '../../assets/images/common/belt/redBelt.png';
 import WhiteBelt from '../../assets/images/common/belt/whiteBelt.png';
 import YellowBelt from '../../assets/images/common/belt/yellowBelt.png';
 
-const UserInfo = ({ language }) => {
-  const dispatch = useDispatch();
-  const { profile, status: userStatus, error: userError } = useSelector((state) => state.user);
-  const { record, status: recordStatus, error: recordError } = useSelector((state) => state.userRecord);
-
-  useEffect(() => {
-    dispatch(fetchUserProfileAsync());
-    dispatch(fetchUserRecordAsync());
-  }, [dispatch]);
-
+const UserInfo = ({ language, userdata, userrecord }) => {
   const getImageSrc = (imagename) => {
     switch (imagename) {
       case 'Tiger':
@@ -66,38 +57,26 @@ const UserInfo = ({ language }) => {
     }
   };
 
-  if (userStatus === 'loading' || recordStatus === 'loading') {
-    return <div>Loading...</div>;
-  }
+  const winRate = (userrecord.data.win || 0) + (userrecord.data.lose || 0) === 0 ? 0 :
+    ((userrecord.data.win || 0) / ((userrecord.data.win || 0) + (userrecord.data.lose || 0))) * 100;
 
-  if (userStatus === 'failed') {
-    return <div>Error: {userError}</div>;
-  }
-
-  if (recordStatus === 'failed') {
-    return <div>Error: {recordError}</div>;
-  }
-
-  const winRate = (record?.win || 0) + (record?.lose || 0) + (record?.draw || 0) === 0 ? 0 :
-    ((record?.win || 0) / ((record?.win || 0) + (record?.lose || 0) + (record?.draw || 0))) * 100;
-
-  const beltNameParts = profile?.beltName ? profile.beltName.split('/') : ['', ''];
+  const beltNameParts = userdata?.beltName ? userdata.beltName.split('/') : ['', ''];
 
   return (
     <div className="userinfobox">
       <div className="characterphoto">
-        <img src={getImageSrc(profile?.profileImg)} alt="" />
+        <img src={getImageSrc(userdata?.profileImg)} alt="" />
       </div>
       <div className="characterinfomation">
-        <p className="mypagenickname">{profile?.nickname}</p>
+        <p className="mypagenickname">{userdata?.nickname}</p>
         <p className="mypagettiname">{language === 'en' ? beltNameParts[1] : beltNameParts[0]}</p>
-        {profile?.beltName && (
+        {userdata?.beltName && (
           <img src={getBeltSrc(beltNameParts[1].replace(/\s/g, ''))} alt="Belt" />
         )}
       </div>
       <div className="poomsaeeducation">
-        {profile?.poomSaeCompletedList ? (
-          profile.poomSaeCompletedList.map((item) => (
+        {userdata?.poomSaeCompletedList ? (
+          userdata.poomSaeCompletedList.map((item) => (
             <img key={item.psId} src={item.isCompleted ? CheckComplete : Check} alt="" />
           ))
         ) : (
