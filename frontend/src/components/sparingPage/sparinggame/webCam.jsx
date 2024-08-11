@@ -3,7 +3,7 @@ import CamTop from '../../../assets/images/sparingPage/webcam-top.png';
 import { useEffect, useRef } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
-const WebCam = ({ className, streamManager }) => {
+const WebCam = ({ className, streamManager, isAttack }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -15,11 +15,23 @@ const WebCam = ({ className, streamManager }) => {
       console.warn('Stream manager or video element not found');
     }
 
-    const loadMediaPipe = async () => {
+    const loadModelAndPose = async () => {
       try {
         await tf.setBackend('webgl');
         await tf.ready();
         console.log('TensorFlow.js initialized with WebGL backend');
+
+        const modelPath = isAttack ? '/models/6jang/model.json' : '/models/7jang/model.json';
+        console.log(`Loading model from: ${modelPath}`);
+        
+        let model;
+        try {
+          model = await tf.loadLayersModel(modelPath);
+          console.log(`Successfully loaded model from: ${modelPath}`);
+        } catch (modelLoadError) {
+          console.error(`Failed to load model from: ${modelPath}`, modelLoadError);
+          return;
+        }
 
         const pose = new window.Pose({
           locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
@@ -34,7 +46,6 @@ const WebCam = ({ className, streamManager }) => {
           minTrackingConfidence: 0.5
         });
 
-        // 비디오 로드 후 처리
         videoRef.current.onloadeddata = () => {
           console.log('Video data loaded');
 
@@ -46,13 +57,10 @@ const WebCam = ({ className, streamManager }) => {
           sendPose();  // 초기 시작
         };
 
-        pose.onResults((results) => {
-          console.log('Pose results:', results);
-
+        pose.onResults(async (results) => {
           const canvas = canvasRef.current;
           const ctx = canvas.getContext('2d');
 
-          // 비디오 크기와 캔버스 크기 일치
           canvas.width = videoRef.current.videoWidth;
           canvas.height = videoRef.current.videoHeight;
 
@@ -60,6 +68,17 @@ const WebCam = ({ className, streamManager }) => {
           ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
           if (results.poseLandmarks) {
+            // 관절 좌표 추출 및 텐서로 변환
+            const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
+            const inputTensor = tf.tensor2d([keypoints]);
+
+            // console.log('Input Tensor:', inputTensor.arraySync());
+
+            // 모델 예측 수행
+            const predictions = model.predict(inputTensor);
+            predictions.array().then((result) => console.log('Model predictions:', result));
+
+            // 포즈 랜드마크 그리기
             window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
             window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
           } else {
@@ -72,9 +91,9 @@ const WebCam = ({ className, streamManager }) => {
       }
     };
 
-    loadMediaPipe();
+    loadModelAndPose();
 
-  }, [streamManager]);
+  }, [streamManager, isAttack]);
 
   return (
     <div className={`webcambox ${className}`}>

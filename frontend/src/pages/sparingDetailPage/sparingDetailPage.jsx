@@ -333,9 +333,9 @@ const SparingDetailPage = () => {
       <Mission myMission={myMission} opponentMission={opponentMission} />
       <Timer />
 
-      <WebCam className="webcamleft" streamManager={publisher} />
+      <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack}/>
       {subscribers.map((subscriber, index) => (
-        <WebCam key={index} className="webcamright" streamManager={subscriber} />
+        <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} />
       ))}
 
       <button onClick={nextRound}>Next Round</button>
