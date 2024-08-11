@@ -54,8 +54,8 @@ public class FightController {
     }
 
     @DeleteMapping("/exit")
-    public ResponseEntity<ResponseDto> exitRoom(@Autowired Long memberId, @RequestParam String sessionId, @RequestParam String roomType){
-        fightService.exitRoom(memberId, sessionId, roomType);
+    public ResponseEntity<ResponseDto> exitRoom(@AuthenticationPrincipal Long memberId, @RequestParam String sessionId, @RequestParam String roomType){
+        fightService.deleteRoom(sessionId, roomType);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "겨루기가 정상적으로 종료되었습니다.", "success"));
     }
 }
