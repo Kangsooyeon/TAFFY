@@ -39,3 +39,15 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+.resultsign {
+  width: 50%;
+  height: 50%
+}
+
+.scorebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

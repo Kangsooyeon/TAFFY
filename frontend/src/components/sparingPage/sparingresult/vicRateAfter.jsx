@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import '../../../styles/sparingPage/sparingresult/vicRateAfter.css';
+import upSign from '../../../assets/images/sparingPage/상승아이콘.png'
+import downSign from '../../../assets/images/sparingPage/하강아이콘.png'
 
-const VicRateAfter = ({ className, oldData, newData }) => {
+
+const VicRateAfter = ({ className, oldData, newData, result }) => {
   const [displayRate, setDisplayRate] = useState(oldData.data.totalMatches > 0 ? ((oldData.data.win / oldData.data.totalMatches) * 100).toFixed(1) : '0.0');
   const [fadeClass, setFadeClass] = useState('fade-in');
 
@@ -29,7 +32,15 @@ const VicRateAfter = ({ className, oldData, newData }) => {
     <div className={`vicrateafterbox ${className}`}>
       <h2 style={{ margin: '2%' }}>승률</h2>
       <hr className="afterhr" />
-      <p className={fadeClass}>{displayRate}%</p>
+      <div className="scorebox">
+        <p className={fadeClass}>{displayRate}%</p>
+        { result === 'win' ?
+        <img src={upSign} className="resultsign"alt=""/> :
+        // <div class="arrow-up"></div>
+        <img src={downSign} className="resultsign" alt=""/>
+        }
+      {/* <img src={downSign} alt="" /> */}
+      </div>
     </div>
   );
 };
