@@ -29,11 +29,13 @@ const SparingPage = () => {
   const [status, setStatus] = useState(null);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [roomType, setRoomType] = useState(null);
 
   const sessionIDRef = useRef(sessionID);
   const connectionTokenRef = useRef(connectionToken);
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
+  const roomTypeRef = userRef(roomType)
 
 
   const handleReceiveMessage = (message) => {
@@ -166,6 +168,10 @@ const SparingPage = () => {
     statusRef.current = status;
   }, [status]);
 
+  useEffect(() => {
+    roomTypeRef.current = roomType
+  })
+
   const joinGame = (message) => {
     const receivedData = JSON.parse(message.body);
     console.log("Game data received: ", receivedData);
@@ -176,7 +182,8 @@ const SparingPage = () => {
       sessionIDRef.current &&
       connectionTokenRef.current &&
       userdataRef.current &&
-      statusRef.current
+      statusRef.current &&
+      roomTypeRef.currtent
     ) {
       if (receivedData.sessionId === sessionIDRef.current) {
         console.log("game start!");
@@ -188,12 +195,9 @@ const SparingPage = () => {
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
             status: statusRef.current,
+            roomType: roomTypeRef.current,
           },
         });
-        // alert("join game");
-        // alert(
-        //   `connectionToken: ${connectionTokenRef.current} sessionID: ${receivedMessage.sessionId}`
-        // );
       }
     } else {
       console.error("One of the required refs is null");
@@ -243,6 +247,7 @@ const SparingPage = () => {
             setSessionID={setSessionID}
             setConnectionToken={setConnectionToken}
             setStatus={setStatus}
+            setRoomType={setRoomType}
           />
         </div>
         <div className="rightSection">

@@ -14,6 +14,7 @@ import { OpenVidu } from 'openvidu-browser';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
+import { fetchGameExitAsync } from '../../store/sparing/gameExit'
 
 const SparingDetailPage = () => {
   const location = useLocation();
