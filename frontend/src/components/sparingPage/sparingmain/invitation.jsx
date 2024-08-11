@@ -47,10 +47,12 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox }) => {
           });
         } else if (
           receivedMessage.status === "denied" &&
-          receivedMessage.nickname === userdata.data.nickname
+          receivedMessage.inviter === userdata.data.nickname
         ) {
           setUserStatus("");
           setInvitee("");
+          setMinutes(INIT_MINUTE);
+          setSeconds(INIT_SECOND);
           alert("상대방이 초대를 거절했습니다.");
         } else if (
           receivedMessage.status === "timeout" &&
