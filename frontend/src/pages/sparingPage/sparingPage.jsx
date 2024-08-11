@@ -35,8 +35,7 @@ const SparingPage = () => {
   const connectionTokenRef = useRef(connectionToken);
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
-  const roomTypeRef = userRef(roomType)
-
+  const roomTypeRef = useRef(roomType)
 
   const handleReceiveMessage = (message) => {
     setReceivedMessage(message);
@@ -54,20 +53,20 @@ const SparingPage = () => {
 
         // 초대수락 API 호출
         const response = await axiosInstance.post(url);
-        console.log(
-          "피초대자 connectionToken:",
-          response.data.data.connectionToken
-        );
+        // console.log(
+        //   "피초대자 connectionToken:",
+        //   response.data.data.connectionToken
+        // );
 
         // connectionToken 저장
         setConnectionToken(response.data.data.connectionToken);
 
-        console.log(
-          "Session ID being sent as query:",
-          receivedMessage.sessionId
-        );
+        // console.log(
+        //   "Session ID being sent as query:",
+        //   receivedMessage.sessionId
+        // );
 
-        console.log("Game invitation Accepted:", response.data);
+        // console.log("Game invitation Accepted:", response.data);
 
         // Send a message back to the inviter
         if (stompClient && stompClient.connected) {
@@ -89,6 +88,7 @@ const SparingPage = () => {
           state: {
             connectionToken: response.data.data.connectionToken,
             userdata: userdataRef.current,
+            roomType: "private",
           },
         });
       } catch (error) {
@@ -106,9 +106,22 @@ const SparingPage = () => {
   };
 
   const handleDeny = () => {
-    console.log("Invitation denied");
+    // console.log("Invitation denied");
     setShowMessageBox(false);
-    // Additional logic for denying the invitation, e.g., notifying the inviter
+
+    if (stompClient && stompClient.connected) {
+      const denyMessage = {
+        sessionId: receivedMessage.sessionId,
+        nickname: receivedMessage.nickname, // invitee's nickname
+        inviter: receivedMessage.inviter, // inviter's nickname
+        status: "denied",
+      };
+
+      stompClient.publish({
+        destination: "/app/data.send",
+        body: JSON.stringify(denyMessage),
+      });
+    }
   };
 
   useEffect(() => {
@@ -170,7 +183,7 @@ const SparingPage = () => {
 
   useEffect(() => {
     roomTypeRef.current = roomType
-  })
+  }, [roomType]);
 
   const joinGame = (message) => {
     const receivedData = JSON.parse(message.body);
@@ -251,7 +264,6 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
-
           {showMessageBox && (
             <MessageBox
               inviter={receivedMessage.inviter}
@@ -263,6 +275,7 @@ const SparingPage = () => {
             <Invitation
               stompClient={stompClient}
               onReceiveMessage={handleReceiveMessage}
+              setShowMessageBox={setShowMessageBox}
             />
           )}
         </div>

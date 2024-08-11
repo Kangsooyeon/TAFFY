@@ -20,17 +20,17 @@ const sparingExitSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSparingMissionUserAsync.pending, (state) => {
+      .addCase(fetchGameExitAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchSparingMissionUserAsync.fulfilled, (state, action) => {
+      .addCase(fetchGameExitAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = {
           ...state.data,
           [action.meta.arg]: action.payload
         };
       })
-      .addCase(fetchSparingMissionUserAsync.rejected, (state, action) => {
+      .addCase(fetchGameExitAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
