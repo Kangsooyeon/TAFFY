@@ -4,13 +4,12 @@ import Bear from '../../assets/images/myPage/곰 머리.png';
 import Dragon from '../../assets/images/myPage/용 머리.png';
 import Tiger from '../../assets/images/myPage/호랑이 머리.png';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserUpdateProfileAsync, fetchUserProfileAsync, fetchUserDeleteProfileAsync } from '../../store/myPage/myPageUser.js';
+import { useDispatch } from 'react-redux';
+import { fetchUserUpdateProfileAsync, fetchUserProfileAsync } from '../../store/myPage/myPageUser.js';
 import axios from 'axios';
 
-const UserUpdatePage = ({ closeUpdate, language }) => {
+const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
   const dispatch = useDispatch();
-  const { profile, status, error } = useSelector((state) => state.user);
 
   const [profileData, setProfileData] = useState({
     nickName: '',
@@ -22,17 +21,18 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [initialNickName, setInitialNickName] = useState('');
 
+  console.log(userdata)
   useEffect(() => {
-    if (profile) {
+    if (userdata) {
       setProfileData({
-        nickName: profile.nickname || '',
-        profileImg: profile.profileImg || '',
-        countryName: profile.country || '',
+        nickName: userdata.nickname || '',
+        profileImg: userdata.profileImg || '',
+        countryName: userdata.country || '',
       });
-      setSelectedCharacter(profile.profileImg || 'Tiger');
-      setInitialNickName(profile.nickname || '');
+      setSelectedCharacter(userdata.profileImg || 'Tiger');
+      setInitialNickName(userdata.nickname || '');
     }
-  }, [profile]);
+  }, [userdata]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -163,7 +163,6 @@ const UserUpdatePage = ({ closeUpdate, language }) => {
         <button type="button" className="userdeletebutton" onClick={handleUserDelete}>{language === 'en' ? 'Withdrawal' : '회원 탈퇴'}</button>
         <button type="submit" className="updatesavebutton">{language === 'en' ? 'Save' : '저장'}</button>
       </form>
-      {status === 'failed' && <p className="error-message">Error: {error}</p>}
     </div>
   );
 };
