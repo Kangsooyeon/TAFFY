@@ -321,13 +321,14 @@ const SparingDetailPage = () => {
       <Character className="characterleft" userdata={userdata} action={myAction} />
       <Character className="characterright" userdata={opponentData} action={opponentAction} />
 
+
       {finishOn === false ?
         <div>
           <Mission myMission={myMission} opponentMission={opponentMission} />
           <Timer />
-          <WebCam className="webcamleft" streamManager={publisher} />
+          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack}/>
           {subscribers.map((subscriber, index) => (
-            <WebCam key={index} className="webcamright" streamManager={subscriber} />
+            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack}/>
           ))}
         </div>
       : null }
