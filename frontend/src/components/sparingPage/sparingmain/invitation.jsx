@@ -49,6 +49,12 @@ const Invitation = ({ stompClient, onReceiveMessage }) => {
               roomType: "private",
             },
           });
+        } else if (
+          receivedMessage.status === "denied" &&
+          receivedMessage.inviter === userdata.data.nickname
+        ) {
+          setUserStatus("");
+          alert("상대방이 초대를 거절했습니다.");
         }
       });
 

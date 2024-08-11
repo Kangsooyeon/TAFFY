@@ -106,7 +106,20 @@ const SparingPage = () => {
   const handleDeny = () => {
     // console.log("Invitation denied");
     setShowMessageBox(false);
-    // Additional logic for denying the invitation, e.g., notifying the inviter
+
+    if (stompClient && stompClient.connected) {
+      const denyMessage = {
+        sessionId: receivedMessage.sessionId,
+        nickname: receivedMessage.nickname, // invitee's nickname
+        inviter: receivedMessage.inviter, // inviter's nickname
+        status: "denied",
+      };
+
+      stompClient.publish({
+        destination: "/app/data.send",
+        body: JSON.stringify(denyMessage),
+      });
+    }
   };
 
   useEffect(() => {
