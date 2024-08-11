@@ -56,6 +56,7 @@ const characterImages = {
 };
 
 const Character = ({ className, userdata, action }) => {
+  // console.log(userdata)
   const avatar = userdata.data.avatar;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentAction, setCurrentAction] = useState('basic');

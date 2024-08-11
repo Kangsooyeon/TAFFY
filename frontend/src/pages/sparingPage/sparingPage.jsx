@@ -190,21 +190,25 @@ const SparingPage = () => {
     console.log("Game data received: ", receivedData);
     console.log("Received sessionId:", receivedData.sessionId);
     console.log("Current sessionID:", sessionIDRef.current);
-
+    console.log("roomType:", roomTypeRef.current);
+    console.log("status:", statusRef.current);
+    console.log("connectionToken:", connectionTokenRef.current);
+    console.log('userdata:', userdataRef.current)
+    
     if (
       sessionIDRef.current &&
       connectionTokenRef.current &&
       userdataRef.current &&
       statusRef.current &&
-      roomTypeRef.currtent
+      roomTypeRef.current
     ) {
       if (receivedData.sessionId === sessionIDRef.current) {
         console.log("game start!");
-        console.log("Connection Token:", connectionTokenRef.current);
-        console.log("User Data:", userdataRef.current);
+        // console.log("Connection Token:", connectionTokenRef.current);
+        // console.log("User Data:", userdataRef.current);
         navigate(`/sp/game/${sessionIDRef.current}`, {
           state: {
-            // sessionId: sessionIDRef.current,
+            sessionId: sessionIDRef.current,
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
             status: statusRef.current,

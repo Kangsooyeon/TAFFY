@@ -16,7 +16,7 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, 
       setSessionID(sessionId);
       setConnectionToken(connectionToken);
       setStatus(status)
-      setStatus('public')
+      setRoomType('public')
 
       if (status === 'waiting') {
         console.log('대기 상태입니다');

@@ -6,13 +6,25 @@ const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-export const fetchGameExit = async (roomType, sessionId) => {
+export const fetchGameExit = async (sessionId, roomType) => {
   try {
-    const response = await axiosInstance.get(`/spar/exit`, {
+    const response = await axiosInstance.delete(`/sparring/exit`, {
       params: {
-        roomType: roomType,
-        sessionId: sessionId
+        sessionId,
+        roomType
       }
     });
     return response.data;

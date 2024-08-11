@@ -10,7 +10,7 @@ import moveReducer from './poomsaeEdu/moveSlice';
 import quickStartReducer from './sparing/quickStart'
 import sparingUserReducer from './sparing/sparUser'
 import sparingMissionReducer from './sparing/sparMission'
-import sparingExit from './sparing/gameExit';
+import sparingExitReducer from './sparing/gameExit';
 
 // Redux store 설정
 const store = configureStore({
@@ -26,7 +26,7 @@ const store = configureStore({
     quickStart: quickStartReducer,
     sparingUser: sparingUserReducer,
     sparingMission: sparingMissionReducer,
-    sparingExit: sparingExit,
+    sparingExit: sparingExitReducer,
   }
 });
 
