@@ -1,6 +1,6 @@
 .character-box {
   box-sizing: border-box;
-  z-index: 9999;
+  z-index: 9998;
   position: absolute;
   height: 40%
 }
