@@ -142,6 +142,7 @@ public class FightService {
         }
     }
 
+
     public String findAvailableRoom(){
         Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match("ses_*").build());
         while (cursor.hasNext()) {
@@ -191,6 +192,13 @@ public class FightService {
         return list.stream().map(obj -> objectMapper.convertValue(obj, RedisHashUser.class)).collect(Collectors.toList());
     }
 
+
+    public boolean deleteRoom(String sessionId, String roomType){
+        if(roomType.equals("private")){
+            return expiredRoom("private:"+sessionId);
+        }
+        return  expiredRoom(sessionId);
+    }
     public boolean deleteInviter(Long memberId, String sessionId) {
         List<RedisHashUser> users = getUsers(sessionId);
         if(users.size()==1){ //방에 나 혼자 남았을 때, 방 자체를 삭제함
