@@ -31,7 +31,7 @@
 .poomsaeeducation {
   width: 76%;
   position: absolute;
-  left: 11%;
+  left: 14%;
   top: 44%;
   height: 25%;
   display: flex;
@@ -48,7 +48,7 @@
 .winpoint {
   width: 76%;
   position: absolute;
-  left: 11%;
+  left: 14%;
   top: 72%;
   height: 15%;
   display: flex;
@@ -63,7 +63,7 @@
   height: 35%;
   position: absolute;
   top: 6%;
-  right: 9%;
+  right: 7%;
   display: flex;
   flex-direction: column;
   align-items: center;

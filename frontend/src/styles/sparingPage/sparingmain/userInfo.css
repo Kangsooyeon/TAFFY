@@ -38,10 +38,11 @@
   -webkit-text-stroke: 1.5px #ffffff;
   color: #000000;
   font-family: "Lee", Helvetica;
-  font-size: 40px;
-  font-weight: 400;
+  /* font-size: 60px; */
   text-align: center;
+  /* text-size-adjust: 100%; */
   width: 60%; /* 너비를 100%로 설정 */
+  height: 100%;
   word-break: break-word; /* 단어가 박스를 넘을 경우 줄 바꿈 */
   overflow-wrap: break-word; /* 줄 바꿈을 위해 단어를 나눔 */
   display: flex; /* Flexbox를 사용하여 중앙 정렬 */

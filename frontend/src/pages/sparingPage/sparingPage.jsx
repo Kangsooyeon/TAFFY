@@ -268,13 +268,11 @@ const SparingPage = () => {
           />
         </div>
         <div className="rightSection">
-          {showMessageBox && (
-            <MessageBox
-              inviter={receivedMessage.inviter}
-              onAccept={handleAccept}
-              onDeny={handleDeny}
-            />
-          )}
+          <MessageBox
+            inviter={receivedMessage?.inviter}
+            onAccept={handleAccept}
+            onDeny={handleDeny}
+          />
           {stompClient && (
             <Invitation
               stompClient={stompClient}

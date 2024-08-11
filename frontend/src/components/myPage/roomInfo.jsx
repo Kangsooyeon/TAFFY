@@ -11,14 +11,7 @@ import Malaysia from '../../assets/images/myPage/flag/Malaysia.gif'
 import USA from '../../assets/images/myPage/flag/USA.gif'
 import Vietnam from '../../assets/images/myPage/flag/Vietnam.gif'
 
-import {useEffect} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
-
-const RoomInfo = () => {
-  const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.user);
-
+const RoomInfo = ({userdata}) => {
   const getFlagSrc = (flagname) => {
     switch (flagname) {
       case 'Korea':
@@ -44,15 +37,11 @@ const RoomInfo = () => {
     }
   }
 
-  useEffect(() => {
-    dispatch(fetchUserProfileAsync());
-  }, [dispatch]);
-
   return (
     <div className="roominfobox">
       <img src={Room} alt="" />
       <div className="flag">
-        <img src={getFlagSrc(profile?.country)} alt="" />
+        <img src={getFlagSrc(userdata.country)} alt="" />
       </div>
     </div>
   )
