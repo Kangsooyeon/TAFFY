@@ -4,7 +4,7 @@ import Letter from "../../../assets/images/sparingPage/letter.png";
 import LetterExist from "../../../assets/images/sparingPage/letter-exist.png";
 import Message from "./message.jsx";
 
-const messageBox = ({ inviter, onAccept, onDeny }) => {
+const messageBox = ({ inviter, onAccept, onDeny, language }) => {
   const letterImage = inviter ? LetterExist : Letter;
   return (
     <div className="messagebox">
@@ -13,7 +13,7 @@ const messageBox = ({ inviter, onAccept, onDeny }) => {
       </div>
       <div></div>
       {inviter && (
-        <Message inviter={inviter} onAccept={onAccept} onDeny={onDeny} />
+        <Message inviter={inviter} onAccept={onAccept} onDeny={onDeny} language={language} />
       )}
       <div
         style={{ margin: "-3.5px", width: "97.5%" }}

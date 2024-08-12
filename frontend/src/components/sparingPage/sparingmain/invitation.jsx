@@ -10,7 +10,7 @@ import { div } from "@tensorflow/tfjs";
 const INIT_MINUTE = 0;
 const INIT_SECOND = 30;
 
-const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language }) => {
+const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
@@ -39,11 +39,14 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
           receivedMessage.status === "accepted" &&
           receivedMessage.inviter === userdata.data.nickname
         ) {
+          
           navigate(`/sp/game/${receivedMessage.sessionId}`, {
             state: {
+              sessionId: receivedMessage.sessionId,
               connectionToken: connectionToken,
               userdata: userdata,
               roomType: "private",
+              status : "waiting"
             },
           });
         } else if (
@@ -54,13 +57,17 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
           setInvitee("");
           setMinutes(INIT_MINUTE);
           setSeconds(INIT_SECOND);
-          alert("상대방이 초대를 거절했습니다.");
+          if (language === "ko") {
+            alert("상대방이 초대를 거절했습니다.");
+          } else {
+            alert("The other person declined the invitation.");
+          }
         } else if (
           receivedMessage.status === "timeout" &&
           receivedMessage.nickname === userdata.data.nickname
         ) {
           console.log("받은 초대장의 시간이 만료되었습니다.");
-          setShowMessageBox(false);
+          setInviter("");
         } else {
           console.log("Received message:", receivedMessage);
         }
@@ -77,7 +84,7 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
     onReceiveMessage,
     connectionToken,
     navigate,
-    setShowMessageBox,
+    setInviter,
   ]);
 
   const handleInvite = useCallback(async () => {
@@ -171,9 +178,9 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
   function InvitationCard() {
     return (
       <div className="invitationcardbox">
-        <h1 style={{ margin: "0px" }}>초대하기</h1>
+        <h1 style={{ margin: "0px" }}>{language === 'ko' ? '초대하기' : 'Invitation'}</h1>
         <div className="invitationcard">
-          <p style={{ fontFamily: "HappinessM" }}>야</p>
+          <p style={{ fontFamily: "HappinessM" }}>{language === 'ko' ? '야' : 'Hey'}</p>
           <div className="inputcontainer">
             <img src={Search} alt="" className="inputicon" />
             <input
@@ -184,7 +191,7 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
             />
           </div>
           <p onClick={handleInvite} style={{ fontFamily: "HappinessM" }}>
-            겨루자!
+            {language === 'ko' ? '겨루자!' : 'Fight!'}
           </p>
         </div>
       </div>
@@ -205,7 +212,7 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
               <h3>Waiting for</h3>
               <h3>{nickname.current}`s approval.</h3>
             </div>  
-        }
+          }
         </div>
         <div className="timer">
           <p>
