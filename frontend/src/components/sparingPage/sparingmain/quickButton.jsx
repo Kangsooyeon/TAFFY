@@ -3,6 +3,7 @@ import Punch from '../../../assets/images/sparingPage/punch.png';
 // import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchQuickSparingAsync } from '../../../store/sparing/quickStart';
+import { device_util, div } from '@tensorflow/tfjs';
 
 const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, setStatus, setRoomType }) => {
   const dispatch = useDispatch();
@@ -40,9 +41,22 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, 
 
   return (
     <button className="quickbutton" onClick={handleQuickStart}>
-      <img src={Punch} alt="Quick Start" />
-      <p className="quicktitle">빠른 시작</p>
-      <img src={Punch} alt="Quick Start" />
+      { status === 'waiting' ? 
+        <div>
+          <img src={Punch} alt="Quick Start" />
+          <p className="quicktitle">빠른 시작</p>
+          <img src={Punch} alt="Quick Start" />
+        </div>
+        :
+        <div>
+          <div id="spinner"></div>
+          <p className="quicktitle">대기 중...</p>
+          <div id="spinner"></div>
+        </div>
+       }
+      
+
+
     </button>
   );
 };
