@@ -47,7 +47,7 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, 
       { waiting ? 
         <div className="quickbuttoncontainer">
           <div id="spinner"></div>
-          <p className="quicktitle">대기 중...</p>
+          <p className="quicktitle">{language === 'ko' ? '대기 중...' : 'Waiting...'}</p>
           <div id="spinner"></div>
         </div>
         :

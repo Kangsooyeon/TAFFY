@@ -1,7 +1,8 @@
 import '../../styles/sparingPage/sparingresult/sparingResultPage.css';
 import Bottom from '../../assets/images/sparingPage/result-bottom.png'
 import Top from '../../assets/images/sparingPage/result-top.png'
-import Title from '../../assets/images/sparingPage/result-title.png'
+import Title_Ko from '../../assets/images/sparingPage/result-title.png'
+import Title_En from '../../assets/images/sparingPage/result-title-eng.png'
 
 import CharacterFace from '../../components/sparingPage/sparingresult/characterFace.jsx'
 import VicOrLose from '../../components/sparingPage/sparingresult/vicOrLose.jsx'
@@ -13,7 +14,7 @@ import { useEffect } from 'react'
 const sparingResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult } = location.state;
+  const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult, language } = location.state;
 
   // console.log("oldMyData : ",oldMyData)
   // console.log("oldOpponentData : " , oldOpponentData)
@@ -35,19 +36,22 @@ const sparingResultPage = () => {
         <img src={Bottom} className="resultbottom" alt="" />
         <img src={Top} className="resulttopleft" alt="" />
         <img src={Top} className="resulttopright" alt="" />
-        <img src={Title} className="resulttitle" alt="" />
+        {language === 'ko' ?
+          <img src={Title_Ko} className="resulttitle" alt="" /> :
+          <img src={Title_En} className="resulttitle" alt="" /> 
+        }
       </div>
       <p>{myResult}</p>
       <CharacterFace className="characterfaceleft" userdata={oldMyData}/>
       <CharacterFace className="characterfaceright" userdata={oldOpponentData}/>
-      <VicOrLose className="vicorloseleft" winorlose={myResult}/>
-      <VicOrLose className="vicorloseright" winorlose={opponentResult}/>
-      <VicRateAfter className="vicrateafterleft" oldData={oldMyData} newData={newMyData} result={myResult}/>
-      <VicRateAfter className="vicrateafterright" oldData={oldOpponentData} newData={newOpponentData} result={opponentResult}/>
+      <VicOrLose className="vicorloseleft" winorlose={myResult} language={language}/>
+      <VicOrLose className="vicorloseright" winorlose={opponentResult} language={language}/>
+      <VicRateAfter className="vicrateafterleft" oldData={oldMyData} newData={newMyData} result={myResult} language={language}/>
+      <VicRateAfter className="vicrateafterright" oldData={oldOpponentData} newData={newOpponentData} result={opponentResult} language={language}/>
       <p className="me">ME</p>
       <p className="you">YOU</p>
-      <button className="exitbutton" onClick={goToSparingMain}>나가기</button>
-      <p className="exitp">10초 후 자동으로 닫힙니다.</p>
+      <button className="exitbutton" onClick={goToSparingMain}>{language === 'ko' ? '나가기' : 'EXIT'}</button>
+      <p className="exitp">{language === 'ko' ? '10초 후 자동으로 닫힙니다.' : 'It closes automatically after 10 seconds.'}</p>
     </div>
   )
 }
