@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 // 초기 시간 상수
 const INIT_MINUTE = 0;
-const INIT_SECOND = 10;
+const INIT_SECOND = 30;
 
 const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox }) => {
   const token = localStorage.getItem("accessToken");

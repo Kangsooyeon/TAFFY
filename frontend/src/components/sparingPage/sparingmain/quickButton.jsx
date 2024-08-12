@@ -3,9 +3,12 @@ import Punch from '../../../assets/images/sparingPage/punch.png';
 // import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchQuickSparingAsync } from '../../../store/sparing/quickStart';
+import { device_util, div } from '@tensorflow/tfjs';
+import { useState } from 'react'
 
 const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, setStatus, setRoomType }) => {
   const dispatch = useDispatch();
+  const [waiting, setWaiting] = useState(false)
 
   const handleQuickStart = async () => {
     try {
@@ -17,6 +20,7 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, 
       setConnectionToken(connectionToken);
       setStatus(status)
       setRoomType('public')
+      setWaiting(true)
 
       if (status === 'waiting') {
         console.log('대기 상태입니다');
@@ -40,9 +44,19 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, 
 
   return (
     <button className="quickbutton" onClick={handleQuickStart}>
-      <img src={Punch} alt="Quick Start" />
-      <p className="quicktitle">빠른 시작</p>
-      <img src={Punch} alt="Quick Start" />
+      { waiting ? 
+        <div className="quickbuttoncontainer">
+          <div id="spinner"></div>
+          <p className="quicktitle">대기 중...</p>
+          <div id="spinner"></div>
+        </div>
+        :
+        <div className="quickbuttoncontainer">
+          <img src={Punch} alt="Quick Start" />
+          <p className="quicktitle">빠른 시작</p>
+          <img src={Punch} alt="Quick Start" />
+        </div>
+       }
     </button>
   );
 };
