@@ -95,8 +95,8 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           }
           
           // 포즈 랜드마크 그리기
-          window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
-          window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
+          // window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
+          // window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
         })} else {
           console.warn('No pose landmarks detected or model not loaded yet');
         }
