@@ -10,7 +10,7 @@ import { div } from "@tensorflow/tfjs";
 const INIT_MINUTE = 0;
 const INIT_SECOND = 30;
 
-const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language }) => {
+const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
@@ -63,7 +63,7 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
           receivedMessage.nickname === userdata.data.nickname
         ) {
           console.log("받은 초대장의 시간이 만료되었습니다.");
-          setShowMessageBox(false);
+          setInviter("");
         } else {
           console.log("Received message:", receivedMessage);
         }
@@ -80,7 +80,7 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
     onReceiveMessage,
     connectionToken,
     navigate,
-    setShowMessageBox,
+    setInviter,
   ]);
 
   const handleInvite = useCallback(async () => {
