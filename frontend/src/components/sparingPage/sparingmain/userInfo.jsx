@@ -88,8 +88,7 @@ const userInfo = ({userdata, language}) => {
         return '';
     }
   };
-  // const beltNameParts = userdata?.beltName ? userdata.beltName.split('/') : ['', ''];
-  // {language === 'en' ? beltNameParts[1] : beltNameParts[0]}
+
   return (
     <div className="overlap-group">
       <div className="userInfoBox">
