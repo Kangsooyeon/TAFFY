@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
+import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
 import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
 import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
@@ -29,25 +30,28 @@ const PoomsaeTestPage = () => {
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
     const [selectedPoomsae, setSelectedPoomsae] = useState(null);
     const [loading, setLoading] = useState(true);
-    const activeStage = localStorage.getItem('activeStage');
+    const [activeStages, setActiveStages] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            await dispatch(fetchPoomsaeTest());
-            setLoading(false);
+            try {
+                const userdata = await dispatch(fetchUserProfileAsync()).unwrap();
+
+                // poomSaeCompletedList의 각 단계를 activeStages 배열에 저장
+                const stages = userdata.poomSaeCompletedList.map(item => item.isCompleted);
+                setActiveStages(stages);
+
+                await dispatch(fetchPoomsaeTest());
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+                setLoading(false);
+            }
         };
         fetchData();
-
-
     }, [dispatch]);
 
-    // activeStage가 변경될 때마다 localStorage에 값을 저장
-    useEffect(() => {
-        localStorage.setItem('activeStage', activeStage);
-    }, [activeStage]);
-
     const completedStages = poomsaeTest.map(item => item.passed);
-    console.log(activeStage);
 
     const handleItemClick = (index) => {
         setSelectedPoomsae(poomsaeTest[index]);
@@ -66,7 +70,7 @@ const PoomsaeTestPage = () => {
                         imageUrl={url} 
                         onClick={() => handleItemClick(index)}
                         completed={completedStages[index] || false}
-                        locked={index + 1 >= activeStage}
+                        locked={!activeStages[index]}
                     />
                 ))}
             </div>
