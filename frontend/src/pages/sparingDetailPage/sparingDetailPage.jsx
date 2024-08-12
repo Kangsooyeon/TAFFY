@@ -24,7 +24,7 @@ const SparingDetailPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { sessionId, connectionToken, userdata, status, roomType } = location.state;
-  console.log('Received in SparingDetailPage:', { connectionToken, userdata, status, roomType, sessionId });
+  // console.log('Received in SparingDetailPage:', { connectionToken, userdata, status, roomType, sessionId });
 
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
@@ -49,8 +49,6 @@ const SparingDetailPage = () => {
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
 
-  console.log(userdata)
-  console.log(opponentData)
   console.log('예측모델', predictedLabel)
 
   const oldMyDataRef = useRef(oldMyData);
@@ -82,15 +80,12 @@ const SparingDetailPage = () => {
         await dispatch(fetchUserRecordUpdateAsync(myResult)).unwrap();
         const updatedRecord = await dispatch(fetchUserRecordAsync()).unwrap();
         setNewMyData(updatedRecord);
-        console.log(newMyData)
 
         resultRef.current.myResult = {
           myResult: myResult,
           oldMyData: oldData,
           newMyData: updatedRecord,
         };
-
-        console.log("My Result:", resultRef.current.myResult);
 
         session.signal({
           data: JSON.stringify({
@@ -124,7 +119,6 @@ const SparingDetailPage = () => {
             newOpponentData: data.newMyData,
             opponentResult: data.myResult,
           };
-          console.log("Opponent Result:", resultRef.current.opponentResult);
 
           checkBothPlayersReady();
         }
@@ -134,9 +128,6 @@ const SparingDetailPage = () => {
 
   useEffect(() => {
     if (bothPlayersReady) {
-      console.log(sessionId, roomType)
-      console.log("Final My Result:", resultRef.current.myResult);
-      console.log("Final Opponent Result:", resultRef.current.opponentResult);
       dispatch(fetchGameExitAsync({sessionId, roomType}))
       setFinishOn(true)
       setTimeout(() => {
@@ -181,7 +172,7 @@ const SparingDetailPage = () => {
         setTimeout(() => { // 지연시간 추가
           setOpponentData(data);
           setOpponentDataReady(true);
-        }, 1000);  // 2000ms 지연
+        }, 3000);  // 2000ms 지연
       }
     });
     
@@ -289,7 +280,8 @@ const SparingDetailPage = () => {
   };
 
   const nextRound = () => {
-    const missionList = isAttack ? atkData : defData;
+    console.log('라운드 바뀔때', isAttack)
+    const missionList = isAttack ? defData : atkData;
     if (!missionList) return;
 
     const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
