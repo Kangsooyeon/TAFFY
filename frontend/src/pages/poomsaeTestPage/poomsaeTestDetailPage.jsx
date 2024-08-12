@@ -6,10 +6,10 @@ import PopUp from '../../components/common/popUp';
 import ProgressBar from '../../components/common/progressBar';
 import axios from 'axios';
 import Webcam from '../../components/common/modelWebcam';
-// import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
-// import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
-// import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
-// import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
+import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
+import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
+import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
+import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import { fetchAllStageDetails } from '../../apis/stageApi';
 
@@ -23,6 +23,7 @@ const PoomsaeTestDetailPage = ({language}) => {
     const [predictions, setPredictions] = useState([]);
     const [moves, setMoves] = useState([]);
     const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
+    const [isModelActive, setIsModelActive] = useState(false);
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
@@ -44,51 +45,36 @@ const PoomsaeTestDetailPage = ({language}) => {
     }, [poomsaeId, token]);
 
     useEffect(() => {
-        // const instructions = [
-        //     '차렷',
-        //     '경례',
-        //     '준비',
-        //     '시작'
-        // ];
+        const instructions = language === 'ko' 
+            ? ['차렷', '경례', '준비', '시작'] 
+            : ['Attention', 'Salute', 'Ready', 'Start'];
+        
+        const sounds = [attentionSound, saluteSound, preparationSound, startSound];
 
-        // let currentInstruction = 0;
+        let currentInstruction = 0;
 
         const changeInstruction = () => {
-            // if (currentInstruction < instructions.length) {
-            //     setInstruction(instructions[currentInstruction]);
+            if (currentInstruction < instructions.length) {
+                setInstruction(instructions[currentInstruction]);
 
-            //     let audio;
-            //     if (instructions[currentInstruction] === '차렷') {
-            //         audio = new Audio(attentionSound);
-            //     } else if (instructions[currentInstruction] === '경례') {
-            //         audio = new Audio(saluteSound);
-            //     } else if (instructions[currentInstruction] === '준비') {
-            //         audio = new Audio(preparationSound);
-            //     } else if (instructions[currentInstruction] === '시작') {
-            //         audio = new Audio(startSound);
-            //         audio.play().then(() => {
-            //             setTimeout(() => {
-            //                 console.log('Predictions:', predictions);
-            //             }, 5000);
-            //         });
-            //     }
+                const audio = new Audio(sounds[currentInstruction]);
+                audio.play();
 
-            //     if (audio) {
-            //         audio.play();
-            //     }
+                if (instructions[currentInstruction] === '준비' || instructions[currentInstruction] === 'Ready') {
+                    setIsModelActive(true);
+                }
 
-            //     currentInstruction++;
-            //     if (instructions[currentInstruction - 1] !== '시작') {
-            //         setTimeout(changeInstruction, 3000);
-            //     }
-            // }
+                currentInstruction++;
+                setTimeout(changeInstruction, 3500);
+            }
         };
 
-        const timer = setTimeout(changeInstruction, 3000);
+        const timer = setTimeout(() => {
+            changeInstruction();
+        }, 3000);
 
-        // Clean up the timer if the component unmounts
         return () => clearTimeout(timer);
-    }, [predictions]);
+    }, [language]);
 
     const handleProgressUpdate = (success) => {
         if (success) {
@@ -106,6 +92,7 @@ const PoomsaeTestDetailPage = ({language}) => {
     const handleReset = () => {
         setProgress(0);
         setGameStatus(null);
+        setIsModelActive(false);
     };
 
     const handleExit = () => {
@@ -140,7 +127,8 @@ const PoomsaeTestDetailPage = ({language}) => {
     };
 
     const handlePrediction = (predictions) => {
-        // Handle the prediction result here
+        if (!isModelActive) return;
+
         const predictionArray = Array.from(predictions);
         const top3Predictions = predictionArray
             .map((p, index) => ({ class: index, probability: p }))
@@ -172,7 +160,7 @@ const PoomsaeTestDetailPage = ({language}) => {
             }
             <div className="detail-content">
                 <p>{instruction}</p>
-                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} />
+                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive}/>
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
                 </div>
