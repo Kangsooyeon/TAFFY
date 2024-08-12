@@ -44,12 +44,14 @@ const SparingDetailPage = () => {
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
   const [finishOn, setFinishOn] = useState(false)
   const [opponentDataReady, setOpponentDataReady] = useState(false);
-  // const [opponentResult, setOpponentResult] = useState(null);
+  const [predictedLabel, setPredictedLabel] = useState(false)
+
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
 
   console.log(userdata)
   console.log(opponentData)
+  console.log('예측모델', predictedLabel)
 
   const oldMyDataRef = useRef(oldMyData);
   const newMyDataRef = useRef(newMyData);
@@ -179,7 +181,7 @@ const SparingDetailPage = () => {
         setTimeout(() => { // 지연시간 추가
           setOpponentData(data);
           setOpponentDataReady(true);
-        }, 2000);  // 2000ms 지연
+        }, 1000);  // 2000ms 지연
       }
     });
     
@@ -299,10 +301,12 @@ const SparingDetailPage = () => {
       type: 'mission'
     });
 
-    const newRound = round + 1;
-    const newIsAttack = !isAttack;
-    setRound(newRound);
-    setIsAttack(newIsAttack);
+    setRound((prevRound) => prevRound + 1);
+    setIsAttack((prevIsAttack) => {
+      const newIsAttack = !prevIsAttack;
+      console.log('IsAttack updated:', newIsAttack);
+      return newIsAttack;
+    });
   };
   
   return (
@@ -316,10 +320,12 @@ const SparingDetailPage = () => {
         <img src={Mat} className="sparingmat" alt="" />
       </div>
 
+      <h1>{round}, {predictedLabel}, {isAttack?'ture':'false'}</h1>
+
       {opponentDataReady && (
         <>
-          <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack} />
-          <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack} />
+          <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack} setPredictedLabel={setPredictedLabel}/>
+          <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack} setPredictedLabel={setPredictedLabel} />
 
           <HpBar className="hpbarleft" hp={myHp} />
           <HpBar className="hpbarright" hp={opponentHp} />
@@ -333,9 +339,9 @@ const SparingDetailPage = () => {
         <div>
           <Mission myMission={myMission} opponentMission={opponentMission} />
           <Timer />
-          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack}/>
+          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel}/>
           {subscribers.map((subscriber, index) => (
-            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack}/>
+            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}}/>
           ))}
         </div>
       : null }
