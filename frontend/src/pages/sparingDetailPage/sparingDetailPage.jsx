@@ -333,9 +333,9 @@ const SparingDetailPage = () => {
         <div>
           <Mission myMission={myMission} opponentMission={opponentMission} />
           <Timer />
-          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack}/>
+          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true}/>
           {subscribers.map((subscriber, index) => (
-            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack}/>
+            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false}/>
           ))}
         </div>
       : null }

@@ -3,7 +3,7 @@ import CamTop from '../../../assets/images/sparingPage/webcam-top.png';
 import { useEffect, useRef } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
-const WebCam = ({ className, streamManager, isAttack }) => {
+const WebCam = ({ className, streamManager, isAttack, isLocalUser  }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -87,10 +87,12 @@ const WebCam = ({ className, streamManager, isAttack }) => {
               // console.log('Model predictions:', result);
               // console.log('Predicted Label:', predictedLabel);
 
-              if (isAttack) {
-                console.log('Attack Mode - Predicted Label:', predictedLabel);
-              } else {
-                console.log('Defense Mode - Predicted Label:', predictedLabel);
+              if (isLocalUser) {
+                if (isAttack) {
+                  console.log('Attack Mode - Predicted Label:', predictedLabel);
+                } else {
+                  console.log('Defense Mode - Predicted Label:', predictedLabel);
+                }
               }
             });
 
@@ -109,7 +111,7 @@ const WebCam = ({ className, streamManager, isAttack }) => {
 
     loadModelAndPose();
 
-  }, [streamManager, isAttack]);
+  }, [streamManager, isAttack, isLocalUser]);
 
   return (
     <div className={`webcambox ${className}`}>
