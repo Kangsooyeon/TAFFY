@@ -39,11 +39,14 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language
           receivedMessage.status === "accepted" &&
           receivedMessage.inviter === userdata.data.nickname
         ) {
+          
           navigate(`/sp/game/${receivedMessage.sessionId}`, {
             state: {
+              sessionId: receivedMessage.sessionId,
               connectionToken: connectionToken,
               userdata: userdata,
               roomType: "private",
+              status : "waiting"
             },
           });
         } else if (

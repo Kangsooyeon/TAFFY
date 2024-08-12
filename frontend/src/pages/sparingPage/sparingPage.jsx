@@ -86,9 +86,11 @@ const SparingPage = ({language}) => {
         // Navigate to the game session if successful
         navigate(`/sp/game/${receivedMessage.sessionId}`, {
           state: {
+            sessionId: receivedMessage.sessionId,
             connectionToken: response.data.data.connectionToken,
             userdata: userdataRef.current,
             roomType: "private",
+            status : "start"
           },
         });
       } catch (error) {
