@@ -16,7 +16,7 @@ import axiosInstance from "../../apis/axiosInstance";
 
 let stompClient = null;
 
-const SparingPage = () => {
+const SparingPage = ({ language }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpenHelp, setIsOpenHelp] = useState(false);
@@ -29,16 +29,19 @@ const SparingPage = () => {
   const [status, setStatus] = useState(null);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [roomType, setRoomType] = useState(null);
 
   const sessionIDRef = useRef(sessionID);
   const connectionTokenRef = useRef(connectionToken);
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
-
+  const roomTypeRef = useRef(roomType);
+  const [inviter, setInviter] = useState("");
 
   const handleReceiveMessage = (message) => {
     setReceivedMessage(message);
     setShowMessageBox(true);
+    setInviter(message.inviter);
   };
 
   const handleAccept = async () => {
@@ -52,20 +55,20 @@ const SparingPage = () => {
 
         // 초대수락 API 호출
         const response = await axiosInstance.post(url);
-        console.log(
-          "피초대자 connectionToken:",
-          response.data.data.connectionToken
-        );
+        // console.log(
+        //   "피초대자 connectionToken:",
+        //   response.data.data.connectionToken
+        // );
 
         // connectionToken 저장
         setConnectionToken(response.data.data.connectionToken);
 
-        console.log(
-          "Session ID being sent as query:",
-          receivedMessage.sessionId
-        );
+        // console.log(
+        //   "Session ID being sent as query:",
+        //   receivedMessage.sessionId
+        // );
 
-        console.log("Game invitation Accepted:", response.data);
+        // console.log("Game invitation Accepted:", response.data);
 
         // Send a message back to the inviter
         if (stompClient && stompClient.connected) {
@@ -85,8 +88,11 @@ const SparingPage = () => {
         // Navigate to the game session if successful
         navigate(`/sp/game/${receivedMessage.sessionId}`, {
           state: {
+            sessionId: receivedMessage.sessionId,
             connectionToken: response.data.data.connectionToken,
             userdata: userdataRef.current,
+            roomType: "private",
+            status: "start",
           },
         });
       } catch (error) {
@@ -104,9 +110,23 @@ const SparingPage = () => {
   };
 
   const handleDeny = () => {
-    console.log("Invitation denied");
+    // console.log("Invitation denied");
     setShowMessageBox(false);
-    // Additional logic for denying the invitation, e.g., notifying the inviter
+    setInviter("");
+
+    if (stompClient && stompClient.connected) {
+      const denyMessage = {
+        sessionId: receivedMessage.sessionId,
+        nickname: receivedMessage.nickname, // invitee's nickname
+        inviter: inviter,
+        status: "denied",
+      };
+
+      stompClient.publish({
+        destination: "/app/data.send",
+        body: JSON.stringify(denyMessage),
+      });
+    }
   };
 
   useEffect(() => {
@@ -166,34 +186,40 @@ const SparingPage = () => {
     statusRef.current = status;
   }, [status]);
 
+  useEffect(() => {
+    roomTypeRef.current = roomType;
+  }, [roomType]);
+
   const joinGame = (message) => {
     const receivedData = JSON.parse(message.body);
     console.log("Game data received: ", receivedData);
     console.log("Received sessionId:", receivedData.sessionId);
     console.log("Current sessionID:", sessionIDRef.current);
+    console.log("roomType:", roomTypeRef.current);
+    console.log("status:", statusRef.current);
+    console.log("connectionToken:", connectionTokenRef.current);
+    console.log("userdata:", userdataRef.current);
 
     if (
       sessionIDRef.current &&
       connectionTokenRef.current &&
       userdataRef.current &&
-      statusRef.current
+      statusRef.current &&
+      roomTypeRef.current
     ) {
       if (receivedData.sessionId === sessionIDRef.current) {
         console.log("game start!");
-        console.log("Connection Token:", connectionTokenRef.current);
-        console.log("User Data:", userdataRef.current);
+        // console.log("Connection Token:", connectionTokenRef.current);
+        // console.log("User Data:", userdataRef.current);
         navigate(`/sp/game/${sessionIDRef.current}`, {
           state: {
-            // sessionId: sessionIDRef.current,
+            sessionId: sessionIDRef.current,
             connectionToken: connectionTokenRef.current,
             userdata: userdataRef.current,
             status: statusRef.current,
+            roomType: roomTypeRef.current,
           },
         });
-        alert("join game");
-        alert(
-          `connectionToken: ${connectionTokenRef.current} sessionID: ${receivedMessage.sessionId}`
-        );
       }
     } else {
       console.error("One of the required refs is null");
@@ -221,12 +247,12 @@ const SparingPage = () => {
       <div className="sparingPage">
         <div className="leftSection">
           {userdata ? (
-            <UserInfo userdata={userdata} />
+            <UserInfo userdata={userdata} language={language} />
           ) : (
             <div>No profile data</div>
           )}
           {userdata ? (
-            <UserRecord userdata={userdata} />
+            <UserRecord userdata={userdata} language={language} />
           ) : (
             <div>No record data</div>
           )}
@@ -238,26 +264,28 @@ const SparingPage = () => {
             <div>No profile data</div>
           )}
           <QuickButton
+            language={language}
             userdata={userdata}
             stompClient={stompClient}
             setSessionID={setSessionID}
             setConnectionToken={setConnectionToken}
             setStatus={setStatus}
+            setRoomType={setRoomType}
           />
         </div>
         <div className="rightSection">
-
-          {showMessageBox && (
-            <MessageBox
-              inviter={receivedMessage.inviter}
-              onAccept={handleAccept}
-              onDeny={handleDeny}
-            />
-          )}
+          <MessageBox
+            inviter={inviter}
+            onAccept={handleAccept}
+            onDeny={handleDeny}
+            language={language}
+          />
           {stompClient && (
             <Invitation
               stompClient={stompClient}
               onReceiveMessage={handleReceiveMessage}
+              setInviter={setInviter}
+              language={language}
             />
           )}
         </div>
@@ -265,7 +293,7 @@ const SparingPage = () => {
       <button className="helpbutton" onClick={openHelp}>
         ?
       </button>
-      {isOpenHelp && <Help closeHelp={closeHelp} />}
+      {isOpenHelp && <Help closeHelp={closeHelp} language={language} />}
     </div>
   );
 };

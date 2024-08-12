@@ -6,7 +6,6 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const videoRef = useRef(null);
 
-  // Automatically navigate to the main page after the video ends
   useEffect(() => {
     const handleVideoEnd = () => {
       navigate('/main');

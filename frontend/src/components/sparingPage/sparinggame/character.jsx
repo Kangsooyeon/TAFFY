@@ -56,9 +56,15 @@ const characterImages = {
 };
 
 const Character = ({ className, userdata, action }) => {
+  // console.log(userdata)
+  if (!userdata || !action) {
+    return null; // userdata가 없으면 아무것도 렌더링하지 않음
+  } 
+  
   const avatar = userdata.data.avatar;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentAction, setCurrentAction] = useState('basic');
+
 
   useEffect(() => {
     if (action) {

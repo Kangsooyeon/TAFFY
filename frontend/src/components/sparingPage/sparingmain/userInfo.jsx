@@ -10,8 +10,37 @@ import RedBelt from '../../../assets/images/common/belt/redBelt.png'
 import WhiteBelt from '../../../assets/images/common/belt/whiteBelt.png'
 import YellowBelt from '../../../assets/images/common/belt/yellowBelt.png'
 
+import { useEffect, useRef } from 'react';
 
-const userInfo = ({userdata}) => {
+const userInfo = ({userdata, language}) => {
+  const nicknameRef = useRef(userdata.data.nickname);
+
+  useEffect(() => {
+    const nicknameElement = nicknameRef.current;
+
+    if (nicknameElement) {
+      const adjustFontSize = () => {
+        let fontSize = 60;
+        nicknameElement.style.fontSize = `${fontSize}px`;
+
+        while (nicknameElement.scrollWidth > nicknameElement.clientWidth && fontSize > 20) {
+          fontSize -= 1;
+          nicknameElement.style.fontSize = `${fontSize}px`;
+        }
+      };
+
+      adjustFontSize();
+
+      // 윈도우 리사이즈 시에도 폰트 크기를 다시 계산
+      window.addEventListener('resize', adjustFontSize);
+
+      // cleanup function to remove the event listener
+      return () => {
+        window.removeEventListener('resize', adjustFontSize);
+      };
+    }
+  }, [userdata.data.nickname]);
+
   const getSparBeltSrc = (beltname) => {
     switch (beltname) {
       case 'BlackBelt':
@@ -63,9 +92,9 @@ const userInfo = ({userdata}) => {
   return (
     <div className="overlap-group">
       <div className="userInfoBox">
-        <div className="nickname">{userdata.data.nickname}</div>
+        <div className="nickname" ref={nicknameRef} >{userdata.data.nickname}</div>
         <div className="beltInfo">
-          <div className={`beltname ${getBeltNameClass(userdata.data.belt.split('/')[1].replace(/\s/g, ''))}`}>{userdata.data.belt.split('/')[0]}</div>
+          <div className={`beltname ${getBeltNameClass(userdata.data.belt.split('/')[1].replace(/\s/g, ''))}`}>{language === 'ko' ? userdata.data.belt.split('/')[0] : userdata.data.belt.split('/')[1]}</div>
           <img className="belt" src={getSparBeltSrc(userdata.data.belt.split('/')[1].replace(/\s/g, ''))} alt="Belt" />
         </div>
       </div>
