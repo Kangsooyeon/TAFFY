@@ -2,6 +2,7 @@ package com.taffy.backend.fight.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taffy.backend.fight.controller.FightController;
 import com.taffy.backend.fight.dto.ConnectionInfoDto;
+import com.taffy.backend.fight.dto.QuickStart;
 import com.taffy.backend.fight.dto.RoomType;
 import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
@@ -121,13 +122,15 @@ public class FightService {
     public ConnectionInfoDto quickStart(Long memberId) throws OpenViduJavaClientException, OpenViduHttpException {
         // 빠른참여
         //일단 redis에 빈 방 있는지부터 찾아
-        String status = "quick";
+        String status = QuickStart.QUICK_START.getStartType();
         String sessionId = findAvailableRoom();
         System.out.println("quickStart method sessionId  : " + sessionId);
-        if(sessionId.equals("notfound")){ //참여가능한 게임방을 찾지 못한 경우
+        if(sessionId.equals(QuickStart.NOT_FOUND.getStartType())){ //참여가능한 게임방을 찾지 못한 경우
             // 자신이 새로 게임방을 만든 후, 다른 사람이 들어올 때 까지 대기하게 됨
+            log.info("[game 생성] session: " + sessionId + " , memberId = " + memberId);
             return createRoom(memberId,status);
         }
+        log.info("[game 참여] session: " + sessionId + ", memberId =  ");
         return joinRoom(memberId,sessionId,status);
     }
 
@@ -151,7 +154,7 @@ public class FightService {
                 return key;
             }
         }
-        return "notfound";
+        return QuickStart.NOT_FOUND.getStartType();
     }
 
     public  HashMap<String, List<RedisHashUser>> getAllRoom(){
