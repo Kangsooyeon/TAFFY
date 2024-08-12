@@ -58,7 +58,9 @@ const Modal = ({ stageNum, text, videoUrl, description, modalClose, language, mo
             <Youtube videoUrl={videoUrl} />
             <PsDescription 
               className="psInfo"
-              description={description} />
+              description={language === 'ko' ? description.psKoDesc : description.psEnDesc} // Ensure this line selects the correct description
+              language={language} // Pass the language prop to PsDescription
+            />
           </div>
           <div className='sectionRight'>
             <button className="navButton prevButton" onClick={handlePrevPage}>
@@ -105,7 +107,10 @@ Modal.propTypes = {
   stageNum: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   videoUrl: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.shape({
+    psKoDesc: PropTypes.string.isRequired,
+    psEnDesc: PropTypes.string.isRequired,
+  }).isRequired,
   modalClose: PropTypes.func.isRequired,
   language: PropTypes.string.isRequired,
   moves: PropTypes.arrayOf(PropTypes.shape({

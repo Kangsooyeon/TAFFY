@@ -1,3 +1,4 @@
+// PoomsaeEduAllPage.jsx
 import '../../styles/poomsaeEduPage/poomsaeEduAll.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
@@ -28,7 +29,6 @@ const PoomsaeEduAllPage = ({ language }) => {
   const audioRef = useRef(null);
   const audioTimeoutRef = useRef(null);
 
-
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
   }, [language]);
@@ -55,7 +55,6 @@ const PoomsaeEduAllPage = ({ language }) => {
 
   const playAudio = (audioUrl) => {
     if (audioRef.current && audioUrl) {
-      // 기존 오디오 중단
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       if (audioTimeoutRef.current) {
@@ -95,6 +94,11 @@ const PoomsaeEduAllPage = ({ language }) => {
     const MovePrediction = predictions[currentMoveIndex + 1];
     const calculatedAccuracy = Math.round(MovePrediction * 100)
     setAccuracy(calculatedAccuracy); 
+
+    // 70% 이상이면 다음 동작으로 자동 이동
+    if (calculatedAccuracy >= 70) {
+      handleNextMove();
+    }
   };
 
   const handleNextMove = () => {
@@ -102,9 +106,8 @@ const PoomsaeEduAllPage = ({ language }) => {
       setCurrentMoveIndex(currentMoveIndex + 1);
       setDescription(language === 'ko' ? moves[currentMoveIndex + 1].mvKoDesc : moves[currentMoveIndex + 1].mvEnDesc);
       setProgress(((currentMoveIndex + 1) / moves.length) * 100);
-      setAccuracy(75); // 예시값
+      setAccuracy(0); // 예시값
 
-      // 다음 동작으로 이동할 때 자동 재생
       const audioUrl = language === 'ko' ? moves[currentMoveIndex + 1].mvKoVo : moves[currentMoveIndex + 1].mvEnVo;
       playAudio(audioUrl);
     } else {
@@ -113,7 +116,7 @@ const PoomsaeEduAllPage = ({ language }) => {
       setTimeout(async () => {
         setShowSuccessPopup(true);
         try {
-          await completePoomsae(stageNum, token); // Poomsae 완료 요청
+          await completePoomsae(stageNum, token);
           dispatch(unlockNextStage(parseInt(stageNum) + 1));
         } catch (error) {
           console.error("Failed to complete poomsae:", error);
@@ -167,7 +170,6 @@ const PoomsaeEduAllPage = ({ language }) => {
               text={`${currentMoveIndex} / ${moves.length}`}
             />
           </div>
-          <button onClick={handleNextMove}>{language === 'ko' ? '다음 동작' : 'Next Move'}</button>
         </div>
 
         <div className='mvDescription'>

@@ -10,7 +10,12 @@ import { div } from "@tensorflow/tfjs";
 const INIT_MINUTE = 0;
 const INIT_SECOND = 30;
 
-const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => {
+const Invitation = ({
+  stompClient,
+  onReceiveMessage,
+  setInviter,
+  language,
+}) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
@@ -39,14 +44,13 @@ const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => 
           receivedMessage.status === "accepted" &&
           receivedMessage.inviter === userdata.data.nickname
         ) {
-          
           navigate(`/sp/game/${receivedMessage.sessionId}`, {
             state: {
               sessionId: receivedMessage.sessionId,
               connectionToken: connectionToken,
               userdata: userdata,
               roomType: "private",
-              status : "waiting"
+              status: "waiting",
             },
           });
         } else if (
@@ -88,6 +92,48 @@ const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => 
   ]);
 
   const handleInvite = useCallback(async () => {
+    // First, validate the nickname
+    const validationUrl = "https://i11e104.p.ssafy.io/api/sparring/nickname";
+    try {
+      const validationResponse = await axios.post(
+        validationUrl,
+        { nickname: nickname.current }, // Pass the nickname as JSON
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // Check if the nickname is valid
+      if (!validationResponse.data.data) {
+        // Assuming the data field contains the boolean
+        if (language === "ko") {
+          alert("유효하지 않은 닉네임입니다.");
+        } else {
+          alert("Invalid nickname.");
+        }
+        return; // Exit the function if nickname is invalid
+      }
+    } catch (error) {
+      // Check for specific 400 error indicating invalid nickname
+      if (error.response && error.response.status === 400) {
+        if (language === "ko") {
+          alert("유효하지 않은 닉네임입니다.");
+        } else {
+          alert("Invalid nickname.");
+        }
+      } else {
+        console.error("Error validating nickname:", error);
+        if (language === "ko") {
+          alert("닉네임 유효성 검사 중 오류가 발생했습니다.");
+        } else {
+          alert("An error occurred during nickname validation.");
+        }
+      }
+      return; // Exit the function if an error occurs
+    }
+
     // OpenVidu session create API
     const url = "https://i11e104.p.ssafy.io/api/sparring/create";
     try {
@@ -178,9 +224,13 @@ const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => 
   function InvitationCard() {
     return (
       <div className="invitationcardbox">
-        <h1 style={{ margin: "0px" }}>{language === 'ko' ? '초대하기' : 'Invitation'}</h1>
+        <h1 style={{ margin: "0px" }}>
+          {language === "ko" ? "초대하기" : "Invitation"}
+        </h1>
         <div className="invitationcard">
-          <p style={{ fontFamily: "HappinessM" }}>{language === 'ko' ? '야' : 'Hey'}</p>
+          <p style={{ fontFamily: "HappinessM" }}>
+            {language === "ko" ? "야" : "Hey"}
+          </p>
           <div className="inputcontainer">
             <img src={Search} alt="" className="inputicon" />
             <input
@@ -191,7 +241,7 @@ const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => 
             />
           </div>
           <p onClick={handleInvite} style={{ fontFamily: "HappinessM" }}>
-            {language === 'ko' ? '겨루자!' : 'Fight!'}
+            {language === "ko" ? "겨루자!" : "Fight!"}
           </p>
         </div>
       </div>
@@ -202,17 +252,17 @@ const Invitation = ({ stompClient, onReceiveMessage, setInviter, language }) => 
     return (
       <div className="waitingbox">
         <div className="waitingtitle">
-          {language === 'ko' ?
+          {language === "ko" ? (
             <div>
               <h3>{nickname.current} 님의</h3>
               <h3> 승낙을 기다리고 있습니다.</h3>
             </div>
-          :
+          ) : (
             <div>
               <h3>Waiting for</h3>
               <h3>{nickname.current}`s approval.</h3>
-            </div>  
-          }
+            </div>
+          )}
         </div>
         <div className="timer">
           <p>

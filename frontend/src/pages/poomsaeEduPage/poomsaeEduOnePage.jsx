@@ -10,7 +10,6 @@ import { fetchMoveDetail, completeMovement, setMoveCompletion } from '../../stor
 import PopUp from '../../components/common/popUp';
 import Webcam from '../../components/poomsaeEduPage/modelEduOne';
 
-
 const PoomsaeEduOnePage = ({ language }) => {
   const { stageNum, mvSeq } = useParams();
   const [buttonText, setButtonText] = useState('');
@@ -18,6 +17,7 @@ const PoomsaeEduOnePage = ({ language }) => {
   const [count, setCount] = useState(0);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showFailurePopup, setShowFailurePopup] = useState(false);
+  const [checkingAccuracy, setCheckingAccuracy] = useState(false); // 상태 추가
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const PoomsaeEduOnePage = ({ language }) => {
       if (audioUrl) {
         const playAudioTwice = () => {
           if (audioRef.current) {
-            audioRef.current.src = audioUrl; // Set the correct audio source
+            audioRef.current.src = audioUrl;
             audioRef.current.play();
             audioRef.current.onended = () => {
               setTimeout(() => {
@@ -77,18 +77,29 @@ const PoomsaeEduOnePage = ({ language }) => {
     }
   };
 
-  // const handlePrediction = (predictions) => {
-  //   // predictions 배열에서 가장 높은 값을 찾음
-  //   const maxPrediction = Math.max(...predictions);
-  //   const calculatedAccuracy  = Math.round(maxPrediction * 100)
-  //   setAccuracy(calculatedAccuracy);  // 예측값을 퍼센트로 변환하여 설정
-
-  // };
-
   const handlePrediction = (predictions) => {
+    if (checkingAccuracy || count >= 3) return; // 3번 완료되었거나 체크 중이면 바로 리턴
+
     const MovePrediction = predictions[mvSeq];
     const calculatedAccuracy = Math.round(MovePrediction * 100)
-    setAccuracy(calculatedAccuracy);  
+    setAccuracy(calculatedAccuracy);
+
+    if (calculatedAccuracy >= 70) {
+      setCheckingAccuracy(true); // 체크 중 상태로 변경
+      setTimeout(() => {
+        // 3초 후 재확인
+        if (calculatedAccuracy >= 70) {
+          setCount(prevCount => {
+            if (prevCount + 1 === 3) {
+              handleCompletion(); // 3번 성공 시 교육 완료
+            }
+            return prevCount < 3 ? prevCount + 1 : prevCount; // 카운트가 3 이상이면 증가하지 않음
+          });
+        }
+        setCheckingAccuracy(false); // 체크 중 상태 해제
+        setAccuracy(0); // 3초 후 다시 정확도 초기화
+      }, 3000);
+    }
   };
 
   const handleClosePopup = () => {
@@ -139,9 +150,9 @@ const PoomsaeEduOnePage = ({ language }) => {
               textColor="black"
             />
             <ProgressBar
-              value={count}
+              value={(count / 3) * 100}
               title={language === 'ko' ? '진행률' : 'Progress'}
-              text={`${1} / 5`}
+              text={`${count} / 3`}
             />
           </div>
         </div>
@@ -164,7 +175,7 @@ const PoomsaeEduOnePage = ({ language }) => {
             {buttonText}
           </button>
           {!isCompleted && (
-            <button className='completeButton' onClick={handleCompletion}>
+            <button className='completeButton' onClick={handleCompletion} disabled>
               {language === 'ko' ? '완료' : 'Complete'}
             </button>
           )}
