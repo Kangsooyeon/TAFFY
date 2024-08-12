@@ -66,6 +66,9 @@ function App() {
     // 리덕스 스토어 업데이트
     dispatch(logout());
 
+    setLanguage('en');
+    localStorage.setItem('language', 'en'); // localStorage에 'en'으로 설정
+
     setShowPopUp(false); // 팝업 닫기
     navigate('/main'); // 메인 페이지로 이동
     

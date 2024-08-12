@@ -180,7 +180,7 @@ const SparingDetailPage = () => {
         setTimeout(() => {
           setOpponentData(data);
           setOpponentDataReady(true);
-        }, 3000);
+        }, 5000);
       }
     });
 
@@ -307,9 +307,6 @@ const SparingDetailPage = () => {
     const opponentMissionList = newOpponentIsAttack ? atkData : defData;
     const newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].moKoName;
 
-    console.log(newOpponentMission)
-    console.log(newMyMission)
-
     // 신호로 공수 상태와 미션 정보를 상대방에게 전송
     session.signal({
         data: JSON.stringify({ 
@@ -329,13 +326,21 @@ const SparingDetailPage = () => {
     setIsAttack(newIsAttack);
     setMyMission(newMyMission);
     setOpponentMission(newOpponentMission);
-    console.log(opponentMission)
-    console.log(myMission)
-};
-useEffect(() => {
-  console.log('Updated myMission:', myMission);
-  console.log('Updated opponentMission:', opponentMission);
-}, [myMission, opponentMission]);
+  };  
+
+  useEffect(() => {
+    console.log('Updated myMission:', myMission);
+    console.log('Updated opponentMission:', opponentMission);
+  }, [myMission, opponentMission]);
+
+  useEffect(() => {
+    console.log('인식하고 있는 동작', predictedLabel)
+    console.log('지금 내 미션', myMission)
+    if (predictedLabel === myMission) {
+      handleWin('left')
+      nextRound();
+    }
+  }, [predictedLabel, myMission]); // `predictedLabel` 또는 `myMission`이 변경될 때마다 확인
 
   return (
     <div className="sparinggame">
@@ -367,9 +372,9 @@ useEffect(() => {
         <div>
           <Mission myMission={myMission} opponentMission={opponentMission} />
           <Timer />
-          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} />
+          <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} />
           {subscribers.map((subscriber, index) => (
-            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} />
+            <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} />
           ))}
         </div>
       ) : null}
