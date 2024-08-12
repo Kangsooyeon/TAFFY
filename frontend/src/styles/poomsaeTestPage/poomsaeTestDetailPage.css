@@ -114,7 +114,7 @@
 
 .progress-bar-container {
     position: absolute;
-    top: 120px;
+    top: 180px;
     right: -50px;
     width: 300px; /* 적절한 크기로 설정 */
     height: 300px;

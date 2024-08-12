@@ -12,7 +12,7 @@ import Ps8 from '/src/assets/images/poomsaeTestPage/ps8.png';
 
 const Ps_images = [Ps1, Ps2, Ps3, Ps4, Ps5, Ps6, Ps7, Ps8];
 
-const PoomsaeTestModal = ({ poomsae, onClose }) => {
+const PoomsaeTestModal = ({ poomsae, onClose, language }) => {
     const navigate = useNavigate();
 
     const handleChallengeClick = () => {
@@ -36,7 +36,7 @@ const PoomsaeTestModal = ({ poomsae, onClose }) => {
                 <p>{poomsae.description}</p>              
               </div>
               <div className="modal-btn">
-                <button onClick={handleChallengeClick}>도전하기</button>
+                <button onClick={handleChallengeClick}>{language==='ko'?'도전하기':'Challenge'}</button>
               </div>
             </div>
           </div>
@@ -51,7 +51,6 @@ PoomsaeTestModal.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      imageUrl: PropTypes.string.isRequired,
     }).isRequired,
     onClose: PropTypes.func.isRequired, // 모달을 닫을 함수
 };

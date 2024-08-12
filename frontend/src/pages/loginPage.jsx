@@ -82,7 +82,7 @@ const Login = ({ navigate, language }) => {
 
 Login.propTypes = {
     navigate: PropTypes.func.isRequired,
-    language: PropTypes.func.isRequired,
+    language: PropTypes.string.isRequired,
 };
 
 export default Login;
