@@ -116,7 +116,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
       <img src={CamTop} className="camtop" alt="" />
       <section className="cam">
         <video ref={videoRef} autoPlay className="camvideo" />
-        <canvas ref={canvasRef} className="camoverlay" />
+        <canvas ref={canvasRef} className="camoverlay" style={{ display: 'none' }} />
       </section>
     </div>
   );
