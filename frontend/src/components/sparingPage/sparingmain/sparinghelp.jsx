@@ -7,12 +7,9 @@ import SlideButton from '../../../assets/images/sparingPage/slidebutton.png'
 import Help1_eng from '../../../assets/images/sparingPage/help1_eng.png'
 import Help2_eng from '../../../assets/images/sparingPage/help2_eng.png'
 
-const images = [
-  Help1,
-  Help2
-];
 
-const SparingHelp = ({closeHelp}) => {
+const SparingHelp = ({closeHelp, language}) => {
+  const images = language === 'ko' ? [Help1, Help2] : [Help1_eng, Help2_eng];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
@@ -28,7 +25,7 @@ const SparingHelp = ({closeHelp}) => {
       </div>
       <img src={SlideButton} className="sliderightbutton" onClick={nextSlide} alt="slidebutton" />
       <img src={SlideButton} className="slideleftbutton" onClick={nextSlide} alt="lidebutton" />
-      <button className="helpclosebutton" onClick={closeHelp}>닫기</button>
+      <button className="helpclosebutton" onClick={closeHelp}>{language==='ko'?'닫기':'Close'}</button>
     </div>
   )
 }
