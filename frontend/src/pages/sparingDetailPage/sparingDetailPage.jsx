@@ -18,12 +18,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 import { fetchGameExitAsync } from '../../store/sparing/gameExit';
+import { div } from '@tensorflow/tfjs';
 
 const SparingDetailPage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { sessionId, connectionToken, userdata, status, roomType } = location.state;
+  const { sessionId, connectionToken, userdata, status, roomType, language } = location.state;
 
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
@@ -44,6 +45,8 @@ const SparingDetailPage = () => {
   const [finishOn, setFinishOn] = useState(false);
   const [opponentDataReady, setOpponentDataReady] = useState(false);
   const [predictedLabel, setPredictedLabel] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(true); // 초기 상태: 카운트다운 표시
+  const [countdownText, setCountdownText] = useState(language === 'ko' ? '3초 뒤 게임을 시작합니다' : 'Game starts in 3 seconds');
 
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
@@ -54,6 +57,20 @@ const SparingDetailPage = () => {
 
   const atkData = useSelector((state) => state.sparingMission.data?.ATK);
   const defData = useSelector((state) => state.sparingMission.data?.DEF);
+
+
+  useEffect(() => {
+    const retryInterval = setInterval(() => {
+      if (!opponentDataReady) {
+        session.signal({
+          data: JSON.stringify({ request: 'opponentData', nickname }),
+          to: [],
+          type: 'userDataRequest',
+        });
+      }
+    }, 500); // 1초마다 재시도
+    return () => clearInterval(retryInterval);
+  }, [session, opponentDataReady]);
 
   useEffect(() => {
     oldMyDataRef.current = oldMyData;
@@ -68,19 +85,48 @@ const SparingDetailPage = () => {
   }, [myResult]);
 
   useEffect(() => {
-    // 초기 미션 설정
-    if (atkData && defData) {
-      const missionList = isAttack ? atkData : defData;
-      const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
-      setMyMission(mission.moKoName);
+    // 3초 카운트다운 타이머
+    const countdownTimer = setTimeout(() => {
+      setShowCountdown(false); // 3초 후에 카운트다운 숨기기
+    }, 3000);
 
-      session.signal({
-        data: JSON.stringify({ mission: mission.moKoName, isAttack, nickname }),
-        to: [],
-        type: 'mission',
-      });
-    }
-  }, [atkData, defData]);
+    // 1초 간격으로 카운트다운 텍스트 업데이트
+    let secondsLeft = 3;
+    const textTimer = setInterval(() => {
+      secondsLeft -= 1;
+      if (secondsLeft > 0) {
+        if (language === 'ko') {
+          setCountdownText(`${secondsLeft}초 뒤 게임을 시작합니다`);
+        } else {
+          setCountdownText(`The game starts in ${secondsLeft} seconds`);
+        }
+      }
+    }, 1000);
+
+    // 초기 미션 설정을 3초 후에 실행
+    const gameStartTimer = setTimeout(() => {
+      if (atkData && defData) {
+        const missionList = isAttack ? atkData : defData;
+        const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
+
+        const missionName = language === 'ko' ? mission.moKoName : mission.mvEnName;
+        setMyMission(missionName);
+
+        session.signal({
+          data: JSON.stringify({ mission: missionName, isAttack, nickname }),
+          to: [],
+          type: 'mission',
+        });
+      }
+    }, 3000);
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      clearTimeout(countdownTimer);
+      clearTimeout(gameStartTimer);
+      clearInterval(textTimer);
+    };
+  }, [atkData, defData, isAttack, language, nickname, session]);
 
   const updateRecordAndSignal = async (isMyWin) => {
     const myResult = isMyWin ? 'win' : 'lose';
@@ -151,6 +197,7 @@ const SparingDetailPage = () => {
             newOpponentData: resultRef.current.opponentResult.newOpponentData,
             myResult: resultRef.current.myResult.myResult,
             opponentResult: resultRef.current.opponentResult.opponentResult,
+            language: language
           },
         });
       }, 5000);
@@ -173,14 +220,12 @@ const SparingDetailPage = () => {
     const OV = new OpenVidu();
     const session = OV.initSession();
     const userDataWithNickname = { ...userdata, nickname };
-
+    
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        setTimeout(() => {
-          setOpponentData(data);
-          setOpponentDataReady(true);
-        }, 5000);
+        setOpponentData(data);
+        setOpponentDataReady(true);
       }
     });
 
@@ -200,6 +245,18 @@ const SparingDetailPage = () => {
         setOpponentMission(data.mission)
       }
     })
+
+    session.on('signal:userDataRequest', (event) => {
+      const data = JSON.parse(event.data);
+      if (data.nickname !== nickname) {
+        // 상대방에게 내 데이터를 신호로 보냄
+        session.signal({
+          data: JSON.stringify(userdata, nickname),
+          to: [], // 전체 세션에 신호를 보냄
+          type: 'userData',
+        });
+      }
+    });
 
     session.on('signal:action', (event) => {
       const data = JSON.parse(event.data);
@@ -262,19 +319,24 @@ const SparingDetailPage = () => {
     };
   }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
 
-  const handleWin = (winner) => {
+  const handleWin = () => {
     let newMyAction, newOpponentAction;
     let newMyHp = myHp;
     let newOpponentHp = opponentHp;
+    let completeMission = myMission
 
-    if (winner === 'left') {
-      newOpponentHp = Math.max(newOpponentHp - 34, 0);
-      newMyAction = 'leg';
-      newOpponentAction = 'defense';
-    } else if (winner === 'right') {
-      newMyHp = Math.max(newMyHp - 34, 0);
+    if (completeMission === '몸통막기' || completeMission === '아래막기' || completeMission === '얼굴막기' || completeMission === 'Low block' || completeMission === 'Middle block' || completeMission === 'Face block') {
+      newOpponentHp = Math.max(newOpponentHp - 20, 0);
       newMyAction = 'defense';
-      newOpponentAction = 'leg';
+      newOpponentAction = 'attack_fail';
+    } else if (completeMission === '두 주먹 젖혀찌르기' || completeMission === '몸통찌르기' || completeMission === 'Two fists raised and stabbed' || completeMission === 'Fist middle punch') {
+      newOpponentHp = Math.max(newOpponentHp - 20, 0);
+      newMyAction = 'punch';
+      newOpponentAction = 'fail';
+    } else if (completeMission === '니킥' || completeMission === '앞차기' || completeMission === 'Front kick') {
+      newOpponentHp = Math.max(newOpponentHp - 20, 0);
+      newMyAction = 'leg';
+      newOpponentAction = 'fail';
     }
 
     setMyHp(newMyHp);
@@ -301,11 +363,21 @@ const SparingDetailPage = () => {
 
     // 내 새로운 미션 생성
     const myMissionList = newIsAttack ? atkData : defData;
-    const newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)].moKoName;
+    let newMyMission;
+    if (language === 'ko') {
+      newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)].moKoName;
+    } else {
+      newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)].mvEnName;
+    }
 
     // 상대방의 새로운 미션 생성
     const opponentMissionList = newOpponentIsAttack ? atkData : defData;
-    const newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].moKoName;
+    let newOpponentMission
+    if (language === 'ko') {
+      newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].moKoName;
+    } else {
+      newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].mvEnName;
+    }
 
     // 신호로 공수 상태와 미션 정보를 상대방에게 전송
     session.signal({
@@ -334,18 +406,19 @@ const SparingDetailPage = () => {
   }, [myMission, opponentMission]);
 
   useEffect(() => {
-    console.log('인식하고 있는 동작', predictedLabel)
-    console.log('지금 내 미션', myMission)
+    console.log('predictedLabel or myMission changed:', predictedLabel, myMission)
     if (predictedLabel === myMission) {
-      handleWin('left')
+      handleWin()
       nextRound();
     }
   }, [predictedLabel, myMission]); // `predictedLabel` 또는 `myMission`이 변경될 때마다 확인
 
   return (
     <div className="sparinggame">
-      {finishOn === true ? <img src={GameFinish_Korea} className="finishimg" /> : null}
+      {finishOn === true && language === 'ko' ? <img src={GameFinish_Korea} className="finishimg" /> : null}
+      {finishOn === true && language === 'en' ? <img src={GameFinish_English} className="finishimg" /> : null}
       <img src={Right} className="sparinggameright" alt="" />
+      {/* <img src={Left} className="sparinggameleft" alt="" /> */}
 
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
@@ -370,11 +443,17 @@ const SparingDetailPage = () => {
 
       {finishOn === false ? (
         <div>
-          <Mission myMission={myMission} opponentMission={opponentMission} />
+          {showCountdown ? (
+            <div className="countdown-text">
+              {countdownText}
+            </div>
+          ) : (
+            <Mission myMission={myMission} opponentMission={opponentMission} />
+          )}
           <Timer />
-          <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} />
+          <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} />
           {subscribers.map((subscriber, index) => (
-            <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} />
+            <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} language={language} />
           ))}
         </div>
       ) : null}

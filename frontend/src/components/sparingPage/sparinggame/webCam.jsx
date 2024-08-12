@@ -3,7 +3,7 @@ import CamTop from '../../../assets/images/sparingPage/webcam-top.png';
 import { useEffect, useRef } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
-const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedLabel }) => {
+const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedLabel, language }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const modelRef = useRef(null);
@@ -73,9 +73,15 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
                 const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
                 const inputTensor = tf.tensor2d([keypoints]);
 
-                const labels = isAttack 
-                  ? ['두 주먹 젖혀찌르기', '니킥','앞차기', '몸통찌르기'] 
-                  : ['몸통막기', '아래막기', '얼굴막기'];
+                const labels = language === 'ko' 
+                ? (isAttack 
+                    ? ['두 주먹 젖혀찌르기', '니킥', '앞차기', '몸통찌르기'] 
+                    : ['몸통막기', '아래막기', '얼굴막기']
+                  )
+                : (isAttack 
+                    ? ['Two fists raised and stabbed', 'Knee kick', 'Front kick', 'Fist middle punch'] 
+                    : ['Middle block', 'Low block', 'Face block']
+                  );
 
                 const predictions = modelRef.current.predict(inputTensor);
                 predictions.array().then((result) => {

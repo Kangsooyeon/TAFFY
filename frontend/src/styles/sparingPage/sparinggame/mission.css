@@ -45,7 +45,7 @@
 }
 
 .missionyou p, .missionme p {
-  margin: 8px auto;
+  margin: px auto;
 }
 
 .missionboxme {
@@ -68,24 +68,29 @@
 
 .missionmename {
   position: absolute;
-  left: 50%;
-  top: 20%;
+  left: 53%;
+  top: 35%;
   z-index: 8500;
-  font-size: 70px;
+  font-size: 45px;
   font-family: 'Jo';
   margin: 0;
-  transform: translate(-40%);
-
+  transform: translate(-50%, -50%);
+  width: 70%;
+  word-wrap: break-word;
+  text-align: center;
 }
 
 .missionyouname {
   position: absolute;
-  top: 80%;
+  top: 86%;
   left: 50%;
-  font-size: 35px;
+  font-size: 25px;
   font-family: 'Jo';
   margin: 0;
   z-index: 7500;
-  transform: translate(-50%);
+  transform: translate(-50%, -50%);
+  word-wrap: break-word;
+  width: 40%;
+  text-align: center;
 
 }
