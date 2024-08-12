@@ -27,7 +27,7 @@ function App() {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const isTestPage = location.pathname.startsWith('/ps_test/detail');
   const isSparPage = location.pathname.startsWith('/sp/game');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(localStorage.getItem('language') || 'en');
   const [showPopUp, setShowPopUp] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,6 +43,11 @@ function App() {
     }
     setIsLoading(false);
   }, [dispatch]);
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage); // 언어 설정을 localStorage에 저장
+  };
 
   const handleLogin = () => {
     navigate('/login');
@@ -87,7 +92,7 @@ function App() {
           handleLogin={handleLogin} 
           handleLogout={handleLogout} 
           language={language} 
-          setLanguage={setLanguage} 
+          setLanguage={handleLanguageChange}
         />
       )}
       <Routes>
