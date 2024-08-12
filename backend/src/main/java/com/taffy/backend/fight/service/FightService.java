@@ -2,6 +2,7 @@ package com.taffy.backend.fight.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taffy.backend.fight.controller.FightController;
 import com.taffy.backend.fight.dto.ConnectionInfoDto;
+import com.taffy.backend.fight.dto.RoomType;
 import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.SessionProperties;
@@ -38,7 +39,6 @@ public class FightService {
     private final MemberRepository memberRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
-    private static final String ROOM_PREFIX = "taffy:";
     private final LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
 
@@ -86,12 +86,11 @@ public class FightService {
         //sessionId 생성
         //openvidu 방 생성
        String sessionId=  initializeSession(map);
-
         map.put("sessionId", sessionId);
         map.put("memberId", memberId);
         //redis에 저장
-        if(status.equals("private")){
-            redisTemplate.opsForList().rightPush("private:"+sessionId, redisHashUser);
+        if(status.equals(RoomType.PRIVATE.getRoomType())){
+            redisTemplate.opsForList().rightPush(RoomType.PRIVATE.getSaveRoomType()+sessionId, redisHashUser);
         }else{
             redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         }
@@ -108,8 +107,8 @@ public class FightService {
         map.put("sessionId", sessionId);
         map.put("memberId", memberId);
 
-        if(status.equals("private")){
-            redisTemplate.opsForList().rightPush("private:"+sessionId, redisHashUser);
+        if(status.equals((RoomType.PRIVATE.getRoomType()))){
+            redisTemplate.opsForList().rightPush(RoomType.PRIVATE.getSaveRoomType()+sessionId, redisHashUser);
         }else{
             redisTemplate.opsForList().rightPush(sessionId, redisHashUser);
         }
@@ -135,8 +134,8 @@ public class FightService {
     public void exitRoom(Long memberId, String sessionId, String roomType){
         // 1. sessionId 로 room 가져오기.
         //getUsers(sessionId);
-        if(roomType.equals("private")){
-            deleteInviter(memberId, "private:"+sessionId);
+        if(roomType.equals(RoomType.PRIVATE.getRoomType())){
+            deleteInviter(memberId, RoomType.PRIVATE.getSaveRoomType()+sessionId);
         }else{
             deleteInviter(memberId, sessionId);
         }
@@ -194,8 +193,8 @@ public class FightService {
 
 
     public boolean deleteRoom(String sessionId, String roomType){
-        if(roomType.equals("private")){
-            return expiredRoom("private:"+sessionId);
+        if(roomType.equals(RoomType.PRIVATE.getRoomType())){
+            return expiredRoom(RoomType.PRIVATE.getSaveRoomType()+sessionId);
         }
         return  expiredRoom(sessionId);
     }
