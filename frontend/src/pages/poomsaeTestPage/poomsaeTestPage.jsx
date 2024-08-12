@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import { fetchUserProfileAsync } from '../../store/myPage/myPageUser';
+import { fetchStages } from '../../store/poomsaeEdu/stagesSlice';
 import '../../styles/poomsaeTestPage/poomsaeTestPage.css';
 import PoomsaeBeltItem from '../../components/poomsaeTestPage/poomsaeBeltItem';
 import PoomsaeTestModal from '../../components/poomsaeTestPage/poomsaeTestModal';
@@ -25,23 +26,26 @@ const belt_images = [
     BlackBelt,
 ];
 
-const PoomsaeTestPage = () => {
+const PoomsaeTestPage = ({language}) => {
     const dispatch = useDispatch();
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
+    const stages = useSelector(state => state.stages.stages || []);
     const [selectedPoomsae, setSelectedPoomsae] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [activeStages, setActiveStages] = useState([]);
+    const [eduCompletedStages, setEduCompletedStages] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const token = localStorage.getItem('accessToken');
                 const userdata = await dispatch(fetchUserProfileAsync()).unwrap();
 
                 // poomSaeCompletedList의 각 단계를 activeStages 배열에 저장
-                const stages = userdata.poomSaeCompletedList.map(item => item.isCompleted);
-                setActiveStages(stages);
+                const edustagesCompletion = userdata.poomSaeCompletedList.map(item => item.isCompleted);
+                setEduCompletedStages(edustagesCompletion);
 
                 await dispatch(fetchPoomsaeTest());
+                await dispatch(fetchStages({ token }));
                 setLoading(false);
             } catch (error) {
                 console.error('Failed to fetch data:', error);
@@ -54,7 +58,15 @@ const PoomsaeTestPage = () => {
     const completedStages = poomsaeTest.map(item => item.passed);
 
     const handleItemClick = (index) => {
-        setSelectedPoomsae(poomsaeTest[index]);
+        const stage = stages.find(s => s.psId === poomsaeTest[index].id); // 해당 단계의 교육 데이터 찾기
+
+        if (stage) {
+            setSelectedPoomsae({
+                id: poomsaeTest[index].id,
+                name: language === 'ko' ? stage.psKoName : stage.psEnName, // 언어 설정에 따라 이름 변경
+                description: language === 'ko' ? stage.psKoDesc : stage.psEnDesc, // 언어 설정에 따라 설명 변경
+            });
+        }
     };
 
     const handleCloseModal = () => {
@@ -70,7 +82,7 @@ const PoomsaeTestPage = () => {
                         imageUrl={url} 
                         onClick={() => handleItemClick(index)}
                         completed={completedStages[index] || false}
-                        locked={!activeStages[index]}
+                        locked={!eduCompletedStages[index]}
                     />
                 ))}
             </div>
@@ -78,6 +90,7 @@ const PoomsaeTestPage = () => {
                 <PoomsaeTestModal 
                     poomsae={selectedPoomsae}
                     onClose={handleCloseModal} 
+                    language={language}
                 />
             )}
         </div>

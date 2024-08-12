@@ -13,10 +13,13 @@ import Webcam from '../../components/common/modelWebcam';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import { fetchAllStageDetails } from '../../apis/stageApi';
 
-const PoomsaeTestDetailPage = () => {
+const PoomsaeTestDetailPage = ({language}) => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null);
-    const [instruction, setInstruction] = useState('영역 안에 몸 전체가 보이도록 위치를 조정해주세요.');
+    const initialInstruction = language === 'ko' 
+        ? '몸 전체가 보이도록 위치를 조정해주세요.' 
+        : 'Please adjust your position so that your entire body is visible.';
+    const [instruction, setInstruction] = useState(initialInstruction);
     const [predictions, setPredictions] = useState([]);
     const [moves, setMoves] = useState([]);
     const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
@@ -146,18 +149,27 @@ const PoomsaeTestDetailPage = () => {
         const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
 
-        // 예측 결과가 80 이상인 경우 진행률을 업데이트
-        // if (predictionArray[currentMoveIndex] >= 0.7) {
-        //     handleProgressUpdate(true);
-        // }
+        // 예측 결과가 70 이상인 경우 진행률을 업데이트
+        if (predictionArray[currentMoveIndex+1] >= 0.7) {
+            handleProgressUpdate(true);
+        }
     };
 
     return (
         <div className="poomsae-test-detail-page">
-            <div className="detail-title">
-                <p>태극 {poomsaeId}장</p>
-                <p className="exit" onClick={handleExit}>나가기</p>
-            </div>
+            {language==='ko'?
+                (<div className="detail-title">
+                    <p>태극 {poomsaeId}장</p>
+                    <p className="exit" onClick={handleExit}>나가기</p>
+                </div>
+                ) : (
+                    
+                <div className="detail-title">
+                    <p>Taegeuk {poomsaeId}</p>
+                    <p className="exit" onClick={handleExit}>Exit</p>
+                </div>
+                )
+            }
             <div className="detail-content">
                 <p>{instruction}</p>
                 <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} />
@@ -173,7 +185,7 @@ const PoomsaeTestDetailPage = () => {
                     <ProgressBar 
                         value={progress} 
                         text={`${currentMoveIndex} / ${moves.length}`} 
-                        title="진행률" 
+                        title={language==='ko'?'진행률' :'Progress'}
                     />
                 </div>
             </div>
@@ -181,11 +193,11 @@ const PoomsaeTestDetailPage = () => {
                 <div className="pop-up-container">
                     {gameStatus === 'pass' && (
                         <PopUp
-                            title="합격"
+                            title={language==='ko'?"합격":'Pass'}
                             titleColor="blue"
-                            btnText1="촬영하기"
+                            btnText1={language==='ko'?"촬영하기":'Photo'}
                             btnHref1="/photo"
-                            btnText2="목록으로"
+                            btnText2={language==='ko'?"목록으로":'List'}
                             btnHref2="/ps_test"
                             handleBtn1Click={() => handlePopUpButtonClick('/photo', true)}
                             handleBtn2Click={() => handlePopUpButtonClick('/ps_test', true)}
@@ -193,11 +205,11 @@ const PoomsaeTestDetailPage = () => {
                     )}
                     {gameStatus === 'fail' && (
                         <PopUp
-                            title="불합격"
+                            title={language==='ko'?"불합격":'Fail'}
                             titleColor="red"
-                            btnText1="재도전하기"
+                            btnText1={language==='ko'?"재도전하기":'Retry'}
                             btnHref1={`/ps_test/detail/${poomsaeId}`}
-                            btnText2="교육하기"
+                            btnText2={language==='ko'?"교육하기":'Education'}
                             btnHref2="/ps_edu"
                         />
                     )}
