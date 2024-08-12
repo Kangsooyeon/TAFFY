@@ -40,3 +40,9 @@
     transform: rotate(180deg);
   }
 }
+
+.quickbuttoncontainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
