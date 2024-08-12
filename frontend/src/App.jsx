@@ -27,7 +27,7 @@ function App() {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const isTestPage = location.pathname.startsWith('/ps_test/detail');
   const isSparPage = location.pathname.startsWith('/sp/game');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(localStorage.getItem('language') || 'en');
   const [showPopUp, setShowPopUp] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,6 +43,11 @@ function App() {
     }
     setIsLoading(false);
   }, [dispatch]);
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage); // 언어 설정을 localStorage에 저장
+  };
 
   const handleLogin = () => {
     navigate('/login');
@@ -63,7 +68,12 @@ function App() {
 
     setShowPopUp(false); // 팝업 닫기
     navigate('/main'); // 메인 페이지로 이동
-    alert('로그아웃 되었습니다.');
+    
+    if (language === 'ko') {
+      alert('로그아웃 되었습니다.');
+    } else {
+      alert('Logout successfully.');
+    }
   };
 
   const handleLogout = () => {
@@ -82,7 +92,7 @@ function App() {
           handleLogin={handleLogin} 
           handleLogout={handleLogout} 
           language={language} 
-          setLanguage={setLanguage} 
+          setLanguage={handleLanguageChange}
         />
       )}
       <Routes>
@@ -97,15 +107,15 @@ function App() {
         <Route path="/ps_edu/:stageNum" element={<PrivateRoute element={PoomsaeEduAllPage} language={language}/>} />
         <Route path="/ps_test" element={<PrivateRoute element={PoomsaeTestPage} />} />
         <Route path="/ps_test/detail/:poomsaeId" element={<PrivateRoute element={PoomsaeTestDetailPage} />} />
-        <Route path="/login" element={<LoginPage navigate={navigate} />} />
+        <Route path="/login" element={<LoginPage navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
       {showPopUp && (
         <PopUp 
-          title="로그아웃 하시겠습니까?" 
-          btnText1="네" 
+          title={language==='ko'?'로그아웃 하시겠습니까?' :'Logout Now?'}
+          btnText1={language==='ko'?'네':'Yes'}
           btnHref1="" 
-          btnText2="아니오" 
+          btnText2={language==='ko'?'아니오':'No'}
           btnHref2="" 
           handleBtn1Click={handleLogoutConfirm} // 로그아웃 핸들러 연결
           handleBtn2Click={() => setShowPopUp(false)} // 팝업 닫기 핸들러 연결

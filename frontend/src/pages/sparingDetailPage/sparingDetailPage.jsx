@@ -17,14 +17,13 @@ import { OpenVidu } from 'openvidu-browser';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
-import { fetchGameExitAsync } from '../../store/sparing/gameExit'
+import { fetchGameExitAsync } from '../../store/sparing/gameExit';
 
 const SparingDetailPage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { sessionId, connectionToken, userdata, status, roomType } = location.state;
-  // console.log('Received in SparingDetailPage:', { connectionToken, userdata, status, roomType, sessionId });
 
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
@@ -40,20 +39,21 @@ const SparingDetailPage = () => {
   const [opponentAction, setOpponentAction] = useState('basic');
   const [oldMyData, setOldMyData] = useState(null);
   const [newMyData, setNewMyData] = useState(null);
-  const [myResult, setMyResult] = useState(null)
+  const [myResult, setMyResult] = useState(null);
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
-  const [finishOn, setFinishOn] = useState(false)
+  const [finishOn, setFinishOn] = useState(false);
   const [opponentDataReady, setOpponentDataReady] = useState(false);
-  const [predictedLabel, setPredictedLabel] = useState(false)
+  const [predictedLabel, setPredictedLabel] = useState(false);
 
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
 
-  console.log('예측모델', predictedLabel)
-
   const oldMyDataRef = useRef(oldMyData);
   const newMyDataRef = useRef(newMyData);
   const myResultRef = useRef(myResult);
+
+  const atkData = useSelector((state) => state.sparingMission.data?.ATK);
+  const defData = useSelector((state) => state.sparingMission.data?.DEF);
 
   useEffect(() => {
     oldMyDataRef.current = oldMyData;
@@ -67,39 +67,51 @@ const SparingDetailPage = () => {
     myResultRef.current = myResult;
   }, [myResult]);
 
-  const updateRecordAndSignal  = async (isMyWin) => {
+  useEffect(() => {
+    // 초기 미션 설정
+    if (atkData && defData) {
+      const missionList = isAttack ? atkData : defData;
+      const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
+      setMyMission(mission.moKoName);
+
+      session.signal({
+        data: JSON.stringify({ mission: mission.moKoName, isAttack, nickname }),
+        to: [],
+        type: 'mission',
+      });
+    }
+  }, [atkData, defData]);
+
+  const updateRecordAndSignal = async (isMyWin) => {
     const myResult = isMyWin ? 'win' : 'lose';
     setMyResult(myResult);
 
-    // 이전 데이터 저장
     const oldData = userdata;
     setOldMyData(oldData);
 
-    // 최신 데이터 업데이트
     try {
-        await dispatch(fetchUserRecordUpdateAsync(myResult)).unwrap();
-        const updatedRecord = await dispatch(fetchUserRecordAsync()).unwrap();
-        setNewMyData(updatedRecord);
+      await dispatch(fetchUserRecordUpdateAsync(myResult)).unwrap();
+      const updatedRecord = await dispatch(fetchUserRecordAsync()).unwrap();
+      setNewMyData(updatedRecord);
 
-        resultRef.current.myResult = {
-          myResult: myResult,
-          oldMyData: oldData,
-          newMyData: updatedRecord,
-        };
+      resultRef.current.myResult = {
+        myResult: myResult,
+        oldMyData: oldData,
+        newMyData: updatedRecord,
+      };
 
-        session.signal({
-          data: JSON.stringify({
-            ...resultRef.current.myResult,
-            nickname: nickname,  
-          }),
-          to: [],
-          type: 'result'
-        });
+      session.signal({
+        data: JSON.stringify({
+          ...resultRef.current.myResult,
+          nickname: nickname,
+        }),
+        to: [],
+        type: 'result',
+      });
 
-        checkBothPlayersReady();
-
+      checkBothPlayersReady();
     } catch (error) {
-        console.error('Error updating record:', error);
+      console.error('Error updating record:', error);
     }
   };
 
@@ -128,8 +140,8 @@ const SparingDetailPage = () => {
 
   useEffect(() => {
     if (bothPlayersReady) {
-      dispatch(fetchGameExitAsync({sessionId, roomType}))
-      setFinishOn(true)
+      dispatch(fetchGameExitAsync({ sessionId, roomType }));
+      setFinishOn(true);
       setTimeout(() => {
         navigate('/sp/game/result', {
           state: {
@@ -139,14 +151,11 @@ const SparingDetailPage = () => {
             newOpponentData: resultRef.current.opponentResult.newOpponentData,
             myResult: resultRef.current.myResult.myResult,
             opponentResult: resultRef.current.opponentResult.opponentResult,
-          }
+          },
         });
-      }, 5000)
+      }, 5000);
     }
   }, [bothPlayersReady, navigate]);
-
-  const atkData = useSelector(state => state.sparingMission.data?.ATK);
-  const defData = useSelector(state => state.sparingMission.data?.DEF);
 
   useEffect(() => {
     dispatch(fetchSparingMissionUserAsync('ATK'));
@@ -159,30 +168,39 @@ const SparingDetailPage = () => {
       updateRecordAndSignal(isMyWin);
     }
   }, [myHp, opponentHp]);
-  
+
   useEffect(() => {
     const OV = new OpenVidu();
     const session = OV.initSession();
     const userDataWithNickname = { ...userdata, nickname };
-    
+
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
-      console.log("Opponent data received: ", data);
       if (data.nickname !== nickname) {
-        setTimeout(() => { // 지연시간 추가
+        setTimeout(() => {
           setOpponentData(data);
           setOpponentDataReady(true);
-        }, 3000);  // 2000ms 지연
+        }, 3000);
       }
     });
-    
-    session.on('signal:mission', (event) => {
+
+    session.on('signal:nextRound', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        setOpponentMission(data.mission);
+        setRound(data.newRound);
+        setIsAttack(data.opponentIsAttack); // 상대방이 보낸 상대방의 공수 상태를 내 공수 상태로 적용
+        setMyMission(data.opponentMission); // 상대방이 보낸 상대방의 미션을 내 미션으로 적용
+        setOpponentMission(data.myMission); // 내가 보낸 미션을 상대방의 미션으로 적용
       }
     });
-    
+
+    session.on('signal:mission', (event) => {
+      const data = JSON.parse(event.data)
+      if (data.nickname !== nickname) {
+        setOpponentMission(data.mission)
+      }
+    })
+
     session.on('signal:action', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
@@ -192,65 +210,63 @@ const SparingDetailPage = () => {
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
       }
     });
-    
+
     session.on('signal:result', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
         resultRef.current.opponentResult = {
-          oldOpponentData: data.oldMyData,  
-          newOpponentData: data.newMyData,  
-          opponentResult: data.myResult,    
+          oldOpponentData: data.oldMyData,
+          newOpponentData: data.newMyData,
+          opponentResult: data.myResult,
         };
         checkBothPlayersReady();
       }
     });
-    
+
     session.on('streamCreated', (event) => {
       const subscriber = session.subscribe(event.stream, undefined);
-      setSubscribers(prevSubscribers => [...prevSubscribers, subscriber]);
+      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
-    
+
     session.on('streamDestroyed', (event) => {
       event.stream.streamManager?.dispose();
-      setSubscribers(prevSubscribers => prevSubscribers.filter(sub => sub !== event.stream.streamManager));
+      setSubscribers((prevSubscribers) => prevSubscribers.filter((sub) => sub !== event.stream.streamManager));
     });
-    
-    
-    session.connect(connectionToken)
-    .then(() => {
-      const publisher = OV.initPublisher(undefined, {
-        insertMode: 'APPEND',
-        width: '100%',
-        height: '100%',
-        publishAudio: false,
+
+    session
+      .connect(connectionToken)
+      .then(() => {
+        const publisher = OV.initPublisher(undefined, {
+          insertMode: 'APPEND',
+          width: '100%',
+          height: '100%',
+          publishAudio: false,
+        });
+
+        session.publish(publisher);
+        setPublisher(publisher);
+        setSession(session);
+
+        session.signal({
+          data: JSON.stringify(userDataWithNickname),
+          to: [],
+          type: 'userData',
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to connect to the session:', error);
       });
-      
-      session.publish(publisher);
-      setPublisher(publisher);
-      setSession(session);
-      
-      session.signal({
-        data: JSON.stringify(userDataWithNickname),
-        to: [],
-        type: 'userData'
-      });
-      console.log('userdata 전송')
-      
-    })
-    .catch(error => {
-      console.error('Failed to connect to the session:', error);
-    });
-    
+
     return () => {
       if (session) session.disconnect();
     };
   }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
-  
+
   const handleWin = (winner) => {
     let newMyAction, newOpponentAction;
     let newMyHp = myHp;
     let newOpponentHp = opponentHp;
-    
+
     if (winner === 'left') {
       newOpponentHp = Math.max(newOpponentHp - 34, 0);
       newMyAction = 'leg';
@@ -275,48 +291,68 @@ const SparingDetailPage = () => {
         nickname,
       }),
       to: [],
-      type: 'action'
+      type: 'action',
     });
   };
 
   const nextRound = () => {
-    console.log('라운드 바뀔때', isAttack)
-    const missionList = isAttack ? defData : atkData;
-    if (!missionList) return;
+    const newIsAttack = !isAttack; // 내 공수 상태를 반전
+    const newOpponentIsAttack = !newIsAttack; // 상대방의 공수 상태는 현재 내 공수 상태의 반대
 
-    const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
-    setMyMission(mission.moKoName);
+    // 내 새로운 미션 생성
+    const myMissionList = newIsAttack ? atkData : defData;
+    const newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)].moKoName;
 
+    // 상대방의 새로운 미션 생성
+    const opponentMissionList = newOpponentIsAttack ? atkData : defData;
+    const newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].moKoName;
+
+    console.log(newOpponentMission)
+    console.log(newMyMission)
+
+    // 신호로 공수 상태와 미션 정보를 상대방에게 전송
     session.signal({
-      data: JSON.stringify({ mission: mission.moKoName, isAttack, nickname }),
-      to: [],
-      type: 'mission'
+        data: JSON.stringify({ 
+            newRound: round + 1,
+            myIsAttack: newIsAttack,
+            myMission: newMyMission,
+            opponentIsAttack: newOpponentIsAttack,
+            opponentMission: newOpponentMission,
+            nickname,
+        }),
+        to: [],
+        type: 'nextRound',
     });
 
+    // 본인의 상태 업데이트
     setRound((prevRound) => prevRound + 1);
-    setIsAttack((prevIsAttack) => {
-      const newIsAttack = !prevIsAttack;
-      console.log('IsAttack updated:', newIsAttack);
-      return newIsAttack;
-    });
-  };
-  
+    setIsAttack(newIsAttack);
+    setMyMission(newMyMission);
+    setOpponentMission(newOpponentMission);
+    console.log(opponentMission)
+    console.log(myMission)
+};
+useEffect(() => {
+  console.log('Updated myMission:', myMission);
+  console.log('Updated opponentMission:', opponentMission);
+}, [myMission, opponentMission]);
+
   return (
     <div className="sparinggame">
-      {finishOn === true ?
-        <img src={GameFinish_Korea} className="finishimg"/>:
-        null} 
+      {finishOn === true ? <img src={GameFinish_Korea} className="finishimg" /> : null}
       <img src={Right} className="sparinggameright" alt="" />
-      
+
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
 
-      <h1>{round}, {predictedLabel}, {isAttack?'ture':'false'}</h1>
+      <h1>
+        {round}, {predictedLabel}, {isAttack ? 'true' : 'false'}
+      </h1>
 
       {opponentDataReady && (
         <>
-          <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack} setPredictedLabel={setPredictedLabel}/>
+          <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack} setPredictedLabel={setPredictedLabel} />
           <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack} setPredictedLabel={setPredictedLabel} />
 
           <HpBar className="hpbarleft" hp={myHp} />
@@ -327,16 +363,16 @@ const SparingDetailPage = () => {
         </>
       )}
 
-      {finishOn === false ?
+      {finishOn === false ? (
         <div>
           <Mission myMission={myMission} opponentMission={opponentMission} />
           <Timer />
-          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel}/>
+          <WebCam className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} />
           {subscribers.map((subscriber, index) => (
-            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}}/>
+            <WebCam key={index} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} />
           ))}
         </div>
-      : null }
+      ) : null}
 
       <button onClick={nextRound}>Next Round</button>
       <button onClick={() => handleWin('left')}>left win</button>
