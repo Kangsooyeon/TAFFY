@@ -27,7 +27,10 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           try {
             await tf.setBackend('webgl');
             await tf.ready();
+            tf.ENV.set('WEBGL_PACK', true);
+            tf.ENV.set('WEBGL_FORCE_F16_TEXTURES', true);
             console.log('TensorFlow.js initialized with WebGL backend');
+
 
             if (modelRef.current) {
               modelRef.current.dispose();
@@ -60,11 +63,13 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
 
             poseRef.current = pose;
 
+            let frameCounter = 0;
+
             pose.onResults(async (results) => {
               const canvas = canvasRef.current;
               const ctx = canvas.getContext('2d');
 
-              if (canvas && ctx && videoRef.current) {
+              if (canvas && ctx && videoRef.current && frameCounter % 3 === 0) {
                 canvas.width = videoRef.current.videoWidth;
                 canvas.height = videoRef.current.videoHeight;
 
@@ -91,9 +96,10 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
                 }
 
                 // 포즈 랜드마크 그리기
-                window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
-                window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
+                // window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
+                // window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
               }
+              frameCounter++;
             });
 
             const sendPose = async () => {
