@@ -94,6 +94,8 @@ public class MemberController {
         return ResponseEntity.status(OK).body("사용가능한 닉네임 입니다");
     }
 
+    @PostMapping("/api/")
+
     private static void cookieTokenSetting(HttpServletResponse response, TokensResponseDTO tokens) {
         // Access Token 설정
         ResponseCookie

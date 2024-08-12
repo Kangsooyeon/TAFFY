@@ -254,4 +254,11 @@ public class MemberService {
         return member.getBelt().getBeltName();
     }
 
+    @Transactional(readOnly = true)
+    public Boolean isValidInviteNickname(Long memberId, String nickname) {
+        System.out.println(memberId);
+        System.out.println(nickname);
+        return memberRepository.isValidInviteNickname(memberId, nickname);
+    }
+
 }

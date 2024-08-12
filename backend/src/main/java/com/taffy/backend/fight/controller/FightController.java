@@ -4,6 +4,7 @@ import com.taffy.backend.fight.dto.ConnectionInfoDto;
 import com.taffy.backend.fight.dto.ResponseDto;
 import com.taffy.backend.fight.dto.UserInfoDto;
 import com.taffy.backend.fight.service.FightService;
+import com.taffy.backend.member.dto.NicknameRequestDto;
 import com.taffy.backend.member.service.MemberService;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,28 @@ public class FightController {
         ConnectionInfoDto connectionInfoDto = fightService.createRoom(memberId,status);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(HttpStatus.OK.value(), "방 생성 완료", connectionInfoDto));
     }
+
+    @PostMapping("/nickname")
+    public ResponseEntity<ResponseDto<Boolean>> isValidInviteNickname(
+            @AuthenticationPrincipal Long memberId,
+            @RequestBody NicknameRequestDto nicknameRequestDto) {
+
+        String nickname = nicknameRequestDto.getNickname();
+        Boolean isValid = memberService.isValidInviteNickname(memberId, nickname);
+
+        // Create response based on the validity check
+        ResponseDto<Boolean> response;
+
+        if (isValid) {
+            response = new ResponseDto<>(200, "Valid nickname", true);
+            return ResponseEntity.ok(response);
+        } else {
+            response = new ResponseDto<>(400, "Invalid nickname", false);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+
 
     @PostMapping("/game-invitations")
     public ResponseEntity<ResponseDto> enterRoom(@AuthenticationPrincipal Long memberId, @RequestParam  String sessionId)
