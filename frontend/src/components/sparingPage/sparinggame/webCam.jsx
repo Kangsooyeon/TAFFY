@@ -84,8 +84,14 @@ const WebCam = ({ className, streamManager, isAttack }) => {
             predictions.array().then((result) => {
               const predictedIndex = result[0].indexOf(Math.max(...result[0]));
               const predictedLabel = labels[predictedIndex];
-              console.log('Model predictions:', result);
-              console.log('Predicted Label:', predictedLabel);
+              // console.log('Model predictions:', result);
+              // console.log('Predicted Label:', predictedLabel);
+
+              if (isAttack) {
+                console.log('Attack Mode - Predicted Label:', predictedLabel);
+              } else {
+                console.log('Defense Mode - Predicted Label:', predictedLabel);
+              }
             });
 
             // 포즈 랜드마크 그리기
