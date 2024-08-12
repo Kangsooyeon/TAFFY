@@ -74,9 +74,19 @@ const WebCam = ({ className, streamManager, isAttack }) => {
 
             // console.log('Input Tensor:', inputTensor.arraySync());
 
+            // 예측 레이블 배열 정의
+            const labels = isAttack 
+              ? ['두 주먹 젖혀찌르기', '니킥','앞차기', '몸통찌르기'] 
+              : ['몸통막기', '아래막기', '얼굴막기'];
+
             // 모델 예측 수행
             const predictions = model.predict(inputTensor);
-            predictions.array().then((result) => console.log('Model predictions:', result));
+            predictions.array().then((result) => {
+              const predictedIndex = result[0].indexOf(Math.max(...result[0]));
+              const predictedLabel = labels[predictedIndex];
+              console.log('Model predictions:', result);
+              console.log('Predicted Label:', predictedLabel);
+            });
 
             // 포즈 랜드마크 그리기
             window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
