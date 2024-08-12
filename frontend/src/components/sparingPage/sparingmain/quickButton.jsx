@@ -6,7 +6,7 @@ import { fetchQuickSparingAsync } from '../../../store/sparing/quickStart';
 import { device_util, div } from '@tensorflow/tfjs';
 import { useState } from 'react'
 
-const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, setStatus, setRoomType }) => {
+const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, setStatus, setRoomType, language }) => {
   const dispatch = useDispatch();
   const [waiting, setWaiting] = useState(false)
 
@@ -53,7 +53,7 @@ const QuickButton = ({ userdata, stompClient, setSessionID, setConnectionToken, 
         :
         <div className="quickbuttoncontainer">
           <img src={Punch} alt="Quick Start" />
-          <p className="quicktitle">빠른 시작</p>
+          <p className="quicktitle">{language === "ko" ? "빠른 시작" : "Quick Start"}</p>
           <img src={Punch} alt="Quick Start" />
         </div>
        }
