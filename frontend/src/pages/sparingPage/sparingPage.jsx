@@ -16,7 +16,7 @@ import axiosInstance from "../../apis/axiosInstance";
 
 let stompClient = null;
 
-const SparingPage = () => {
+const SparingPage = ({language}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpenHelp, setIsOpenHelp] = useState(false);
@@ -242,12 +242,12 @@ const SparingPage = () => {
       <div className="sparingPage">
         <div className="leftSection">
           {userdata ? (
-            <UserInfo userdata={userdata} />
+            <UserInfo userdata={userdata} language={language} />
           ) : (
             <div>No profile data</div>
           )}
           {userdata ? (
-            <UserRecord userdata={userdata} />
+            <UserRecord userdata={userdata} language={language} />
           ) : (
             <div>No record data</div>
           )}
@@ -259,6 +259,7 @@ const SparingPage = () => {
             <div>No profile data</div>
           )}
           <QuickButton
+            language={language}
             userdata={userdata}
             stompClient={stompClient}
             setSessionID={setSessionID}
@@ -272,20 +273,22 @@ const SparingPage = () => {
             inviter={receivedMessage?.inviter}
             onAccept={handleAccept}
             onDeny={handleDeny}
+            language={language}
           />
           {stompClient && (
             <Invitation
               stompClient={stompClient}
               onReceiveMessage={handleReceiveMessage}
               setShowMessageBox={setShowMessageBox}
+              language={language}
             />
           )}
         </div>
       </div>
-      <button className="helpbutton" onClick={openHelp}>
+      <button className="helpbutton" onClick={openHelp} >
         ?
       </button>
-      {isOpenHelp && <Help closeHelp={closeHelp} />}
+      {isOpenHelp && <Help closeHelp={closeHelp}  language={language}/>}
     </div>
   );
 };

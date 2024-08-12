@@ -3,7 +3,7 @@ import SparInfoBottom from '../../../assets/images/sparingPage/spar-info-bottom.
 import SparInfoTop from '../../../assets/images/sparingPage/spar-info-top.png'
 
 
-const userRecord = ({userdata}) => {
+const userRecord = ({userdata, language}) => {
   const winRate = (userdata.data.totalMatches) === 0 
   ? 0 
   : (userdata.data.win / (userdata.data.totalMatches)) * 100;
@@ -15,18 +15,18 @@ const userRecord = ({userdata}) => {
       <div className="countbox">
         <div className="countdiv">
           <div className="totalcount">
-            <p className="custom-title">총 횟수</p>
+            <p className="custom-title">{language === 'ko' ? '총 횟수' : 'total times'}</p>
             <hr className="custom-hr"/>
-            <p style={{fontSize: '50px', margin: '0px'}}>{userdata.data.totalMatches}<span style={{fontSize: '20px'}}>회</span></p>
+            <p style={{fontSize: '50px', margin: '0px'}}>{userdata.data.totalMatches}<span style={{fontSize: '20px'}}>{language === 'ko' ? '회' : 'T'}</span></p>
           </div>
           <div className="wincount">
-            <p className="custom-title">이긴 횟수</p>
+            <p className="custom-title">{language == 'ko' ? '이긴 횟수' : 'number of wins'}</p>
             <hr className="custom-hr"/>
-            <p style={{fontSize: '50px', margin: '0px'}}>{userdata.data.win}<span style={{fontSize: '20px'}}>회</span></p>
+            <p style={{fontSize: '50px', margin: '0px'}}>{userdata.data.win}<span style={{fontSize: '20px'}}>{language === 'ko' ? '회' : 'T'}</span></p>
           </div>
         </div>
         <div className="winscore">
-          <p className="custom-title">승률</p>
+          <p className="custom-title">{language === 'ko' ? '승률' : 'WP' }</p>
           <hr className="custom-hr"/>
           <p style={{fontSize: '50px', margin: '0px'}}>{isNaN(winRate) ? 0 : winRate.toFixed(1)}<span style={{fontSize: '20px'}}>%</span></p>
           </div>

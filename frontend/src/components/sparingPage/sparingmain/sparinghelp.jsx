@@ -4,6 +4,8 @@ import Help1 from '../../../assets/images/sparingPage/help1.png'
 import Help2 from '../../../assets/images/sparingPage/help2.png'
 import { CSSTransition } from 'react-transition-group';
 import SlideButton from '../../../assets/images/sparingPage/slidebutton.png'
+import Help1_eng from '../../../assets/images/sparingPage/help1_eng.png'
+import Help2_eng from '../../../assets/images/sparingPage/help2_eng.png'
 
 const images = [
   Help1,
