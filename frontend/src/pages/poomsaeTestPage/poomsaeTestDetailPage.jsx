@@ -6,20 +6,24 @@ import PopUp from '../../components/common/popUp';
 import ProgressBar from '../../components/common/progressBar';
 import axios from 'axios';
 import Webcam from '../../components/common/modelWebcam';
-// import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
-// import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
-// import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
-// import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
+import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
+import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
+import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
+import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import { fetchAllStageDetails } from '../../apis/stageApi';
 
-const PoomsaeTestDetailPage = () => {
+const PoomsaeTestDetailPage = ({language}) => {
     const [progress, setProgress] = useState(0);
     const [gameStatus, setGameStatus] = useState(null);
-    const [instruction, setInstruction] = useState('영역 안에 몸 전체가 보이도록 위치를 조정해주세요.');
+    const initialInstruction = language === 'ko' 
+        ? '몸 전체가 보이도록 위치를 조정해주세요.' 
+        : 'Please adjust your position so that your entire body is visible.';
+    const [instruction, setInstruction] = useState(initialInstruction);
     const [predictions, setPredictions] = useState([]);
     const [moves, setMoves] = useState([]);
     const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
+    const [isModelActive, setIsModelActive] = useState(false);
     const { poomsaeId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('accessToken');
@@ -41,51 +45,36 @@ const PoomsaeTestDetailPage = () => {
     }, [poomsaeId, token]);
 
     useEffect(() => {
-        // const instructions = [
-        //     '차렷',
-        //     '경례',
-        //     '준비',
-        //     '시작'
-        // ];
+        const instructions = language === 'ko' 
+            ? ['차렷', '경례', '준비', '시작'] 
+            : ['Attention', 'Salute', 'Ready', 'Start'];
+        
+        const sounds = [attentionSound, saluteSound, preparationSound, startSound];
 
-        // let currentInstruction = 0;
+        let currentInstruction = 0;
 
         const changeInstruction = () => {
-            // if (currentInstruction < instructions.length) {
-            //     setInstruction(instructions[currentInstruction]);
+            if (currentInstruction < instructions.length) {
+                setInstruction(instructions[currentInstruction]);
 
-            //     let audio;
-            //     if (instructions[currentInstruction] === '차렷') {
-            //         audio = new Audio(attentionSound);
-            //     } else if (instructions[currentInstruction] === '경례') {
-            //         audio = new Audio(saluteSound);
-            //     } else if (instructions[currentInstruction] === '준비') {
-            //         audio = new Audio(preparationSound);
-            //     } else if (instructions[currentInstruction] === '시작') {
-            //         audio = new Audio(startSound);
-            //         audio.play().then(() => {
-            //             setTimeout(() => {
-            //                 console.log('Predictions:', predictions);
-            //             }, 5000);
-            //         });
-            //     }
+                const audio = new Audio(sounds[currentInstruction]);
+                audio.play();
 
-            //     if (audio) {
-            //         audio.play();
-            //     }
+                if (instructions[currentInstruction] === '준비' || instructions[currentInstruction] === 'Ready') {
+                    setIsModelActive(true);
+                }
 
-            //     currentInstruction++;
-            //     if (instructions[currentInstruction - 1] !== '시작') {
-            //         setTimeout(changeInstruction, 3000);
-            //     }
-            // }
+                currentInstruction++;
+                setTimeout(changeInstruction, 3500);
+            }
         };
 
-        const timer = setTimeout(changeInstruction, 3000);
+        const timer = setTimeout(() => {
+            changeInstruction();
+        }, 3000);
 
-        // Clean up the timer if the component unmounts
         return () => clearTimeout(timer);
-    }, [predictions]);
+    }, [language]);
 
     const handleProgressUpdate = (success) => {
         if (success) {
@@ -103,6 +92,7 @@ const PoomsaeTestDetailPage = () => {
     const handleReset = () => {
         setProgress(0);
         setGameStatus(null);
+        setIsModelActive(false);
     };
 
     const handleExit = () => {
@@ -137,7 +127,8 @@ const PoomsaeTestDetailPage = () => {
     };
 
     const handlePrediction = (predictions) => {
-        // Handle the prediction result here
+        if (!isModelActive) return;
+
         const predictionArray = Array.from(predictions);
         const top3Predictions = predictionArray
             .map((p, index) => ({ class: index, probability: p }))
@@ -146,21 +137,30 @@ const PoomsaeTestDetailPage = () => {
         const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
 
-        // 예측 결과가 80 이상인 경우 진행률을 업데이트
-        // if (predictionArray[currentMoveIndex] >= 0.7) {
-        //     handleProgressUpdate(true);
-        // }
+        // 예측 결과가 70 이상인 경우 진행률을 업데이트
+        if (predictionArray[currentMoveIndex+1] >= 0.7) {
+            handleProgressUpdate(true);
+        }
     };
 
     return (
         <div className="poomsae-test-detail-page">
-            <div className="detail-title">
-                <p>태극 {poomsaeId}장</p>
-                <p className="exit" onClick={handleExit}>나가기</p>
-            </div>
+            {language==='ko'?
+                (<div className="detail-title">
+                    <p>태극 {poomsaeId}장</p>
+                    <p className="exit" onClick={handleExit}>나가기</p>
+                </div>
+                ) : (
+                    
+                <div className="detail-title">
+                    <p>Taegeuk {poomsaeId}</p>
+                    <p className="exit" onClick={handleExit}>Exit</p>
+                </div>
+                )
+            }
             <div className="detail-content">
                 <p>{instruction}</p>
-                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} />
+                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive}/>
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
                 </div>
@@ -173,7 +173,7 @@ const PoomsaeTestDetailPage = () => {
                     <ProgressBar 
                         value={progress} 
                         text={`${currentMoveIndex} / ${moves.length}`} 
-                        title="진행률" 
+                        title={language==='ko'?'진행률' :'Progress'}
                     />
                 </div>
             </div>
@@ -181,11 +181,11 @@ const PoomsaeTestDetailPage = () => {
                 <div className="pop-up-container">
                     {gameStatus === 'pass' && (
                         <PopUp
-                            title="합격"
+                            title={language==='ko'?"합격":'Pass'}
                             titleColor="blue"
-                            btnText1="촬영하기"
+                            btnText1={language==='ko'?"촬영하기":'Photo'}
                             btnHref1="/photo"
-                            btnText2="목록으로"
+                            btnText2={language==='ko'?"목록으로":'List'}
                             btnHref2="/ps_test"
                             handleBtn1Click={() => handlePopUpButtonClick('/photo', true)}
                             handleBtn2Click={() => handlePopUpButtonClick('/ps_test', true)}
@@ -193,11 +193,11 @@ const PoomsaeTestDetailPage = () => {
                     )}
                     {gameStatus === 'fail' && (
                         <PopUp
-                            title="불합격"
+                            title={language==='ko'?"불합격":'Fail'}
                             titleColor="red"
-                            btnText1="재도전하기"
+                            btnText1={language==='ko'?"재도전하기":'Retry'}
                             btnHref1={`/ps_test/detail/${poomsaeId}`}
-                            btnText2="교육하기"
+                            btnText2={language==='ko'?"교육하기":'Education'}
                             btnHref2="/ps_edu"
                         />
                     )}

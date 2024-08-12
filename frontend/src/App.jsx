@@ -108,8 +108,8 @@ function App() {
         <Route path="/ps_edu" element={<PrivateRoute element={PoomsaeEduPage} language={language}/>} />
         <Route path="/ps_edu/:stageNum/:mvSeq" element={<PrivateRoute element={PoomsaeEduOnePage} language={language}/>} />
         <Route path="/ps_edu/:stageNum" element={<PrivateRoute element={PoomsaeEduAllPage} language={language}/>} />
-        <Route path="/ps_test" element={<PrivateRoute element={PoomsaeTestPage} />} />
-        <Route path="/ps_test/detail/:poomsaeId" element={<PrivateRoute element={PoomsaeTestDetailPage} />} />
+        <Route path="/ps_test" element={<PrivateRoute element={PoomsaeTestPage} language={language}/>} />
+        <Route path="/ps_test/detail/:poomsaeId" element={<PrivateRoute element={PoomsaeTestDetailPage} language={language}/>} />
         <Route path="/login" element={<LoginPage navigate={navigate} language={language}/>} />
         <Route path="/signup" element={<SignupPage language={language}/>} />
       </Routes>
