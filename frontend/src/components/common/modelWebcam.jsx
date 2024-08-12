@@ -48,8 +48,8 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height); // 비디오 프레임 그리기
 
                     // 포즈 랜드마크 그리기
-                    window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
-                    window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
+                    // window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
+                    // window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
 
                     if (results.poseLandmarks) {
                         const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
