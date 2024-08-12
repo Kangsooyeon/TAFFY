@@ -43,6 +43,7 @@ const SparingDetailPage = () => {
   const [myResult, setMyResult] = useState(null)
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
   const [finishOn, setFinishOn] = useState(false)
+  const [opponentDataReady, setOpponentDataReady] = useState(false);
   // const [opponentResult, setOpponentResult] = useState(null);
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
@@ -175,7 +176,10 @@ const SparingDetailPage = () => {
       const data = JSON.parse(event.data);
       console.log("Opponent data received: ", data);
       if (data.nickname !== nickname) {
-        setOpponentData(data);
+        setTimeout(() => { // 지연시간 추가
+          setOpponentData(data);
+          setOpponentDataReady(true);
+        }, 2000);  // 2000ms 지연
       }
     });
     
@@ -312,15 +316,18 @@ const SparingDetailPage = () => {
         <img src={Mat} className="sparingmat" alt="" />
       </div>
 
-      <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack}/>
-      <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack}/>
+      {opponentDataReady && (
+        <>
+          <GameUser className="gameuserleft" userdata={userdata} isAttack={isAttack} />
+          <GameUser className="gameuserright" userdata={opponentData} isAttack={!isAttack} />
 
-      <HpBar className="hpbarleft" hp={myHp} />
-      <HpBar className="hpbarright" hp={opponentHp} />
+          <HpBar className="hpbarleft" hp={myHp} />
+          <HpBar className="hpbarright" hp={opponentHp} />
 
-      <Character className="characterleft" userdata={userdata} action={myAction} />
-      <Character className="characterright" userdata={opponentData} action={opponentAction} />
-
+          <Character className="characterleft" userdata={userdata} action={myAction} />
+          <Character className="characterright" userdata={opponentData} action={opponentAction} />
+        </>
+      )}
 
       {finishOn === false ?
         <div>
