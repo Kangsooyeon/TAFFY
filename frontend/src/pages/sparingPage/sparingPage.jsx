@@ -16,7 +16,7 @@ import axiosInstance from "../../apis/axiosInstance";
 
 let stompClient = null;
 
-const SparingPage = ({language}) => {
+const SparingPage = ({ language }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpenHelp, setIsOpenHelp] = useState(false);
@@ -35,11 +35,13 @@ const SparingPage = ({language}) => {
   const connectionTokenRef = useRef(connectionToken);
   const userdataRef = useRef(userdata);
   const statusRef = useRef(status);
-  const roomTypeRef = useRef(roomType)
+  const roomTypeRef = useRef(roomType);
+  const [inviter, setInviter] = useState("");
 
   const handleReceiveMessage = (message) => {
     setReceivedMessage(message);
     setShowMessageBox(true);
+    setInviter(message.inviter);
   };
 
   const handleAccept = async () => {
@@ -90,7 +92,7 @@ const SparingPage = ({language}) => {
             connectionToken: response.data.data.connectionToken,
             userdata: userdataRef.current,
             roomType: "private",
-            status : "start"
+            status: "start",
           },
         });
       } catch (error) {
@@ -110,12 +112,13 @@ const SparingPage = ({language}) => {
   const handleDeny = () => {
     // console.log("Invitation denied");
     setShowMessageBox(false);
+    setInviter("");
 
     if (stompClient && stompClient.connected) {
       const denyMessage = {
         sessionId: receivedMessage.sessionId,
         nickname: receivedMessage.nickname, // invitee's nickname
-        inviter: receivedMessage.inviter, // inviter's nickname
+        inviter: inviter,
         status: "denied",
       };
 
@@ -184,7 +187,7 @@ const SparingPage = ({language}) => {
   }, [status]);
 
   useEffect(() => {
-    roomTypeRef.current = roomType
+    roomTypeRef.current = roomType;
   }, [roomType]);
 
   const joinGame = (message) => {
@@ -195,8 +198,8 @@ const SparingPage = ({language}) => {
     console.log("roomType:", roomTypeRef.current);
     console.log("status:", statusRef.current);
     console.log("connectionToken:", connectionTokenRef.current);
-    console.log('userdata:', userdataRef.current)
-    
+    console.log("userdata:", userdataRef.current);
+
     if (
       sessionIDRef.current &&
       connectionTokenRef.current &&
@@ -272,7 +275,7 @@ const SparingPage = ({language}) => {
         </div>
         <div className="rightSection">
           <MessageBox
-            inviter={receivedMessage?.inviter}
+            inviter={inviter}
             onAccept={handleAccept}
             onDeny={handleDeny}
             language={language}
@@ -287,10 +290,10 @@ const SparingPage = ({language}) => {
           )}
         </div>
       </div>
-      <button className="helpbutton" onClick={openHelp} >
+      <button className="helpbutton" onClick={openHelp}>
         ?
       </button>
-      {isOpenHelp && <Help closeHelp={closeHelp}  language={language}/>}
+      {isOpenHelp && <Help closeHelp={closeHelp} language={language} />}
     </div>
   );
 };
