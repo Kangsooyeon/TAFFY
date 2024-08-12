@@ -127,7 +127,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         poseRef.current = null;
       }
     };
-  }, [streamManager, isAttack, isLocalUser]);
+  }, [streamManager, isAttack, isLocalUser ]);
 
   return (
     <div className={`webcambox ${className}`}>
