@@ -12,7 +12,7 @@ import YellowBelt from '../../../assets/images/common/belt/yellowBelt.png'
 
 import { useEffect, useRef } from 'react';
 
-const userInfo = ({userdata}) => {
+const userInfo = ({userdata, language}) => {
   const nicknameRef = useRef(userdata.data.nickname);
 
   useEffect(() => {
@@ -88,13 +88,14 @@ const userInfo = ({userdata}) => {
         return '';
     }
   };
-
+  // const beltNameParts = userdata?.beltName ? userdata.beltName.split('/') : ['', ''];
+  // {language === 'en' ? beltNameParts[1] : beltNameParts[0]}
   return (
     <div className="overlap-group">
       <div className="userInfoBox">
         <div className="nickname" ref={nicknameRef} >{userdata.data.nickname}</div>
         <div className="beltInfo">
-          <div className={`beltname ${getBeltNameClass(userdata.data.belt.split('/')[1].replace(/\s/g, ''))}`}>{userdata.data.belt.split('/')[0]}</div>
+          <div className={`beltname ${getBeltNameClass(userdata.data.belt.split('/')[1].replace(/\s/g, ''))}`}>{language === 'ko' ? userdata.data.belt.split('/')[0] : userdata.data.belt.split('/')[1]}</div>
           <img className="belt" src={getSparBeltSrc(userdata.data.belt.split('/')[1].replace(/\s/g, ''))} alt="Belt" />
         </div>
       </div>

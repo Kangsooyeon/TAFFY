@@ -4,12 +4,13 @@ import axios from "axios";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { div } from "@tensorflow/tfjs";
 
 // 초기 시간 상수
 const INIT_MINUTE = 0;
 const INIT_SECOND = 30;
 
-const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox }) => {
+const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox, language }) => {
   const token = localStorage.getItem("accessToken");
   const [openViduSessionId, setOpenViduSessionId] = useState("");
   const [connectionToken, setConnectionToken] = useState("");
@@ -194,8 +195,17 @@ const Invitation = ({ stompClient, onReceiveMessage, setShowMessageBox }) => {
     return (
       <div className="waitingbox">
         <div className="waitingtitle">
-          <h3>{nickname.current} 님의</h3>
-          <h3> 승낙을 기다리고 있습니다.</h3>
+          {language === 'ko' ?
+            <div>
+              <h3>{nickname.current} 님의</h3>
+              <h3> 승낙을 기다리고 있습니다.</h3>
+            </div>
+          :
+            <div>
+              <h3>Waiting for</h3>
+              <h3>{nickname.current}`s approval.</h3>
+            </div>  
+        }
         </div>
         <div className="timer">
           <p>
