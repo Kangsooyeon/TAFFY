@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
-const Webcam = ({ onPrediction, poomsaeId }) => {
+const Webcam = ({ onPrediction, poomsaeId,isModelActive }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const URL = `/models/${poomsaeId}jang/`; // poomsaeId를 사용해 모델 URL 설정
@@ -51,7 +51,7 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
                     // window.drawConnectors(ctx, results.poseLandmarks, window.POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
                     // window.drawLandmarks(ctx, results.poseLandmarks, { color: '#FF0000', lineWidth: 0.1 });
 
-                    if (results.poseLandmarks) {
+                    if (results.poseLandmarks && isModelActive) {
                         const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
                         if (keypoints.length !== 99) {
                             console.error("Keypoints length is incorrect:", keypoints.length);
@@ -108,8 +108,7 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
 
         init();
 
-        // Clean up webcam when location changes (page navigation)
-    }, [onPrediction, URL, location]);
+    }, [onPrediction, URL, location, isModelActive]);
 
     return (
         <div className="webcam-container">
@@ -135,6 +134,7 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
 Webcam.propTypes = {
     onPrediction: PropTypes.func.isRequired, 
     poomsaeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
+    isModelActive: PropTypes.bool.isRequired,
 };
 
 export default Webcam;

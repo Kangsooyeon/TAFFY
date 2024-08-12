@@ -51,7 +51,6 @@ PoomsaeTestModal.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      imageUrl: PropTypes.string.isRequired,
     }).isRequired,
     onClose: PropTypes.func.isRequired, // 모달을 닫을 함수
 };
