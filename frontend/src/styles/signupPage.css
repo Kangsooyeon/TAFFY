@@ -64,7 +64,7 @@
     justify-content: space-between;
 }
 
-.input-wrapper {
+.signup-input-wrapper {
     display: flex;
     width: calc(100% - 50px); 
     align-items: center;
