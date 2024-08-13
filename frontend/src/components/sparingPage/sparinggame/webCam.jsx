@@ -2,6 +2,8 @@ import '../../../styles/sparingPage/sparinggame/webCam.css';
 import CamTop from '../../../assets/images/sparingPage/webcam-top.png';
 import { useEffect, useRef, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
+import Attackk from '/models/6jang/model.json'
+import Defensee from '/models/7jang/model.json'
 
 const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedLabel, language }) => {
   const videoRef = useRef(null);
@@ -17,6 +19,15 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
   console.log(isAttack)
   useEffect(() => {
     const initializeStream = async () => {
+      try {
+        await tf.setBackend('webgl');
+        await tf.ready();
+      } catch (error) {
+          console.warn("WebGL is not supported on this device. Switching to WASM backend.");
+          await tf.setBackend('wasm');
+          await tf.ready();
+      }
+
       if (streamManager && videoRef.current) {
         streamManager.addVideoElement(videoRef.current);
         console.log('Video stream added to video element');
@@ -36,7 +47,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           //   modelRef.current = null;
           // }
 
-          const modelPath = isAttack ? '/models/6jang/model.json' : '/models/7jang/model.json';
+          const modelPath = isAttack ? Attackk : Defensee;
           console.log(`Loading model from: ${modelPath}`);
 
           const model = await tf.loadLayersModel(modelPath);
