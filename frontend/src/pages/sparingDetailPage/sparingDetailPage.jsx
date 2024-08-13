@@ -225,6 +225,7 @@ const SparingDetailPage = () => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
         setOpponentData(data);
+        console.log('상대방 데이터', data)
         setOpponentDataReady(true);
       }
     });

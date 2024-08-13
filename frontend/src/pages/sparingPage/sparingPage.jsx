@@ -211,6 +211,10 @@ const SparingPage = ({ language }) => {
         console.log("game start!");
         // console.log("Connection Token:", connectionTokenRef.current);
         // console.log("User Data:", userdataRef.current);
+        if (stompClient && stompClient.connected) {
+          stompClient.deactivate();
+        }
+        
         navigate(`/sp/game/${sessionIDRef.current}`, {
           state: {
             sessionId: sessionIDRef.current,
