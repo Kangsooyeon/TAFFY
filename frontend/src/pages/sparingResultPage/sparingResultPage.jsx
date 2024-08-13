@@ -16,18 +16,16 @@ const sparingResultPage = ({language}) => {
   const location = useLocation();
   const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult } = location.state;
 
-  // console.log("oldMyData : ",oldMyData)
-  // console.log("oldOpponentData : " , oldOpponentData)
   const goToSparingMain = () => {
     navigate("/sp")
   }
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      goToSparingMain(); // 10초 후 자동으로 스파링 메인 페이지로 이동
-    }, 10000); // 10000ms = 10초
+      goToSparingMain();
+    }, 10000);
 
-    return () => clearTimeout(timer); // 컴포넌트가 언마운트될 때 타이머를 클리어
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -41,7 +39,6 @@ const sparingResultPage = ({language}) => {
           <img src={Title_En} className="resulttitle" alt="" /> 
         }
       </div>
-      <p>{myResult}</p>
       <CharacterFace className="characterfaceleft" userdata={oldMyData}/>
       <CharacterFace className="characterfaceright" userdata={oldOpponentData}/>
       <VicOrLose className="vicorloseleft" winorlose={myResult} language={language}/>

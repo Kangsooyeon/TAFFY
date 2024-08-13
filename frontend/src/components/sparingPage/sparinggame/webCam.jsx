@@ -2,14 +2,12 @@ import '../../../styles/sparingPage/sparinggame/webCam.css';
 import CamTop from '../../../assets/images/sparingPage/webcam-top.png';
 import { useEffect, useRef, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
-// import Attackk from '/models/6jang/model.json'
-// import Defensee from '/models/7jang/model.json'
 
 const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedLabel, language }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const modelRef = useRef(null);
-  const poseRef = useRef(null); // 포즈 객체를 ref로 관리
+  const poseRef = useRef(null);
   // const [isModelReady, setIsModelReady] = useState(false); // 모델이 실행 가능한지 여부를 나타내는 상태
   
   // 3초 후에 모델이 준비된 상태로 변경
