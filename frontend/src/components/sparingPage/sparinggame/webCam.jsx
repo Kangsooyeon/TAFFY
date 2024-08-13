@@ -96,7 +96,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
                 const labels = language === 'ko' 
                 ? (isAttack 
                     ? ['준비', '앞차기', '몸통찌르기', '두 주먹 젖혀 찌르기'] 
-                    : ['준비', '아래 막기', '얼굴 막기', '몸통 막기']
+                    : ['준비', '아래막기', '얼굴막기', '몸통막기']
                   )
                 : (isAttack 
                     ? ['Ready', 'Front kick', 'Fist middle punch', 'Two fists raised and stabbed'] 
