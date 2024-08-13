@@ -20,11 +20,11 @@ import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 import { fetchGameExitAsync } from '../../store/sparing/gameExit';
 import { div } from '@tensorflow/tfjs';
 
-const SparingDetailPage = () => {
+const SparingDetailPage = ({language}) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { sessionId, connectionToken, userdata, status, roomType, language } = location.state;
+  const { sessionId, connectionToken, userdata, status, roomType } = location.state;
 
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
@@ -57,7 +57,6 @@ const SparingDetailPage = () => {
 
   const atkData = useSelector((state) => state.sparingMission.data?.ATK);
   const defData = useSelector((state) => state.sparingMission.data?.DEF);
-
 
   useEffect(() => {
     const retryInterval = setInterval(() => {
@@ -109,11 +108,10 @@ const SparingDetailPage = () => {
         const missionList = isAttack ? atkData : defData;
         const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
 
-        const missionName = language === 'ko' ? mission.moKoName : mission.mvEnName;
-        setMyMission(missionName);
+        setMyMission(mission);
 
         session.signal({
-          data: JSON.stringify({ mission: missionName, isAttack, nickname }),
+          data: JSON.stringify({ mission: mission, isAttack, nickname }),
           to: [],
           type: 'mission',
         });
@@ -315,7 +313,7 @@ const SparingDetailPage = () => {
       });
 
     return () => {
-     // if (session) session.disconnect();
+      if (session) session.disconnect();
     };
   }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
 
@@ -333,7 +331,7 @@ const SparingDetailPage = () => {
       newOpponentHp = Math.max(newOpponentHp - 20, 0);
       newMyAction = 'punch';
       newOpponentAction = 'fail';
-    } else if (completeMission === '니킥' || completeMission === '앞차기' || completeMission === 'Front kick') {
+    } else if (completeMission === '앞차기' || completeMission === 'Front kick') {
       newOpponentHp = Math.max(newOpponentHp - 20, 0);
       newMyAction = 'leg';
       newOpponentAction = 'fail';
@@ -364,20 +362,15 @@ const SparingDetailPage = () => {
     // 내 새로운 미션 생성
     const myMissionList = newIsAttack ? atkData : defData;
     let newMyMission;
-    if (language === 'ko') {
-      newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)].moKoName;
-    } else {
-      newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)].mvEnName;
-    }
+    newMyMission = myMissionList.data[Math.floor(Math.random() * myMissionList.data.length)];
+
+
 
     // 상대방의 새로운 미션 생성
     const opponentMissionList = newOpponentIsAttack ? atkData : defData;
     let newOpponentMission
-    if (language === 'ko') {
-      newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].moKoName;
-    } else {
-      newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)].mvEnName;
-    }
+    newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)];
+
 
     // 신호로 공수 상태와 미션 정보를 상대방에게 전송
     session.signal({
@@ -411,7 +404,7 @@ const SparingDetailPage = () => {
       handleWin()
       nextRound();
     }
-  }, [predictedLabel, myMission]); // `predictedLabel` 또는 `myMission`이 변경될 때마다 확인
+  }, [predictedLabel, myMission]);
 
   return (
     <div className="sparinggame">
@@ -449,7 +442,7 @@ const SparingDetailPage = () => {
               {countdownText}
             </div>
           ) : (
-            <Mission myMission={myMission} opponentMission={opponentMission} />
+            <Mission myMission={myMission} opponentMission={opponentMission} language={language} />
           )}
           <Timer />
           <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} />

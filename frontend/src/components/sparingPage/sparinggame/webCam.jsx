@@ -47,7 +47,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           //   modelRef.current = null;
           // }
 
-          const modelPath = isAttack ? '/models/6jang/model.json' : '/models/7jang/model.json';
+          const modelPath = isAttack ? 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_attack@main/model.json' : 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_defence@main/model.json';
           console.log(`Loading model from: ${modelPath}`);
 
           const model = await tf.loadLayersModel(modelPath);

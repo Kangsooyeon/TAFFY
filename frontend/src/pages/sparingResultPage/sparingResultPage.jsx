@@ -11,10 +11,10 @@ import VicRateAfter from '../../components/sparingPage/sparingresult/vicRateAfte
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react'
 
-const sparingResultPage = () => {
+const sparingResultPage = ({language}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult, language } = location.state;
+  const { oldMyData, newMyData, oldOpponentData, newOpponentData, myResult, opponentResult } = location.state;
 
   // console.log("oldMyData : ",oldMyData)
   // console.log("oldOpponentData : " , oldOpponentData)
