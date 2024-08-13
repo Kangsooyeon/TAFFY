@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 import { fetchGameExitAsync } from '../../store/sparing/gameExit';
-import { div } from '@tensorflow/tfjs';
 
 const SparingDetailPage = ({language}) => {
   const location = useLocation();
@@ -30,7 +29,7 @@ const SparingDetailPage = ({language}) => {
   const [publisher, setPublisher] = useState(null);
   const [subscribers, setSubscribers] = useState([]);
   const [opponentData, setOpponentData] = useState(null);
-  // const [round, setRound] = useState(0);
+  const [round, setRound] = useState(1);
   const [myMission, setMyMission] = useState('');
   const [opponentMission, setOpponentMission] = useState('');
   const [isAttack, setIsAttack] = useState(status === 'start' ? true : false);
@@ -47,8 +46,7 @@ const SparingDetailPage = ({language}) => {
   const [predictedLabel, setPredictedLabel] = useState(false);
   const [showCountdown, setShowCountdown] = useState(true); // 초기 상태: 카운트다운 표시
   const [countdownText, setCountdownText] = useState(language === 'ko' ? '3초 뒤 게임을 시작합니다' : 'Game starts in 3 seconds');
-
-  let round = 1
+  const [isGamePaused, setIsGamePaused] = useState(false);
 
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
@@ -389,7 +387,8 @@ const SparingDetailPage = ({language}) => {
     });
 
     // 본인의 상태 업데이트
-    round = round + 1
+    const newRound = round + 1
+    setRound(newRound)
     // setRound((prevRound) => prevRound + 1);
     setIsAttack(newIsAttack);
     setMyMission(newMyMission);
@@ -403,9 +402,31 @@ const SparingDetailPage = ({language}) => {
 
   useEffect(() => {
     console.log('predictedLabel or myMission changed:', predictedLabel, myMission)
-    if (predictedLabel === (language==='ko'? myMission.moKoName : myMission.mvEnName)) {// 미션 처리가 완료되었음을 표시
+    if (predictedLabel === (language === 'ko' ? myMission.moKoName : myMission.mvEnName)) {
+      setIsGamePaused(true); // Pause the game
+    
       handleWin();
-      nextRound();
+    
+      setTimeout(() => {
+        nextRound();
+    
+        const utterance = new SpeechSynthesisUtterance(language === 'ko' ? newMyMission.mvKoVo : newMyMission.mvEnVo);
+        utterance.onstart = () => console.log('Speech started');
+        utterance.onend = () => console.log('Speech ended');
+        utterance.onerror = (e) => console.error('Speech error:', e);
+
+        // Play the mission voice
+        if ('speechSynthesis' in window) {
+          speechSynthesis.cancel(); // Cancel any ongoing speech
+          speechSynthesis.speak(utterance);
+        } else {
+          console.error('SpeechSynthesis API is not supported on this browser.');
+        }
+    
+        setTimeout(() => {
+          setIsGamePaused(false); // Resume the game
+        }, 3000); // Resume after 3 seconds
+      }, 5000); // 5-second pause after handleWin
     }
   }, [predictedLabel]);
   
@@ -421,9 +442,9 @@ const SparingDetailPage = ({language}) => {
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
       </div>
-
+      <h1 className="roundcontainer">{round}{language=='ko'? '회' : 'R'}</h1>
       <h1>
-        {round}, {predictedLabel}, {isAttack ? 'true' : 'false'}
+        {predictedLabel}, {isAttack ? 'true' : 'false'}
       </h1>
 
       {opponentDataReady && (
@@ -449,7 +470,7 @@ const SparingDetailPage = ({language}) => {
             <Mission myMission={myMission} opponentMission={opponentMission} language={language} />
           )}
           <Timer />
-          <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} />
+          <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} isGamePaused={isGamePaused}/>
           {subscribers.map((subscriber, index) => (
             <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} language={language} />
           ))}
