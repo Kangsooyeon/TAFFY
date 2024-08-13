@@ -316,7 +316,7 @@ const SparingDetailPage = () => {
       });
 
     return () => {
-      if (session) session.disconnect();
+     // if (session) session.disconnect();
     };
   }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
 
