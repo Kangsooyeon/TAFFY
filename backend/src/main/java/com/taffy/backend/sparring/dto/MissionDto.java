@@ -14,5 +14,7 @@ public class MissionDto {
     private String moKoName;
     private String mvEnName;
     private Mv.MovementType mvType;
+    private String mvKoVo;
+    private String mvEnVo;
 
 }

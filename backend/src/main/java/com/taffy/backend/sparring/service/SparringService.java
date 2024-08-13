@@ -67,7 +67,7 @@ public class SparringService {
             randomMovements.add(movements.get((int) (Math.random() * movements.size())));
         }
         return randomMovements.stream()
-                .map(mv -> new MissionDto(mv.getMvId(), mv.getMvKoName(), mv.getMvEnName(), mv.getMvType()))
+                .map(mv -> new MissionDto(mv.getMvId(), mv.getMvKoName(), mv.getMvEnName(), mv.getMvType(), mv.getMvKoVo(), mv.getMvEnVo()))
                 .collect(Collectors.toList());
     }
 }
