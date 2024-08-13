@@ -234,9 +234,9 @@ const SparingDetailPage = () => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
         setRound(data.newRound);
-        setIsAttack(data.opponentIsAttack); // 상대방이 보낸 상대방의 공수 상태를 내 공수 상태로 적용
-        setMyMission(data.opponentMission); // 상대방이 보낸 상대방의 미션을 내 미션으로 적용
-        setOpponentMission(data.myMission); // 내가 보낸 미션을 상대방의 미션으로 적용
+        setIsAttack(data.opponentIsAttack);
+        setMyMission(data.opponentMission);
+        setOpponentMission(data.myMission);
       }
     });
 
@@ -250,10 +250,9 @@ const SparingDetailPage = () => {
     session.on('signal:userDataRequest', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        // 상대방에게 내 데이터를 신호로 보냄
         session.signal({
           data: JSON.stringify(userdata, nickname),
-          to: [], // 전체 세션에 신호를 보냄
+          to: [],
           type: 'userData',
         });
       }
@@ -418,8 +417,9 @@ const SparingDetailPage = () => {
     <div className="sparinggame">
       {finishOn === true && language === 'ko' ? <img src={GameFinish_Korea} className="finishimg" /> : null}
       {finishOn === true && language === 'en' ? <img src={GameFinish_English} className="finishimg" /> : null}
+      
       <img src={Right} className="sparinggameright" alt="" />
-      {/* <img src={Left} className="sparinggameleft" alt="" /> */}
+      <img src={Left} className="sparinggameleft" alt="" />
 
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
@@ -459,9 +459,9 @@ const SparingDetailPage = () => {
         </div>
       ) : null}
 
-      <button onClick={nextRound}>Next Round</button>
+      {/* <button onClick={nextRound}>Next Round</button>
       <button onClick={() => handleWin('left')}>left win</button>
-      <button onClick={() => handleWin('right')}>right win</button>
+      <button onClick={() => handleWin('right')}>right win</button> */}
     </div>
   );
 };

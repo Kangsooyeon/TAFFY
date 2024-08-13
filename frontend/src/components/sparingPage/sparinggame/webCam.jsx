@@ -1,6 +1,6 @@
 import '../../../styles/sparingPage/sparinggame/webCam.css';
 import CamTop from '../../../assets/images/sparingPage/webcam-top.png';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
 const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedLabel, language }) => {
@@ -8,6 +8,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
   const canvasRef = useRef(null);
   const modelRef = useRef(null);
   const poseRef = useRef(null); // 포즈 객체를 ref로 관리
+  const [isModelReady, setIsModelReady] = useState(false); // 모델이 실행 가능한지 여부를 나타내는 상태
 
   useEffect(() => {
     const initializeStream = async () => {
@@ -25,7 +26,6 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           await tf.ready();
           console.log('TensorFlow.js initialized with WebGL backend');
 
-          // 모델 로드 전에 기존 모델을 정리합니다.
           if (modelRef.current) {
             modelRef.current.dispose();
             modelRef.current = null;
@@ -38,7 +38,6 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           console.log(`Successfully loaded model from: ${modelPath}`);
           modelRef.current = model;
 
-          // 이전 포즈 인식 객체를 정리합니다.
           if (poseRef.current) {
             poseRef.current.close(); // 포즈 인식기를 닫아줍니다.
           }
@@ -59,6 +58,8 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           poseRef.current = pose; // 현재 포즈 객체를 저장합니다.
 
           pose.onResults(async (results) => {
+            if (!isModelReady) return; // 모델이 준비되지 않았으면 예측을 수행하지 않음
+
             const canvas = canvasRef.current;
             const ctx = canvas.getContext('2d');
 
@@ -116,8 +117,13 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
 
     initializeStream();
 
-    // Clean up when the component is unmounted or the dependencies change
+    // 3초 후에 모델이 준비된 상태로 변경
+    const modelReadyTimeout = setTimeout(() => {
+      setIsModelReady(true);
+    }, 3000);
+
     return () => {
+      clearTimeout(modelReadyTimeout); // 타이머 정리
       if (modelRef.current) {
         modelRef.current.dispose();
         modelRef.current = null;
@@ -127,7 +133,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         poseRef.current = null;
       }
     };
-  }, [streamManager, isAttack, isLocalUser ]);
+  }, [streamManager, isAttack, isLocalUser, isModelReady]);
 
   return (
     <div className={`webcambox ${className}`}>
