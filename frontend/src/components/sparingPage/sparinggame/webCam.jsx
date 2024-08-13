@@ -17,6 +17,15 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
   console.log(isAttack)
   useEffect(() => {
     const initializeStream = async () => {
+      try {
+        await tf.setBackend('webgl');
+        await tf.ready();
+      } catch (error) {
+          console.warn("WebGL is not supported on this device. Switching to WASM backend.");
+          await tf.setBackend('wasm');
+          await tf.ready();
+      }
+
       if (streamManager && videoRef.current) {
         streamManager.addVideoElement(videoRef.current);
         console.log('Video stream added to video element');
