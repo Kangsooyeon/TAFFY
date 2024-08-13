@@ -47,7 +47,14 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           //   modelRef.current = null;
           // }
 
-          const modelPath = isAttack ? '/models/6jang/model.json' : '/models/7jang/model.json';
+          const isLocal = window.location.hostname === 'localhost';
+          const modelPath = isLocal
+            ? isAttack 
+              ? '/models/6jang/model.json' // 로컬 경로
+              : '/models/7jang/model.json' // 로컬 경로
+            : isAttack 
+              ? 'https://i11e104.p.ssafy.io/models/6jang/model.json' // 서버 경로
+              : 'https://i11e104.p.ssafy.io/models/7jang/model.json'; // 서버 경로
           console.log(`Loading model from: ${modelPath}`);
 
           const model = await tf.loadLayersModel(modelPath);
