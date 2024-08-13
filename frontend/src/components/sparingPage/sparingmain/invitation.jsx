@@ -238,6 +238,11 @@ const Invitation = ({
               type="text"
               defaultValue={nickname.current} // Bind input value to nickname state
               onChange={(e) => (nickname.current = e.target.value)} // Update state on change
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleInvite();
+                }
+              }}
             />
           </div>
           <p onClick={handleInvite} style={{ fontFamily: "HappinessM" }}>

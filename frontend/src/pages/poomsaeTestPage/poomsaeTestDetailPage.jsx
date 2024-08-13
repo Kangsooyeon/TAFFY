@@ -89,11 +89,11 @@ const PoomsaeTestDetailPage = ({language}) => {
         }
     };
 
-    const handleReset = () => {
-        setProgress(0);
-        setGameStatus(null);
-        setIsModelActive(false);
-    };
+    // const handleReset = () => {
+    //     setProgress(0);
+    //     setGameStatus(null);
+    //     setIsModelActive(false);
+    // };
 
     const handleExit = () => {
         navigate('/ps_test');
@@ -137,8 +137,14 @@ const PoomsaeTestDetailPage = ({language}) => {
         const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
 
-        // 예측 결과가 70 이상인 경우 진행률을 업데이트
-        if (predictionArray[currentMoveIndex+1] >= 0.7) {
+        const moveIndex = currentMoveIndex + 1;
+        const predictionValue = predictionArray[moveIndex]?.toFixed(2);
+
+        // currentMoveIndex + 1 값과 predictionArray[currentMoveIndex + 1] 값을 소수점 2자리까지 출력
+        console.log(`현재 인덱스: ${moveIndex}, 정확도: ${predictionValue}`);
+
+        // 예측 결과가 50 이상인 경우 진행률을 업데이트
+        if (predictionArray[moveIndex] >= 0.5) {
             handleProgressUpdate(true);
         }
     };
@@ -163,11 +169,6 @@ const PoomsaeTestDetailPage = ({language}) => {
                 <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive}/>
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
-                </div>
-                <div className="temp">
-                    <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
-                    <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
-                    <button onClick={handleReset}>Reset</button>
                 </div>
                 <div className='progress-bar-container'>
                     <ProgressBar 
