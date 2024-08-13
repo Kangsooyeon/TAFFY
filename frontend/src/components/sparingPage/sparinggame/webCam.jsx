@@ -76,12 +76,12 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
 
                 const labels = language === 'ko' 
                 ? (isAttack 
-                    ? ['두 주먹 젖혀찌르기', '니킥', '앞차기', '몸통찌르기'] 
-                    : ['몸통막기', '아래막기', '얼굴막기']
+                    ? ['준비', '앞차기', '몸통찌르기', '두 주먹 젖혀 찌르기'] 
+                    : ['준비', '아래 막기', '얼굴 막기', '몸통 막기']
                   )
                 : (isAttack 
-                    ? ['Two fists raised and stabbed', 'Knee kick', 'Front kick', 'Fist middle punch'] 
-                    : ['Middle block', 'Low block', 'Face block']
+                    ? ['Ready', 'Front kick', 'Fist middle punch', 'Two fists raised and stabbed'] 
+                    : ['Ready', 'Low block', 'Face block', 'Middle block']
                   );
 
                 const predictions = modelRef.current.predict(inputTensor);
