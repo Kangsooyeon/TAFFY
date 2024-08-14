@@ -141,14 +141,14 @@ const PoomsaeTestDetailPage = ({language}) => {
         const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
 
-        const moveIndex = currentMoveIndex + 1;
+        const moveIndex = currentMoveIndex % 6;
         const predictionValue = predictionArray[moveIndex]?.toFixed(2);
 
         // currentMoveIndex + 1 값과 predictionArray[currentMoveIndex + 1] 값을 소수점 2자리까지 출력
         console.log(`현재 인덱스: ${moveIndex}, 정확도: ${predictionValue}`);
 
-        // 예측 결과가 50 이상인 경우 진행률을 업데이트
-        if (predictionArray[moveIndex] >= 0.5) {
+        // 예측 결과가 70 이상인 경우 진행률을 업데이트
+        if (predictionArray[moveIndex] >= 0.7) {
             handleProgressUpdate(true);
         }
     };
@@ -170,7 +170,7 @@ const PoomsaeTestDetailPage = ({language}) => {
             }
             <div className="detail-content">
                 <p>{instruction}</p>
-                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive}/>
+                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive} currentMoveIndex={currentMoveIndex}/>
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
                 </div>
