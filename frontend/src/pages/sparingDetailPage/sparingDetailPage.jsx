@@ -118,6 +118,10 @@ const SparingDetailPage = ({language}) => {
       });
     }
 
+    setTimeout(() => {
+      playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
+    }, 3000);
+
     return () => {
       clearTimeout(countdownTimer);
       clearInterval(textTimer);
