@@ -61,7 +61,7 @@ const SparingDetailPage = ({language}) => {
 
   useEffect(() => {
     const retryInterval = setInterval(() => {
-      if (!opponentDataReady) {
+      if (!opponentData) {
         console.log('상대 데이터 없음!!!!')
         session.signal({
           data: JSON.stringify({ nickname }),
@@ -84,6 +84,8 @@ const SparingDetailPage = ({language}) => {
   useEffect(() => {
     myResultRef.current = myResult;
   }, [myResult]);
+
+  
 
   useEffect(() => {
     const countdownTimer = setTimeout(() => {
@@ -212,27 +214,22 @@ const SparingDetailPage = ({language}) => {
 
   useEffect(() => {
     const OV = new OpenVidu();
+    OV.enableProdMode();
     const session = OV.initSession();
     const userDataWithNickname = { ...userdata, nickname };
-    
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname && userdata && data.nickname !== undefined) {
-        console.log('상대방데이터 평가시 상대 데이터', data.nickname)
-        console.log('상대방데이터 평가시 내 데이터', nickname)
-        setOpponentData(data);
-        console.log('상대방 데이터', data)
+        setOpponentData(data.userdata);
         setOpponentDataReady(true);
       }
     });
 
     session.on('signal:userDataRequest', (event) => {
       const data = JSON.parse(event.data);
-      console.log('상대방 데이터 없다길레 신호 확인 완료!!!!!')
       if (data.nickname !== nickname) {
-        console.log('상대방한테 데이터 보내줬데이~')
         session.signal({
-          data: JSON.stringify(userdata, nickname),
+          data: JSON.stringify({userdata, nickname}),
           to: [],
           type: 'userData',
         });
@@ -264,6 +261,7 @@ const SparingDetailPage = ({language}) => {
         setMyAction(data.opponentAction);
         if (data.opponentHp !== undefined) setOpponentHp(data.myHp);
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
+        
       }
     });
 
@@ -315,9 +313,11 @@ const SparingDetailPage = ({language}) => {
 
     return () => {
     };
-  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult, atkData, defData, isAttack]);
+  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult, isAttack]);
 
   const handleWin = () => {
+    setIsGamePaused(true)
+
     let newMyAction, newOpponentAction;
     let newMyHp = myHp;
     let newOpponentHp = opponentHp;
@@ -391,6 +391,10 @@ const SparingDetailPage = ({language}) => {
     setIsAttack(newIsAttack);
     setMyMission(newMyMission);
     setOpponentMission(newOpponentMission);
+
+    setTimeout(() => {
+      setIsGamePaused(false);
+    }, 3000);
   };  
 
   const playAudio = (audioUrl) => {
@@ -416,19 +420,11 @@ const SparingDetailPage = ({language}) => {
   useEffect(() => {
     console.log('predictedLabel or myMission changed:', predictedLabel, myMission)
     if (predictedLabel === (language === 'ko' ? myMission.moKoName : myMission.mvEnName)) {
-      setIsGamePaused(true); // Pause the game
-    
       handleWin();
-    
-      setTimeout(() => {
-        nextRound();
-        
-        playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
-    
-        setTimeout(() => {
-          setIsGamePaused(false); // Resume the game
-        }, 3000); // Resume after 3 seconds
-      }, 5000); // 5-second pause after handleWin
+      nextRound();
+      playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
+  
+
     }
   }, [predictedLabel]);
   

@@ -9,7 +9,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
   const modelRef = useRef(null);
   const poseRef = useRef(null);
 
-  console.log(isAttack)
+  // console.log(isAttack)
   useEffect(() => {
     const initializeStream = async () => {
       if (isLocalUser && !isGamePaused) {
