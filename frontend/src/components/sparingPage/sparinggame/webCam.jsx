@@ -20,98 +20,101 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         await tf.setBackend('wasm');
         await tf.ready();
       }
-      if (isLocalUser && !isGamePaused) {
+      if (!isGamePaused) {
       
-      if (streamManager && videoRef.current) {
-        streamManager.addVideoElement(videoRef.current);
-        // console.log('Video stream added to video element');
-      } else {
-        console.warn('Stream manager or video element not found');
-        return;
-      }
-      
-        try {
-          await tf.setBackend('webgl');
-          await tf.ready();
-          // console.log('TensorFlow.js initialized with WebGL backend');
-
-          const modelPath = isAttack ? 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_attack@main/model.json' : 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_defence@main/model.json';
-          // console.log(`Loading model from: ${modelPath}`);
-
-          const model = await tf.loadLayersModel(modelPath);
-          // console.log(`Successfully loaded model from: ${modelPath}`);
-          modelRef.current = model;
-
-          const pose = new window.Pose({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
-          });
-
-          pose.setOptions({
-            modelComplexity: 1,
-            smoothLandmarks: true,
-            enableSegmentation: false,
-            smoothSegmentation: true,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5
-          });
-          
-          poseRef.current = pose; // 현재 포즈 객체를 저장합니다.
-
-          videoRef.current.oncanplay = () => {
-            // console.log('Video can play');
-            const sendPose = async () => {
-              if (poseRef.current && videoRef.current.readyState >= 2) {
-                await poseRef.current.send({ image: videoRef.current });
-                console.log('pose.send() called');
-                requestAnimationFrame(sendPose);
-              }
-            };
-            sendPose();
-          };
-
-          pose.onResults(async (results) => {
-            // console.log(1)
-            if (isGamePaused) return;
-            // console.log(2)
-            const canvas = canvasRef.current;
-            const ctx = canvas.getContext('2d');
-          
-            if (canvas && ctx && videoRef.current) {
-              canvas.width = videoRef.current.videoWidth;
-              canvas.height = videoRef.current.videoHeight;
-
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-              if (results.poseLandmarks && modelRef.current) {
-                const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
-                const inputTensor = tf.tensor2d([keypoints]);
-
-                const labels = language === 'ko' 
-                ? (isAttack 
-                    ? ['준비', '앞차기', '몸통찌르기', '두 주먹 젖혀 찌르기'] 
-                    : ['준비', '아래막기', '얼굴막기', '몸통막기']
-                  )
-                : (isAttack 
-                    ? ['Ready', 'Front kick', 'Fist middle punch', 'Two fists raised and stabbed'] 
-                    : ['Ready', 'Low block', 'Face block', 'Middle block']
-                  );
-
-                const predictions = modelRef.current.predict(inputTensor);
-                predictions.array().then((result) => {
-                  const predictedIndex = result[0].indexOf(Math.max(...result[0]));
-                  const predictedLabel = labels[predictedIndex];
-                  // console.log('Model predictions:', result);
-                  // console.log(isAttack ? 'Attack Mode' : 'Defense Mode', '- Predicted Label:', predictedLabel);
-                  setPredictedLabel(predictedLabel);
-                });
-              }
-            }
-          });
-        } catch (error) {
-          console.error("Error initializing MediaPipe Pose or TensorFlow.js:", error);
+        if (streamManager && videoRef.current) {
+          streamManager.addVideoElement(videoRef.current);
+          // console.log('Video stream added to video element');
+        } else {
+          console.warn('Stream manager or video element not found');
+          return;
         }
-      }
+
+        if (isLocalUser) {
+
+        
+          try {
+            await tf.setBackend('webgl');
+            await tf.ready();
+            // console.log('TensorFlow.js initialized with WebGL backend');
+
+            const modelPath = isAttack ? 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_attack@main/model.json' : 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_defence@main/model.json';
+            // console.log(`Loading model from: ${modelPath}`);
+
+            const model = await tf.loadLayersModel(modelPath);
+            // console.log(`Successfully loaded model from: ${modelPath}`);
+            modelRef.current = model;
+
+            const pose = new window.Pose({
+              locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+            });
+
+            pose.setOptions({
+              modelComplexity: 1,
+              smoothLandmarks: true,
+              enableSegmentation: false,
+              smoothSegmentation: true,
+              minDetectionConfidence: 0.5,
+              minTrackingConfidence: 0.5
+            });
+            
+            poseRef.current = pose; // 현재 포즈 객체를 저장합니다.
+
+            videoRef.current.oncanplay = () => {
+              // console.log('Video can play');
+              const sendPose = async () => {
+                if (poseRef.current && videoRef.current.readyState >= 2) {
+                  await poseRef.current.send({ image: videoRef.current });
+                  console.log('pose.send() called');
+                  requestAnimationFrame(sendPose);
+                }
+              };
+              sendPose();
+            };
+
+            pose.onResults(async (results) => {
+              // console.log(1)
+              if (isGamePaused) return;
+              // console.log(2)
+              const canvas = canvasRef.current;
+              const ctx = canvas.getContext('2d');
+            
+              if (canvas && ctx && videoRef.current) {
+                canvas.width = videoRef.current.videoWidth;
+                canvas.height = videoRef.current.videoHeight;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+                if (results.poseLandmarks && modelRef.current) {
+                  const keypoints = results.poseLandmarks.flatMap(({ x, y, z }) => [x, y, z]);
+                  const inputTensor = tf.tensor2d([keypoints]);
+
+                  const labels = language === 'ko' 
+                  ? (isAttack 
+                      ? ['준비', '앞차기', '몸통찌르기', '두 주먹 젖혀 찌르기'] 
+                      : ['준비', '아래막기', '얼굴막기', '몸통막기']
+                    )
+                  : (isAttack 
+                      ? ['Ready', 'Front kick', 'Fist middle punch', 'Two fists raised and stabbed'] 
+                      : ['Ready', 'Low block', 'Face block', 'Middle block']
+                    );
+
+                  const predictions = modelRef.current.predict(inputTensor);
+                  predictions.array().then((result) => {
+                    const predictedIndex = result[0].indexOf(Math.max(...result[0]));
+                    const predictedLabel = labels[predictedIndex];
+                    // console.log('Model predictions:', result);
+                    // console.log(isAttack ? 'Attack Mode' : 'Defense Mode', '- Predicted Label:', predictedLabel);
+                    setPredictedLabel(predictedLabel);
+                  });
+                }
+              }
+            });
+          } catch (error) {
+            console.error("Error initializing MediaPipe Pose or TensorFlow.js:", error);
+          }
+      }}
     };
 
     initializeStream()
