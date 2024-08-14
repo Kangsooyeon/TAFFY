@@ -24,14 +24,14 @@
   border: 0px
 }
 
-.input-container {
+.nickname-input-container {
   display: flex;
   align-items: center;
   width: 67%;
   margin: 10px;
 }
 
-.input-label {
+.nickname-input-label {
   margin-right: 10px;
   font-family: 'Lee';
   font-size: 40px;
@@ -40,12 +40,13 @@
   margin-right: 10px;
 }
 
-.input-wrapper {
+.nickname-input-wrapper {
+  display: flex;
   position: relative;
   width: 85%
 }
 
-.input-field {
+.nickname-input-field {
   width: 100%;
   padding: 8px 8px 8px 8px;
   font-size: 16px;
