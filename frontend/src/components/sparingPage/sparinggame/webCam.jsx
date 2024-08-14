@@ -102,7 +102,6 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
                   const predictedIndex = result[0].indexOf(Math.max(...result[0]));
                   const predictedLabel = labels[predictedIndex];
                   // console.log('Model predictions:', result);
-
                   // console.log(isAttack ? 'Attack Mode' : 'Defense Mode', '- Predicted Label:', predictedLabel);
                   setPredictedLabel(predictedLabel);
                 });
