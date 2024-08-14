@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import '../../styles/poomsaeTestPage/poomsaeTestDetailPage.css';
@@ -30,6 +31,7 @@ const PoomsaeTestDetailPage = ({language}) => {
     const token = localStorage.getItem('accessToken');
     const dispatch = useDispatch();
     const poomsaeTest = useSelector(state => state.poomsaeTest.poomsaeTest);
+    const hasPlayedOkSound = useRef(false); 
 
     useEffect(() => {
         const getStageDetails = async () => {
@@ -61,12 +63,12 @@ const PoomsaeTestDetailPage = ({language}) => {
                 const audio = new Audio(sounds[currentInstruction]);
                 audio.play();
 
-                if (instructions[currentInstruction] === '준비' || instructions[currentInstruction] === 'Ready') {
+                if (instructions[currentInstruction] === '시작' || instructions[currentInstruction] === 'Start') {
                     setIsModelActive(true);
                 }
 
                 currentInstruction++;
-                setTimeout(changeInstruction, 3500);
+                setTimeout(changeInstruction, 3000);
             }
         };
 
@@ -77,10 +79,16 @@ const PoomsaeTestDetailPage = ({language}) => {
         return () => clearTimeout(timer);
     }, [language]);
 
+    useEffect(() => {
+        hasPlayedOkSound.current = false;
+    }, [currentMoveIndex]);
+
     const handleProgressUpdate = (success) => {
-        const okAudio = new Audio(okSound);
         if (success) {
+            const okAudio = new Audio(okSound);
             okAudio.play();
+            hasPlayedOkSound.current = true;
+
             const newProgress = (currentMoveIndex + 1) / moves.length * 100;
             setProgress(newProgress);
             setCurrentMoveIndex(currentMoveIndex + 1);
@@ -216,6 +224,10 @@ const PoomsaeTestDetailPage = ({language}) => {
             )}
         </div>
     );
+};
+
+PoomsaeTestDetailPage.propTypes = {
+    language: PropTypes.string.isRequired, 
 };
 
 export default PoomsaeTestDetailPage;
