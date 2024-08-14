@@ -101,8 +101,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/sp" element={<PrivateRoute element={SparingPage} language={language} />} />
-        <Route path="/sp/game/:sessionId" element={<PrivateRoute element={SparingDetailPage} />} />
-        <Route path="/sp/game/result" element={<PrivateRoute element={SparingResultPage} />} />
+        <Route path="/sp/game/:sessionId" element={<PrivateRoute element={SparingDetailPage} language={language}/>} />
+        <Route path="/sp/game/result" element={<PrivateRoute element={SparingResultPage} language={language}/>} />
         <Route path="/main" element={<MainPage language={language}/>} />
         <Route path="/mypage" element={<PrivateRoute element={MyPage} language={language} />} />
         <Route path="/ps_edu" element={<PrivateRoute element={PoomsaeEduPage} language={language}/>} />
