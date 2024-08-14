@@ -79,33 +79,38 @@ const PoomsaeTestDetailPage = ({language}) => {
         return () => clearTimeout(timer);
     }, [language]);
 
-    useEffect(() => {
-        hasPlayedOkSound.current = false;
-    }, [currentMoveIndex]);
 
     const handleProgressUpdate = (success) => {
-        if (success) {
+        if (success && !hasPlayedOkSound.current) {
             const okAudio = new Audio(okSound);
             okAudio.play();
-            hasPlayedOkSound.current = true;
-
+            hasPlayedOkSound.current = true;  // 사운드가 재생되었음을 기록
+    
             const newProgress = (currentMoveIndex + 1) / moves.length * 100;
             setProgress(newProgress);
             setCurrentMoveIndex(currentMoveIndex + 1);
-
+    
             if (currentMoveIndex + 1 >= moves.length) {
                 setGameStatus('pass');
+            } else {
+                // 다음 동작으로 넘어갈 때 플래그를 리셋
+                okAudio.onended = () => {
+                    hasPlayedOkSound.current = false; // 사운드 재생 완료 후 플래그 리셋
+                };
             }
-        } else {
+        } else if (!success) {
             setGameStatus('fail');
         }
     };
-
-    // const handleReset = () => {
-    //     setProgress(0);
-    //     setGameStatus(null);
-    //     setIsModelActive(false);
-    // };
+    
+    // 이 부분은 필요 시 사용합니다. 각 동작의 시작 시 플래그를 리셋할 수 있습니다.
+    useEffect(() => {
+        // 새로운 동작으로 넘어갈 때 사운드 재생 플래그를 리셋
+        if (currentMoveIndex < moves.length) {
+            hasPlayedOkSound.current = false;
+        }
+    }, [currentMoveIndex, moves.length]);
+    
 
     const handleExit = () => {
         navigate('/ps_test');
