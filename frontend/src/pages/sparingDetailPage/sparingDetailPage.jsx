@@ -243,9 +243,11 @@ const SparingDetailPage = ({language}) => {
         setIsAttack(data.opponentIsAttack);
         setMyMission(data.opponentMission);
         setOpponentMission(data.myMission);
+
         setTimeout(() => {
           setIsGamePaused(false);
         }, 3000);
+        playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
       }
     });
 
@@ -264,7 +266,6 @@ const SparingDetailPage = ({language}) => {
         setIsGamePaused(true)
         if (data.opponentHp !== undefined) setOpponentHp(data.myHp);
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
-        
       }
     });
 
@@ -394,6 +395,8 @@ const SparingDetailPage = ({language}) => {
     setMyMission(newMyMission);
     setOpponentMission(newOpponentMission);
 
+    playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
+
     setTimeout(() => {
       setIsGamePaused(false);
     }, 3000);
@@ -421,7 +424,7 @@ const SparingDetailPage = ({language}) => {
     if (predictedLabel === (language === 'ko' ? myMission.moKoName : myMission.mvEnName)) {
       handleWin();
       nextRound();
-      playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
+      // playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
     }
   }, [predictedLabel]);
   
