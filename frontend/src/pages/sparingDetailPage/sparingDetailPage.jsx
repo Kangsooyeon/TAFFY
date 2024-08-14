@@ -50,6 +50,7 @@ const SparingDetailPage = ({language}) => {
 
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
+  const audioRef = useRef(null);
 
   const oldMyDataRef = useRef(oldMyData);
   const newMyDataRef = useRef(newMyData);
@@ -109,6 +110,7 @@ const SparingDetailPage = ({language}) => {
         const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
 
         setMyMission(mission);
+        playAudio(language === 'ko' ? mission.mvKoVo : mission.mvEnVo)
 
         session.signal({
           data: JSON.stringify({ mission: mission, isAttack, nickname }),
@@ -244,7 +246,8 @@ const SparingDetailPage = ({language}) => {
     session.on('signal:nextRound', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        round = round + 1;
+        const newRound = round + 1
+        setRound(newRound)
         setIsAttack(data.opponentIsAttack);
         setMyMission(data.opponentMission);
         setOpponentMission(data.myMission);
@@ -394,6 +397,21 @@ const SparingDetailPage = ({language}) => {
     setOpponentMission(newOpponentMission);
   };  
 
+  const playAudio = (audioUrl) => {
+    console.log('playAudio called with URL:', audioUrl);
+    if (audioRef.current && audioUrl) {
+      audioRef.current.pause();
+      console.log('Paused existing audio');
+      audioRef.current.src = audioUrl;
+      console.log('Set new audio source:', audioUrl);
+      audioRef.current.play().catch(error => {
+        console.error('Audio playback failed:', error);
+      });
+    } else {
+      console.log('Audio element or URL not available');
+    }
+  };
+
   useEffect(() => {
     console.log('Updated myMission:', myMission);
     console.log('Updated opponentMission:', opponentMission);
@@ -408,19 +426,8 @@ const SparingDetailPage = ({language}) => {
     
       setTimeout(() => {
         nextRound();
-    
-        // const utterance = new SpeechSynthesisUtterance(language === 'ko' ? newMyMission.mvKoVo : newMyMission.mvEnVo);
-        // utterance.onstart = () => console.log('Speech started');
-        // utterance.onend = () => console.log('Speech ended');
-        // utterance.onerror = (e) => console.error('Speech error:', e);
-
-        // // Play the mission voice
-        // if ('speechSynthesis' in window) {
-        //   speechSynthesis.cancel(); // Cancel any ongoing speech
-        //   speechSynthesis.speak(utterance);
-        // } else {
-        //   console.error('SpeechSynthesis API is not supported on this browser.');
-        // }
+        
+        playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
     
         setTimeout(() => {
           setIsGamePaused(false); // Resume the game
@@ -434,7 +441,7 @@ const SparingDetailPage = ({language}) => {
     <div className="sparinggame">
       {finishOn === true && language === 'ko' ? <img src={GameFinish_Korea} className="finishimg" /> : null}
       {finishOn === true && language === 'en' ? <img src={GameFinish_English} className="finishimg" /> : null}
-      
+      <audio ref={audioRef} />
       <img src={Right} className="sparinggameright" alt="" />
       {/* <img src={Left} className="sparinggameleft" alt="" /> */}
 
