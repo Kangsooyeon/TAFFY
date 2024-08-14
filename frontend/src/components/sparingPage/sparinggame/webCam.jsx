@@ -24,7 +24,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
 
       if (streamManager && videoRef.current) {
         streamManager.addVideoElement(videoRef.current);
-        console.log('Video stream added to video element');
+        // console.log('Video stream added to video element');
       } else {
         console.warn('Stream manager or video element not found');
         return;
@@ -33,13 +33,13 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         try {
           await tf.setBackend('webgl');
           await tf.ready();
-          console.log('TensorFlow.js initialized with WebGL backend');
+          // console.log('TensorFlow.js initialized with WebGL backend');
 
           const modelPath = isAttack ? 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_attack@main/model.json' : 'https://cdn.jsdelivr.net/gh/Kangsooyeon/TAFFY_defence@main/model.json';
-          console.log(`Loading model from: ${modelPath}`);
+          // console.log(`Loading model from: ${modelPath}`);
 
           const model = await tf.loadLayersModel(modelPath);
-          console.log(`Successfully loaded model from: ${modelPath}`);
+          // console.log(`Successfully loaded model from: ${modelPath}`);
           modelRef.current = model;
 
           const pose = new window.Pose({
@@ -58,11 +58,11 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           poseRef.current = pose; // 현재 포즈 객체를 저장합니다.
 
           videoRef.current.oncanplay = () => {
-            console.log('Video can play');
+            // console.log('Video can play');
             const sendPose = async () => {
               if (poseRef.current && videoRef.current.readyState >= 2) {
                 await poseRef.current.send({ image: videoRef.current });
-                console.log('pose.send() called');
+                // console.log('pose.send() called');
                 requestAnimationFrame(sendPose);
               }
             };
@@ -70,9 +70,9 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           };
 
           pose.onResults(async (results) => {
-            console.log(1)
+            // console.log(1)
             if (isGamePaused) return;
-            console.log(2)
+            // console.log(2)
             const canvas = canvasRef.current;
             const ctx = canvas.getContext('2d');
           
@@ -101,9 +101,9 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
                 predictions.array().then((result) => {
                   const predictedIndex = result[0].indexOf(Math.max(...result[0]));
                   const predictedLabel = labels[predictedIndex];
-                  console.log('Model predictions:', result);
+                  // console.log('Model predictions:', result);
 
-                  console.log(isAttack ? 'Attack Mode' : 'Defense Mode', '- Predicted Label:', predictedLabel);
+                  // console.log(isAttack ? 'Attack Mode' : 'Defense Mode', '- Predicted Label:', predictedLabel);
                   setPredictedLabel(predictedLabel);
                 });
               }
@@ -118,21 +118,21 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
     initializeStream()
 
     if (videoRef.current) {
-      console.log('Video element found');
+      // console.log('Video element found');
     } else {
       console.error('Video element not found');
     }
     
     if (streamManager) {
-      console.log('Stream manager found');
+      // console.log('Stream manager found');
     } else {
       console.error('Stream manager not found');
     }
 
-    console.log('Video ready state:', videoRef.current.readyState);
+    // console.log('Video ready state:', videoRef.current.readyState);
 
     if (videoRef.current.srcObject) {
-      console.log('Video source is set');
+      // console.log('Video source is set');
     } else {
       console.error('Video source is not set');
     }
