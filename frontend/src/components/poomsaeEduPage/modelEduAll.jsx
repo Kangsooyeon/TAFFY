@@ -127,7 +127,7 @@ const Webcam = ({ onPrediction, poomsaeId, currentMoveIndex }) => {
                 style={{
                     width: '190%',
                     height: '110%',
-                    boxShadow: '7px 7px 5px 0px rgba(0, 0, 0, 0.35)',
+                    boxShadow: '-7px 7px 5px 0px rgba(0, 0, 0, 0.35)',
                     borderRadius: '2%',
                 }}
             />
