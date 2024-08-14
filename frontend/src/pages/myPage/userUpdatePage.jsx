@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import '../../styles/myPage/userUpdatePage.css';
 import { useState, useEffect } from 'react';
 import Bear from '../../assets/images/myPage/곰 머리.png';
@@ -21,7 +22,6 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [initialNickName, setInitialNickName] = useState('');
 
-  console.log(userdata)
   useEffect(() => {
     if (userdata) {
       setProfileData({
@@ -36,18 +36,32 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (profileData.nickName !== initialNickName && !isNicknameChecked) {
-      {language === 'en' ?
-        alert('Please check for duplicate nicknames.') :
-        alert('닉네임 중복확인을 해주세요') }
-      return;
+
+    // 닉네임 길이 확인
+    if (profileData.nickName.length < 4 || profileData.nickName.length > 10) {
+        if (language === 'en') {
+            alert('Nickname must be between 4 and 10 characters.');
+        } else {
+            alert('닉네임은 4자에서 10자 사이여야 합니다.');
+        }
+        return;
     }
+
+    if (profileData.nickName !== initialNickName && !isNicknameChecked) {
+        if (language === 'en') {
+            alert('Please check for duplicate nicknames.');
+        } else {
+            alert('닉네임 중복확인을 해주세요');
+        }
+        return;
+    }
+
     try {
-      await dispatch(fetchUserUpdateProfileAsync(profileData)).unwrap();
-      await dispatch(fetchUserProfileAsync());
-      closeUpdate();
+        await dispatch(fetchUserUpdateProfileAsync(profileData)).unwrap();
+        await dispatch(fetchUserProfileAsync());
+        closeUpdate();
     } catch (err) {
-      console.error('Failed to save the profile: ', err);
+        console.error('Failed to save the profile: ', err);
     }
   };
 
@@ -75,13 +89,18 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
     }
   };
 
-
   const handleCountryChange = (e) => {
     setProfileData({ ...profileData, countryName: e.target.value });
   };
 
   const handleNickNameChange = (e) => {
-    setProfileData({ ...profileData, nickName: e.target.value });
+    const newNickName = e.target.value;
+    setProfileData({ ...profileData, nickName: newNickName });
+
+    // 닉네임이 4자 이상일 때만 중복 확인 가능하게 플래그 초기화
+    if (newNickName.length >= 4) {
+        setIsNicknameChecked(false);
+    }
   };
 
   const clearInput = () => {
@@ -93,24 +112,22 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
     setProfileData({ ...profileData, profileImg: e.target.value });
   };
 
-  const handleUserDelete = (e) => {
+  const handleUserDelete = () => {
 
   }
-
-  console.log(profileData);
 
   return (
     <div className="updatepage">
       <button className="updateclosebutton" onClick={closeUpdate}>X</button>
       <form onSubmit={handleSubmit} className="updateformbox">
-        <div className="input-container">
-          <div className="input-wrapper">
-            <label className="input-label">{language === 'en' ? 'Nickname' : '닉네임'}</label>
+        <div className="nickname-input-container">
+          <div className="nickname-input-wrapper">
+            <label className="nickname-input-label">{language === 'en' ? 'Nickname' : '닉네임'}</label>
             <input
               type="text"
               value={profileData.nickName}
               onChange={handleNickNameChange}
-              className="input-field"
+              className="nickname-input-field"
             />
             {profileData.nickName && (
               <button className="clear-btn" onClick={clearInput}>&times;</button>
@@ -126,8 +143,8 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
               { id: 'Bear', img: Bear },
               { id: 'Dragon', img: Dragon },
             ].map((character) => (
-              <div key={character.id} className="character-option">
-                <img src={character.img} alt={character.id} className="character-image" />
+              <label key={character.id} className="character-option">
+                <img src={character.img} alt={character.id} className="character-image" onClick={() => setSelectedCharacter(character.id)} style={{ cursor: 'pointer' }}/>
                 <input
                   type="radio"
                   id={character.id}
@@ -136,7 +153,7 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
                   checked={selectedCharacter === character.id}
                   onChange={handleCharacterChange}
                 />
-              </div>
+              </label>
             ))}
           </div>
         </div>
@@ -165,6 +182,12 @@ const UserUpdatePage = ({ closeUpdate, language, userdata }) => {
       </form>
     </div>
   );
+};
+
+UserUpdatePage.propTypes = {
+  closeUpdate: PropTypes.func.isRequired, 
+  language: PropTypes.string.isRequired,
+  userdata: PropTypes.object.isRequired,
 };
 
 export default UserUpdatePage;
