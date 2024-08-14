@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserRecordUpdateAsync, fetchUserRecordAsync } from '../../store/myPage/myPageUserRecord';
 import { fetchSparingMissionUserAsync } from '../../store/sparing/sparMission';
 import { fetchGameExitAsync } from '../../store/sparing/gameExit';
+import { div } from '@tensorflow/tfjs';
 
 const SparingDetailPage = ({language}) => {
   const location = useLocation();
@@ -47,6 +48,8 @@ const SparingDetailPage = ({language}) => {
   const [showCountdown, setShowCountdown] = useState(true); // 초기 상태: 카운트다운 표시
   const [countdownText, setCountdownText] = useState(language === 'ko' ? '3초 뒤 게임을 시작합니다' : 'Game starts in 3 seconds');
   const [isGamePaused, setIsGamePaused] = useState(false);
+  const [opponentMissionDataReady, setOpponentMissionDataReady] = useState(false); 
+  const [fisrtMissionOn, setFirstMissionOn] = useState(false)
 
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
@@ -58,6 +61,18 @@ const SparingDetailPage = ({language}) => {
 
   const atkData = useSelector((state) => state.sparingMission.data?.ATK);
   const defData = useSelector((state) => state.sparingMission.data?.DEF);
+  
+  useEffect(() => {
+    oldMyDataRef.current = oldMyData;
+  }, [oldMyData]);
+
+  useEffect(() => {
+    newMyDataRef.current = newMyData;
+  }, [newMyData]);
+
+  useEffect(() => {
+    myResultRef.current = myResult;
+  }, [myResult]);
 
   useEffect(() => {
     const retryInterval = setInterval(() => {
@@ -71,27 +86,73 @@ const SparingDetailPage = ({language}) => {
       }
     }, 500);
     return () => clearInterval(retryInterval);
-  }, [session, predictedLabel]);
+  }, [session]);
+
 
   useEffect(() => {
-    oldMyDataRef.current = oldMyData;
-  }, [oldMyData]);
-
-  useEffect(() => {
-    newMyDataRef.current = newMyData;
-  }, [newMyData]);
-
-  useEffect(() => {
-    myResultRef.current = myResult;
-  }, [myResult]);
-
+    if (session && atkData && defData) {
+      let mission;
+      if (isAttack) {
+        mission = atkData.data[Math.floor(Math.random() * atkData.data.length)];
+      } else {
+        mission = defData.data[Math.floor(Math.random() * defData.data.length)];
+      }
+      
+      setMyMission(mission);
+    
+      session.signal({
+        data: JSON.stringify({ mission, nickname }),
+        to: [],
+        type: 'mission',
+      });
+      
+      session.on('signal:mission', (event) => {
+        const data = JSON.parse(event.data);
+        if (data.nickname !== nickname) {
+          setOpponentMission(data.mission);
+        }
+      });
   
+      session.signal({
+        data: JSON.stringify({ ready: true, nickname }),
+        to: [],
+        type: 'ready',
+      });
 
+    }
+  }, [atkData, defData, session, myMission]);
+  
   useEffect(() => {
+    let bothReady = false;
+    
+    if (session) {
+      session.on('signal:ready', (event) => {
+        const data = JSON.parse(event.data);
+        if (data.nickname !== nickname) {
+          setOpponentMissionDataReady(true);
+        }
+      });
+      
+      if (opponentMissionDataReady) {
+        bothReady = true;
+      }
+      
+      if (bothReady) {
+        startCountdown();
+        setFirstMissionOn(true)
+        console.log('내 미션은?', myMission)
+        console.log('알려줘...', fisrtMissionOn)
+      }
+    }
+  }, [opponentMissionDataReady, session]);
+  
+  const startCountdown = () => {
+    setShowCountdown(true);
+    
     const countdownTimer = setTimeout(() => {
       setShowCountdown(false);
     }, 3000);
-
+    
     let secondsLeft = 3;
     const textTimer = setInterval(() => {
       secondsLeft -= 1;
@@ -103,30 +164,13 @@ const SparingDetailPage = ({language}) => {
         }
       }
     }, 1000);
-
-    if (atkData && defData) {
-      const missionList = isAttack ? atkData : defData;
-      const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
-
-      setMyMission(mission);
-      playAudio(language === 'ko' ? mission.mvKoVo : mission.mvEnVo)
-
-      session.signal({
-        data: JSON.stringify({ mission: mission, isAttack, nickname }),
-        to: [],
-        type: 'mission',
-      });
-    }
-
-    setTimeout(() => {
-      playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
-    }, 3000);
-
+    
+    playAudio(language === 'ko' ? myMission.mvKoVo :myMission.mvEnVo);
     return () => {
       clearTimeout(countdownTimer);
       clearInterval(textTimer);
     };
-  }, [atkData, defData, isAttack, nickname, session]);
+  };
 
   const updateRecordAndSignal = async (isMyWin) => {
     const myResult = isMyWin ? 'win' : 'lose';
@@ -418,10 +462,10 @@ const SparingDetailPage = ({language}) => {
     }
   };
 
-  useEffect(() => {
-    console.log('Updated myMission:', myMission);
-    console.log('Updated opponentMission:', opponentMission);
-  }, [myMission, opponentMission]);
+  // useEffect(() => {
+  //   console.log('Updated myMission:', myMission);
+  //   console.log('Updated opponentMission:', opponentMission);
+  // }, [myMission, opponentMission]);
 
   useEffect(() => {
     console.log('predictedLabel or myMission changed:', predictedLabel, myMission)
@@ -446,7 +490,7 @@ const SparingDetailPage = ({language}) => {
       </div>
       <h1 className="roundcontainer">{round}{language=='ko'? '회' : 'R'}</h1>
       <h1>
-        {predictedLabel}, {isAttack ? 'true' : 'false'}
+        {predictedLabel}, {isAttack ? 'true' : 'false'}, {myMission.data}
       </h1>
 
       {opponentDataReady && (
@@ -469,13 +513,15 @@ const SparingDetailPage = ({language}) => {
               {countdownText}
             </div>
           ) : (
-            <Mission myMission={myMission} opponentMission={opponentMission} language={language} />
+            <>
+              {fisrtMissionOn && <Mission myMission={myMission} opponentMission={opponentMission} language={language} />}
+              <Timer />
+              <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} isGamePaused={isGamePaused}/>
+              {subscribers.map((subscriber, index) => (
+                <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} language={language} />
+              ))}
+            </>
           )}
-          <Timer />
-          <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} isGamePaused={isGamePaused}/>
-          {subscribers.map((subscriber, index) => (
-            <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} language={language} />
-          ))}
         </div>
       ) : null}
 

@@ -116,10 +116,10 @@
   position: absolute;
   bottom: 5%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%);
   font-family: 'Su';
-  font-size: 50px;
-
+  font-size: 40px;
+  text-align: center
 }
 
 .roundcontainer {
