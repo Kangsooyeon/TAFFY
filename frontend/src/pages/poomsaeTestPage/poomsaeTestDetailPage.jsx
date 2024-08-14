@@ -10,6 +10,7 @@ import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
 import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
 import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
 import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
+import okSound from '../../assets/sounds/poomsaeTestPage/ok.mp3';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import { fetchAllStageDetails } from '../../apis/stageApi';
 
@@ -77,10 +78,13 @@ const PoomsaeTestDetailPage = ({language}) => {
     }, [language]);
 
     const handleProgressUpdate = (success) => {
+        const okAudio = new Audio(okSound);
         if (success) {
+            okAudio.play();
             const newProgress = (currentMoveIndex + 1) / moves.length * 100;
             setProgress(newProgress);
             setCurrentMoveIndex(currentMoveIndex + 1);
+
             if (currentMoveIndex + 1 >= moves.length) {
                 setGameStatus('pass');
             }
@@ -137,14 +141,14 @@ const PoomsaeTestDetailPage = ({language}) => {
         const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
         setPredictions(predictionResults);
 
-        const moveIndex = currentMoveIndex + 1;
+        const moveIndex = currentMoveIndex % 6;
         const predictionValue = predictionArray[moveIndex]?.toFixed(2);
 
         // currentMoveIndex + 1 값과 predictionArray[currentMoveIndex + 1] 값을 소수점 2자리까지 출력
         console.log(`현재 인덱스: ${moveIndex}, 정확도: ${predictionValue}`);
 
-        // 예측 결과가 50 이상인 경우 진행률을 업데이트
-        if (predictionArray[moveIndex] >= 0.5) {
+        // 예측 결과가 70 이상인 경우 진행률을 업데이트
+        if (predictionArray[moveIndex] >= 0.7) {
             handleProgressUpdate(true);
         }
     };
@@ -166,10 +170,16 @@ const PoomsaeTestDetailPage = ({language}) => {
             }
             <div className="detail-content">
                 <p>{instruction}</p>
-                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive}/>
+                <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive} currentMoveIndex={currentMoveIndex}/>
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
                 </div>
+                {/* <div className="temp">
+                    <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
+                    <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
+                    <button onClick={handleReset}>Reset</button>
+                </div> */}
+
                 <div className='progress-bar-container'>
                     <ProgressBar 
                         value={progress} 
