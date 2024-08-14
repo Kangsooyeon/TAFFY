@@ -239,8 +239,8 @@ const SparingDetailPage = ({language}) => {
     session.on('signal:nextRound', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        const newRound = round + 1
-        setRound(newRound)
+        const newRound = round + 1;
+        setRound(newRound);
         setIsAttack(data.opponentIsAttack);
         setMyMission(data.opponentMission);
         setOpponentMission(data.myMission);
