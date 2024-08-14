@@ -9,6 +9,7 @@ import ProgressBar from '../../components/common/progressBar';
 import { fetchMoveDetail, completeMovement, setMoveCompletion } from '../../store/poomsaeEdu/moveSlice';
 import PopUp from '../../components/common/popUp';
 import Webcam from '../../components/poomsaeEduPage/modelEduOne';
+import okSound from '../../assets/sounds/poomsaeTestPage/ok.mp3';
 
 const PoomsaeEduOnePage = ({ language }) => {
   const { stageNum, mvSeq } = useParams();
@@ -17,13 +18,14 @@ const PoomsaeEduOnePage = ({ language }) => {
   const [count, setCount] = useState(0);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showFailurePopup, setShowFailurePopup] = useState(false);
-  const [checkingAccuracy, setCheckingAccuracy] = useState(false); // 상태 추가
+  const [okAudioPlaying, setOkAudioPlaying] = useState(false); // okSound 음성 재생 상태 관리
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { moveDetail, loading, error, completedMoves } = useSelector((state) => state.move);
   const token = localStorage.getItem('accessToken');
   const audioRef = useRef(null);
+  const okAudioRef = useRef(new Audio(okSound)); // OK 사운드 참조
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -78,28 +80,26 @@ const PoomsaeEduOnePage = ({ language }) => {
   };
 
   const handlePrediction = (predictions) => {
-    if (checkingAccuracy || count >= 3) return; // 3번 완료되었거나 체크 중이면 바로 리턴
+    if (count >= 3 || okAudioPlaying) return; // 3번 완료되었거나 okSound 재생 중이면 리턴
 
     const calculatedAccuracy = Math.round(predictions * 100);
     console.log(`@@@@ 동작 ${mvSeq}번 / 예측값 ${predictions} / 정확도 : ${calculatedAccuracy}%`);    
 
     setAccuracy(calculatedAccuracy);
 
-    if (calculatedAccuracy >= 70) {
-      setCheckingAccuracy(true); // 체크 중 상태로 변경
-      setTimeout(() => {
-        // 5초 후 재확인
-        if (calculatedAccuracy >= 70) {
-          setCount(prevCount => {
-            if (prevCount + 1 === 3) {
-              handleCompletion(); // 3번 성공 시 교육 완료
-            }
-            return prevCount < 3 ? prevCount + 1 : prevCount; // 카운트가 3 이상이면 증가하지 않음
-          });
-        }
-        setCheckingAccuracy(false); // 체크 중 상태 해제
-        setAccuracy(0); // 5초 후 다시 정확도 초기화
-      }, 5000);
+    if (calculatedAccuracy >= 70 && !okAudioPlaying) {
+      setOkAudioPlaying(true); // okSound 재생 상태로 변경
+      okAudioRef.current.play();
+      okAudioRef.current.onended = () => {
+        setOkAudioPlaying(false); // okSound 재생이 끝나면 상태 해제
+        setCount((prevCount) => {
+          const newCount = prevCount + 1;
+          if (newCount === 3) {
+            handleCompletion(); // 3번 성공 시 교육 완료
+          }
+          return newCount;
+        });
+      };
     }
   };
 
@@ -175,11 +175,6 @@ const PoomsaeEduOnePage = ({ language }) => {
           <button className='exitButton' onClick={handleClosePopup}>
             {buttonText}
           </button>
-          {/* {!isCompleted && (
-            <button className='completeButton' onClick={handleCompletion} disabled>
-              {language === 'ko' ? '완료' : 'Complete'}
-            </button>
-          )} */}
         </div>
       </div>
       {(moveDetail.mvKoVo || moveDetail.mvEnVo) && (
