@@ -315,7 +315,6 @@ const SparingDetailPage = ({language}) => {
       });
 
     return () => {
-      if (session) session.disconnect();
     };
   }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
 
@@ -410,18 +409,18 @@ const SparingDetailPage = ({language}) => {
       setTimeout(() => {
         nextRound();
     
-        const utterance = new SpeechSynthesisUtterance(language === 'ko' ? newMyMission.mvKoVo : newMyMission.mvEnVo);
-        utterance.onstart = () => console.log('Speech started');
-        utterance.onend = () => console.log('Speech ended');
-        utterance.onerror = (e) => console.error('Speech error:', e);
+        // const utterance = new SpeechSynthesisUtterance(language === 'ko' ? newMyMission.mvKoVo : newMyMission.mvEnVo);
+        // utterance.onstart = () => console.log('Speech started');
+        // utterance.onend = () => console.log('Speech ended');
+        // utterance.onerror = (e) => console.error('Speech error:', e);
 
-        // Play the mission voice
-        if ('speechSynthesis' in window) {
-          speechSynthesis.cancel(); // Cancel any ongoing speech
-          speechSynthesis.speak(utterance);
-        } else {
-          console.error('SpeechSynthesis API is not supported on this browser.');
-        }
+        // // Play the mission voice
+        // if ('speechSynthesis' in window) {
+        //   speechSynthesis.cancel(); // Cancel any ongoing speech
+        //   speechSynthesis.speak(utterance);
+        // } else {
+        //   console.error('SpeechSynthesis API is not supported on this browser.');
+        // }
     
         setTimeout(() => {
           setIsGamePaused(false); // Resume the game
