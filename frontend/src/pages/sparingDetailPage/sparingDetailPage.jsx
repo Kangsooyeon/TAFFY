@@ -239,11 +239,13 @@ const SparingDetailPage = ({language}) => {
     session.on('signal:nextRound', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
-        const newRound = round + 1;
-        setRound(newRound);
+        setRound(data.myRound)
         setIsAttack(data.opponentIsAttack);
         setMyMission(data.opponentMission);
         setOpponentMission(data.myMission);
+        setTimeout(() => {
+          setIsGamePaused(false);
+        }, 3000);
       }
     });
 
@@ -259,6 +261,7 @@ const SparingDetailPage = ({language}) => {
       if (data.nickname !== nickname) {
         setOpponentAction(data.myAction);
         setMyAction(data.opponentAction);
+        setIsGamePaused(true)
         if (data.opponentHp !== undefined) setOpponentHp(data.myHp);
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
         
@@ -369,25 +372,24 @@ const SparingDetailPage = ({language}) => {
     let newOpponentMission
     newOpponentMission = opponentMissionList.data[Math.floor(Math.random() * opponentMissionList.data.length)];
 
+    const newRound = round + 1
 
     // 신호로 공수 상태와 미션 정보를 상대방에게 전송
     session.signal({
         data: JSON.stringify({ 
-            // newRound: round + 1,
             myIsAttack: newIsAttack,
             myMission: newMyMission,
             opponentIsAttack: newOpponentIsAttack,
             opponentMission: newOpponentMission,
             nickname,
+            myRound: newRound
         }),
         to: [],
         type: 'nextRound',
     });
 
     // 본인의 상태 업데이트
-    const newRound = round + 1
     setRound(newRound)
-    // setRound((prevRound) => prevRound + 1);
     setIsAttack(newIsAttack);
     setMyMission(newMyMission);
     setOpponentMission(newOpponentMission);
@@ -398,12 +400,9 @@ const SparingDetailPage = ({language}) => {
   };  
 
   const playAudio = (audioUrl) => {
-    // console.log('playAudio called with URL:', audioUrl);
     if (audioRef.current && audioUrl) {
       audioRef.current.pause();
-      // console.log('Paused existing audio');
       audioRef.current.src = audioUrl;
-      // console.log('Set new audio source:', audioUrl);
       audioRef.current.play().catch(error => {
         console.error('Audio playback failed:', error);
       });
@@ -423,8 +422,6 @@ const SparingDetailPage = ({language}) => {
       handleWin();
       nextRound();
       playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
-  
-
     }
   }, [predictedLabel]);
   
