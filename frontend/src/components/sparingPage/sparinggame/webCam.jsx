@@ -30,7 +30,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
           return;
         }
 
-        console.log(isLocalUser)
+        console.log(className, isLocalUser)
         if (isLocalUser) {
 
         
