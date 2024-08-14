@@ -8,15 +8,11 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
   const canvasRef = useRef(null);
   const modelRef = useRef(null);
   const poseRef = useRef(null);
-  // const [isModelReady, setIsModelReady] = useState(false); // 모델이 실행 가능한지 여부를 나타내는 상태
-  
-  // 3초 후에 모델이 준비된 상태로 변경
-  // const modelReadyTimeout = setTimeout(() => {
-  //   setIsModelReady(true);
-  // }, 2000);
+
   console.log(isAttack)
   useEffect(() => {
     const initializeStream = async () => {
+      if (isLocalUser && !isGamePaused) {
       try {
         await tf.setBackend('webgl');
         await tf.ready();
@@ -34,7 +30,6 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         return;
       }
 
-      if (isLocalUser) {
         try {
           await tf.setBackend('webgl');
           await tf.ready();
@@ -143,7 +138,6 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
     }
 
     return () => {
-      // clearTimeout(modelReadyTimeout); // 타이머 정리
       if (modelRef.current) {
         modelRef.current.dispose();
         modelRef.current = null;
@@ -153,7 +147,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         poseRef.current = null;
       }
     };
-  }, [streamManager, isAttack, isLocalUser,]);
+  }, [streamManager, isAttack, isLocalUser, isGamePaused]);
 
   return (
     <div className={`webcambox ${className}`}>

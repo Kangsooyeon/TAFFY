@@ -62,8 +62,9 @@ const SparingDetailPage = ({language}) => {
   useEffect(() => {
     const retryInterval = setInterval(() => {
       if (!opponentDataReady) {
+        console.log('상대 데이터 없음!!!!')
         session.signal({
-          data: JSON.stringify({ request: 'opponentData', nickname }),
+          data: JSON.stringify({ nickname }),
           to: [],
           type: 'userDataRequest',
         });
@@ -85,12 +86,10 @@ const SparingDetailPage = ({language}) => {
   }, [myResult]);
 
   useEffect(() => {
-    // 3초 카운트다운 타이머
     const countdownTimer = setTimeout(() => {
-      setShowCountdown(false); // 3초 후에 카운트다운 숨기기
+      setShowCountdown(false);
     }, 3000);
 
-    // 1초 간격으로 카운트다운 텍스트 업데이트
     let secondsLeft = 3;
     const textTimer = setInterval(() => {
       secondsLeft -= 1;
@@ -103,30 +102,25 @@ const SparingDetailPage = ({language}) => {
       }
     }, 1000);
 
-    // 초기 미션 설정을 3초 후에 실행
-    const gameStartTimer = setTimeout(() => {
-      if (atkData && defData) {
-        const missionList = isAttack ? atkData : defData;
-        const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
+    if (atkData && defData) {
+      const missionList = isAttack ? atkData : defData;
+      const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
 
-        setMyMission(mission);
-        playAudio(language === 'ko' ? mission.mvKoVo : mission.mvEnVo)
+      setMyMission(mission);
+      playAudio(language === 'ko' ? mission.mvKoVo : mission.mvEnVo)
 
-        session.signal({
-          data: JSON.stringify({ mission: mission, isAttack, nickname }),
-          to: [],
-          type: 'mission',
-        });
-      }
-    }, 3000);
+      session.signal({
+        data: JSON.stringify({ mission: mission, isAttack, nickname }),
+        to: [],
+        type: 'mission',
+      });
+    }
 
-    // 컴포넌트 언마운트 시 타이머 정리
     return () => {
       clearTimeout(countdownTimer);
-      clearTimeout(gameStartTimer);
       clearInterval(textTimer);
     };
-  }, [atkData, defData, isAttack, language, nickname, session]);
+  }, [atkData, defData, isAttack, nickname, session]);
 
   const updateRecordAndSignal = async (isMyWin) => {
     const myResult = isMyWin ? 'win' : 'lose';
@@ -234,7 +228,9 @@ const SparingDetailPage = ({language}) => {
 
     session.on('signal:userDataRequest', (event) => {
       const data = JSON.parse(event.data);
+      console.log('상대방 데이터 없다길레 신호 확인 완료!!!!!')
       if (data.nickname !== nickname) {
+        console.log('상대방한테 데이터 보내줬데이~')
         session.signal({
           data: JSON.stringify(userdata, nickname),
           to: [],
@@ -319,7 +315,7 @@ const SparingDetailPage = ({language}) => {
 
     return () => {
     };
-  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
+  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult, atkData, defData, isAttack]);
 
   const handleWin = () => {
     let newMyAction, newOpponentAction;
@@ -398,12 +394,12 @@ const SparingDetailPage = ({language}) => {
   };  
 
   const playAudio = (audioUrl) => {
-    console.log('playAudio called with URL:', audioUrl);
+    // console.log('playAudio called with URL:', audioUrl);
     if (audioRef.current && audioUrl) {
       audioRef.current.pause();
-      console.log('Paused existing audio');
+      // console.log('Paused existing audio');
       audioRef.current.src = audioUrl;
-      console.log('Set new audio source:', audioUrl);
+      // console.log('Set new audio source:', audioUrl);
       audioRef.current.play().catch(error => {
         console.error('Audio playback failed:', error);
       });
@@ -443,7 +439,7 @@ const SparingDetailPage = ({language}) => {
       {finishOn === true && language === 'en' ? <img src={GameFinish_English} className="finishimg" /> : null}
       <audio ref={audioRef} />
       <img src={Right} className="sparinggameright" alt="" />
-      {/* <img src={Left} className="sparinggameleft" alt="" /> */}
+      <img src={Left} className="sparinggameleft" alt="" />
 
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
