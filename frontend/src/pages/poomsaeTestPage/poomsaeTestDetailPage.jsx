@@ -10,6 +10,7 @@ import attentionSound from '../../assets/sounds/poomsaeTestPage/attention.mp3';
 import saluteSound from '../../assets/sounds/poomsaeTestPage/salute.mp3';
 import preparationSound from '../../assets/sounds/poomsaeTestPage/preparation.mp3';
 import startSound from '../../assets/sounds/poomsaeTestPage/start.mp3';
+import okSound from '../../assets/sounds/poomsaeTestPage/ok.mp3';
 import { setPoomsaeTest } from '../../store/poomsaeTest/poomsaeTest';
 import { fetchAllStageDetails } from '../../apis/stageApi';
 
@@ -77,10 +78,13 @@ const PoomsaeTestDetailPage = ({language}) => {
     }, [language]);
 
     const handleProgressUpdate = (success) => {
+        const okAudio = new Audio(okSound);
         if (success) {
+            okAudio.play();
             const newProgress = (currentMoveIndex + 1) / moves.length * 100;
             setProgress(newProgress);
             setCurrentMoveIndex(currentMoveIndex + 1);
+
             if (currentMoveIndex + 1 >= moves.length) {
                 setGameStatus('pass');
             }
@@ -170,6 +174,12 @@ const PoomsaeTestDetailPage = ({language}) => {
                 <div className="predictions">
                     <p>{predictions.join(', ')}</p>
                 </div>
+                {/* <div className="temp">
+                    <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
+                    <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>
+                    <button onClick={handleReset}>Reset</button>
+                </div> */}
+
                 <div className='progress-bar-container'>
                     <ProgressBar 
                         value={progress} 
