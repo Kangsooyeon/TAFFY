@@ -3,10 +3,13 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
-const Webcam = ({ onPrediction, poomsaeId }) => {
+const Webcam = ({ onPrediction, poomsaeId, mvSeq }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
-    const URL = `/models/${poomsaeId}jang/`; // poomsaeId를 사용해 모델 URL 설정
+    // const URL = `/models/${poomsaeId}jang/`; // poomsaeId를 사용해 모델 URL 설정
+    const modelIndex = Math.ceil(mvSeq / 6); // Model group (1_1, 1_2, 1_3)
+    const modelSubIndex = (mvSeq - 1) % 6; // Index within the model (0-5)
+    const modelURL = `/models/${poomsaeId}jang/1_${modelIndex}/model.json`;
     let model;
 
     const location = useLocation();
@@ -23,7 +26,6 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
             }
 
             try {
-                const modelURL = URL + "model.json";
                 model = await tf.loadLayersModel(modelURL);
 
                 const video = webcamRef.current;
@@ -64,7 +66,7 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
                         try {
                             const predictions = await model.predict(inputTensor).data();
                             console.log('Predictions:', predictions);
-                            onPrediction(predictions);
+                            onPrediction(predictions[modelSubIndex]);
                         } catch (error) {
                             console.error("Prediction error:", error);
                         }
@@ -137,6 +139,7 @@ const Webcam = ({ onPrediction, poomsaeId }) => {
 Webcam.propTypes = {
     onPrediction: PropTypes.func.isRequired, 
     poomsaeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
+    mvSeq: PropTypes.number.isRequired, // mvSeq props 추가
 };
 
 export default Webcam;

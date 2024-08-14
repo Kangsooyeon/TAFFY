@@ -80,14 +80,15 @@ const PoomsaeEduOnePage = ({ language }) => {
   const handlePrediction = (predictions) => {
     if (checkingAccuracy || count >= 3) return; // 3번 완료되었거나 체크 중이면 바로 리턴
 
-    const MovePrediction = predictions[mvSeq];
-    const calculatedAccuracy = Math.round(MovePrediction * 100)
+    const calculatedAccuracy = Math.round(predictions * 100);
+    console.log(`@@@@ 동작 ${mvSeq}번 / 예측값 ${predictions} / 정확도 : ${calculatedAccuracy}%`);    
+
     setAccuracy(calculatedAccuracy);
 
     if (calculatedAccuracy >= 70) {
       setCheckingAccuracy(true); // 체크 중 상태로 변경
       setTimeout(() => {
-        // 3초 후 재확인
+        // 5초 후 재확인
         if (calculatedAccuracy >= 70) {
           setCount(prevCount => {
             if (prevCount + 1 === 3) {
@@ -97,8 +98,8 @@ const PoomsaeEduOnePage = ({ language }) => {
           });
         }
         setCheckingAccuracy(false); // 체크 중 상태 해제
-        setAccuracy(0); // 3초 후 다시 정확도 초기화
-      }, 3000);
+        setAccuracy(0); // 5초 후 다시 정확도 초기화
+      }, 5000);
     }
   };
 
@@ -138,7 +139,7 @@ const PoomsaeEduOnePage = ({ language }) => {
             <img src={moveDetail.mvUrl} alt={mvName} className="mvGifImage" />
           </div>
           <div>
-            <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} />
+            <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} mvSeq={mvSeq} />
           </div>
           <div className='progress'>
             <ProgressBar
