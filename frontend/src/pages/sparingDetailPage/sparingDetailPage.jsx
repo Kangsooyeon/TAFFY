@@ -50,6 +50,7 @@ const SparingDetailPage = ({language}) => {
 
   const resultRef = useRef({ myResult: null, opponentResult: null });
   const nickname = userdata.data.nickname;
+  const audioRef = useRef(null);
 
   const oldMyDataRef = useRef(oldMyData);
   const newMyDataRef = useRef(newMyData);
@@ -60,9 +61,10 @@ const SparingDetailPage = ({language}) => {
 
   useEffect(() => {
     const retryInterval = setInterval(() => {
-      if (!opponentDataReady) {
+      if (!opponentData) {
+        console.log('상대 데이터 없음!!!!')
         session.signal({
-          data: JSON.stringify({ request: 'opponentData', nickname }),
+          data: JSON.stringify({ nickname }),
           to: [],
           type: 'userDataRequest',
         });
@@ -83,13 +85,13 @@ const SparingDetailPage = ({language}) => {
     myResultRef.current = myResult;
   }, [myResult]);
 
+  
+
   useEffect(() => {
-    // 3초 카운트다운 타이머
     const countdownTimer = setTimeout(() => {
-      setShowCountdown(false); // 3초 후에 카운트다운 숨기기
+      setShowCountdown(false);
     }, 3000);
 
-    // 1초 간격으로 카운트다운 텍스트 업데이트
     let secondsLeft = 3;
     const textTimer = setInterval(() => {
       secondsLeft -= 1;
@@ -102,29 +104,25 @@ const SparingDetailPage = ({language}) => {
       }
     }, 1000);
 
-    // 초기 미션 설정을 3초 후에 실행
-    const gameStartTimer = setTimeout(() => {
-      if (atkData && defData) {
-        const missionList = isAttack ? atkData : defData;
-        const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
+    if (atkData && defData) {
+      const missionList = isAttack ? atkData : defData;
+      const mission = missionList.data[Math.floor(Math.random() * missionList.data.length)];
 
-        setMyMission(mission);
+      setMyMission(mission);
+      playAudio(language === 'ko' ? mission.mvKoVo : mission.mvEnVo)
 
-        session.signal({
-          data: JSON.stringify({ mission: mission, isAttack, nickname }),
-          to: [],
-          type: 'mission',
-        });
-      }
-    }, 3000);
+      session.signal({
+        data: JSON.stringify({ mission: mission, isAttack, nickname }),
+        to: [],
+        type: 'mission',
+      });
+    }
 
-    // 컴포넌트 언마운트 시 타이머 정리
     return () => {
       clearTimeout(countdownTimer);
-      clearTimeout(gameStartTimer);
       clearInterval(textTimer);
     };
-  }, [atkData, defData, isAttack, language, nickname, session]);
+  }, [atkData, defData, isAttack, nickname, session]);
 
   const updateRecordAndSignal = async (isMyWin) => {
     const myResult = isMyWin ? 'win' : 'lose';
@@ -216,16 +214,13 @@ const SparingDetailPage = ({language}) => {
 
   useEffect(() => {
     const OV = new OpenVidu();
+    OV.enableProdMode();
     const session = OV.initSession();
     const userDataWithNickname = { ...userdata, nickname };
-    
     session.on('signal:userData', (event) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname && userdata && data.nickname !== undefined) {
-        console.log('상대방데이터 평가시 상대 데이터', data.nickname)
-        console.log('상대방데이터 평가시 내 데이터', nickname)
-        setOpponentData(data);
-        console.log('상대방 데이터', data)
+        setOpponentData(data.userdata);
         setOpponentDataReady(true);
       }
     });
@@ -234,7 +229,7 @@ const SparingDetailPage = ({language}) => {
       const data = JSON.parse(event.data);
       if (data.nickname !== nickname) {
         session.signal({
-          data: JSON.stringify(userdata, nickname),
+          data: JSON.stringify({userdata, nickname}),
           to: [],
           type: 'userData',
         });
@@ -266,6 +261,7 @@ const SparingDetailPage = ({language}) => {
         setMyAction(data.opponentAction);
         if (data.opponentHp !== undefined) setOpponentHp(data.myHp);
         if (data.myHp !== undefined) setMyHp(data.opponentHp);
+        
       }
     });
 
@@ -317,9 +313,11 @@ const SparingDetailPage = ({language}) => {
 
     return () => {
     };
-  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult]);
+  }, [session, connectionToken, userdata, nickname, oldMyData, newMyData, myResult, isAttack]);
 
   const handleWin = () => {
+    setIsGamePaused(true)
+
     let newMyAction, newOpponentAction;
     let newMyHp = myHp;
     let newOpponentHp = opponentHp;
@@ -393,7 +391,26 @@ const SparingDetailPage = ({language}) => {
     setIsAttack(newIsAttack);
     setMyMission(newMyMission);
     setOpponentMission(newOpponentMission);
+
+    setTimeout(() => {
+      setIsGamePaused(false);
+    }, 3000);
   };  
+
+  const playAudio = (audioUrl) => {
+    // console.log('playAudio called with URL:', audioUrl);
+    if (audioRef.current && audioUrl) {
+      audioRef.current.pause();
+      // console.log('Paused existing audio');
+      audioRef.current.src = audioUrl;
+      // console.log('Set new audio source:', audioUrl);
+      audioRef.current.play().catch(error => {
+        console.error('Audio playback failed:', error);
+      });
+    } else {
+      console.log('Audio element or URL not available');
+    }
+  };
 
   useEffect(() => {
     console.log('Updated myMission:', myMission);
@@ -403,30 +420,11 @@ const SparingDetailPage = ({language}) => {
   useEffect(() => {
     console.log('predictedLabel or myMission changed:', predictedLabel, myMission)
     if (predictedLabel === (language === 'ko' ? myMission.moKoName : myMission.mvEnName)) {
-      setIsGamePaused(true); // Pause the game
-    
       handleWin();
-    
-      setTimeout(() => {
-        nextRound();
-    
-        // const utterance = new SpeechSynthesisUtterance(language === 'ko' ? newMyMission.mvKoVo : newMyMission.mvEnVo);
-        // utterance.onstart = () => console.log('Speech started');
-        // utterance.onend = () => console.log('Speech ended');
-        // utterance.onerror = (e) => console.error('Speech error:', e);
+      nextRound();
+      playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
+  
 
-        // // Play the mission voice
-        // if ('speechSynthesis' in window) {
-        //   speechSynthesis.cancel(); // Cancel any ongoing speech
-        //   speechSynthesis.speak(utterance);
-        // } else {
-        //   console.error('SpeechSynthesis API is not supported on this browser.');
-        // }
-    
-        setTimeout(() => {
-          setIsGamePaused(false); // Resume the game
-        }, 3000); // Resume after 3 seconds
-      }, 5000); // 5-second pause after handleWin
     }
   }, [predictedLabel]);
   
@@ -435,9 +433,9 @@ const SparingDetailPage = ({language}) => {
     <div className="sparinggame">
       {finishOn === true && language === 'ko' ? <img src={GameFinish_Korea} className="finishimg" /> : null}
       {finishOn === true && language === 'en' ? <img src={GameFinish_English} className="finishimg" /> : null}
-      
+      <audio ref={audioRef} />
       <img src={Right} className="sparinggameright" alt="" />
-      {/* <img src={Left} className="sparinggameleft" alt="" /> */}
+      <img src={Left} className="sparinggameleft" alt="" />
 
       <div className="sparingstage">
         <img src={Mat} className="sparingmat" alt="" />
