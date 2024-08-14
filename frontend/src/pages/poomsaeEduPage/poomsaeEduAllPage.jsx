@@ -27,7 +27,7 @@ const PoomsaeEduAllPage = ({ language }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const audioRef = useRef(null);
-  const audioTimeoutRef = useRef(null);
+  // const audioTimeoutRef = useRef(null);
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -57,11 +57,11 @@ const PoomsaeEduAllPage = ({ language }) => {
     if (audioRef.current && audioUrl) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      if (audioTimeoutRef.current) {
-        clearTimeout(audioTimeoutRef.current);
-      }
+      // if (audioTimeoutRef.current) {
+      //   clearTimeout(audioTimeoutRef.current);
+      // }
 
-      audioTimeoutRef.current = setTimeout(() => {
+      // audioTimeoutRef.current = setTimeout(() => {
         audioRef.current.src = audioUrl;
         audioRef.current.play().then(() => {
           audioRef.current.onended = () => {
@@ -73,7 +73,7 @@ const PoomsaeEduAllPage = ({ language }) => {
         }).catch(error => {
           console.error('Audio playback failed:', error);
         });
-      }, 3000);
+      // }, 3000);
     }
   };
 

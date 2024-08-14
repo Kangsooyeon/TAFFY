@@ -74,11 +74,13 @@
   align-items: center;
   padding: 10px;
   box-sizing: border-box;
+  margin-left: -6%;
 }
 
 .mvPs{
   width: 31%;
   padding: 1.2%;
+  margin-left: -1%;
 }
 
 .mvPsDes {
@@ -90,6 +92,7 @@
   box-sizing: border-box;
   font-size: 19px;
   margin-top: -2px;
+  margin-left: -2%;
 
 }
 
@@ -115,6 +118,7 @@
   width: 3%;
   height: auto;
   aspect-ratio: 1 / 1;
+  margin-top: -2.5%;
 }
 
 .mvPsName {
