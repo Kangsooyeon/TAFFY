@@ -3,10 +3,11 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
-const Webcam = ({ onPrediction, poomsaeId,isModelActive }) => {
+const Webcam = ({ onPrediction, poomsaeId,isModelActive, currentMoveIndex }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
-    const URL = `/models/${poomsaeId}jang/`; // poomsaeId를 사용해 모델 URL 설정
+    const modelIndex = Math.floor(currentMoveIndex / 6) + 1
+    const URL = `/models/${poomsaeId}jang/1_${modelIndex}/`; // poomsaeId를 사용해 모델 URL 설정
     let model;
 
     const location = useLocation();
@@ -25,6 +26,7 @@ const Webcam = ({ onPrediction, poomsaeId,isModelActive }) => {
             try {
                 const modelURL = URL + "model.json";
                 model = await tf.loadLayersModel(modelURL);
+                console.log('Loaded Model:', modelURL);
 
                 const video = webcamRef.current;
                 const canvas = canvasRef.current;
@@ -135,6 +137,7 @@ Webcam.propTypes = {
     onPrediction: PropTypes.func.isRequired, 
     poomsaeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
     isModelActive: PropTypes.bool.isRequired,
+
 };
 
 export default Webcam;
