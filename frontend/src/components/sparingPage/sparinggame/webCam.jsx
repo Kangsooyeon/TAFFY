@@ -20,6 +20,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         await tf.setBackend('wasm');
         await tf.ready();
       }
+      if (isLocalUser && !isGamePaused) {
       
       if (streamManager && videoRef.current) {
         streamManager.addVideoElement(videoRef.current);
@@ -29,7 +30,6 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
         return;
       }
       
-      if (isLocalUser && !isGamePaused) {
         try {
           await tf.setBackend('webgl');
           await tf.ready();
@@ -62,7 +62,7 @@ const WebCam = ({ className, streamManager, isAttack, isLocalUser, setPredictedL
             const sendPose = async () => {
               if (poseRef.current && videoRef.current.readyState >= 2) {
                 await poseRef.current.send({ image: videoRef.current });
-                // console.log('pose.send() called');
+                console.log('pose.send() called');
                 requestAnimationFrame(sendPose);
               }
             };
