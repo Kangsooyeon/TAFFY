@@ -3,10 +3,11 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
-const Webcam = ({ onPrediction, poomsaeId }) => {
+const Webcam = ({ onPrediction, poomsaeId, currentMoveIndex }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
-    const URL = `/models/${poomsaeId}jang/`; // poomsaeId를 사용해 모델 URL 설정
+    const modelIndex = Math.floor(currentMoveIndex / 6) + 1
+    const URL = `/models/${poomsaeId}jang/1_${modelIndex}/`;
     let model;
 
     const location = useLocation();

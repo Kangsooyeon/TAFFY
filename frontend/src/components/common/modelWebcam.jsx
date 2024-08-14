@@ -137,6 +137,7 @@ Webcam.propTypes = {
     onPrediction: PropTypes.func.isRequired, 
     poomsaeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
     isModelActive: PropTypes.bool.isRequired,
+    currentMoveIndex: PropTypes.number.isRequired,
 
 };
 

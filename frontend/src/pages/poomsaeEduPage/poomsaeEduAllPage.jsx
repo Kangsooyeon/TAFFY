@@ -91,7 +91,8 @@ const PoomsaeEduAllPage = ({ language }) => {
   };
 
   const handlePrediction = (predictions) => {
-    const MovePrediction = predictions[currentMoveIndex + 1];
+    const moveIndex = currentMoveIndex % 6
+    const MovePrediction = predictions[moveIndex];
     const calculatedAccuracy = Math.round(MovePrediction * 100)
     setAccuracy(calculatedAccuracy); 
 
@@ -105,7 +106,7 @@ const PoomsaeEduAllPage = ({ language }) => {
     if (currentMoveIndex < moves.length - 1) {
       setCurrentMoveIndex(currentMoveIndex + 1);
       setDescription(language === 'ko' ? moves[currentMoveIndex + 1].mvKoDesc : moves[currentMoveIndex + 1].mvEnDesc);
-      setProgress(((currentMoveIndex + 1) / moves.length) * 100);
+      setProgress(((currentMoveIndex) / moves.length) * 100);
       setAccuracy(0); // 예시값
 
       const audioUrl = language === 'ko' ? moves[currentMoveIndex + 1].mvKoVo : moves[currentMoveIndex + 1].mvEnVo;
@@ -153,7 +154,7 @@ const PoomsaeEduAllPage = ({ language }) => {
             <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage" />
           </div>
           <div>
-          <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} />
+          <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} currentMoveIndex={currentMoveIndex}/>
           </div>
           <div className='progress'>
             <ProgressBar
