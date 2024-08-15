@@ -77,7 +77,7 @@ const SparingDetailPage = ({language}) => {
   useEffect(() => {
     const retryInterval = setInterval(() => {
       if (!opponentData) {
-        console.log('상대 데이터 없음!!!!')
+        // console.log('상대 데이터 없음!!!!')
         session.signal({
           data: JSON.stringify({ nickname }),
           to: [],
@@ -140,6 +140,9 @@ const SparingDetailPage = ({language}) => {
       if (bothReady) {
         startCountdown();
         setFirstMissionOn(true)
+        setTimeout(() => {
+          startTimer()
+        }, 3000);
         console.log('내 미션은?', myMission)
         console.log('알려줘...', fisrtMissionOn)
       }
@@ -455,7 +458,7 @@ const SparingDetailPage = ({language}) => {
     
   };  
 
-  const [time, setTime] = useState(5);
+  const [time, setTime] = useState(10);
   
   const [isActive, setIsActive] = useState(false);
 
@@ -474,7 +477,7 @@ const SparingDetailPage = ({language}) => {
   }, [isActive, time]);
 
   const startTimer = () => {
-    setTime(5);
+    setTime(10);
     setIsActive(true);
   };
   
@@ -500,10 +503,45 @@ const SparingDetailPage = ({language}) => {
     if (predictedLabel === (language === 'ko' ? myMission.moKoName : myMission.mvEnName)) {
       handleWin();
       nextRound();
-      // playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
     }
   }, [predictedLabel]);
-  
+
+  useEffect(() => {
+    if (time === 0) {
+      handleDraw()
+      nextRound();
+    }
+  }, [time])
+
+  const handleDraw = () => {
+    setIsGamePaused(true)
+
+    let newMyAction, newOpponentAction;
+    let newMyHp = myHp;
+    let newOpponentHp = opponentHp;
+
+    newOpponentHp = Math.max(newOpponentHp - 25, 0);
+    newMyHp = Math.max(newMyHp - 25, 0);
+    newMyAction = 'fail';
+    newOpponentAction = 'fail';
+    
+    setMyHp(newMyHp);
+    setOpponentHp(newOpponentHp);
+    setMyAction(newMyAction);
+    setOpponentAction(newOpponentAction);
+
+    session.signal({
+      data: JSON.stringify({
+        myAction: newMyAction,
+        opponentAction: newOpponentAction,
+        myHp: newMyHp,
+        opponentHp: newOpponentHp,
+        nickname,
+      }),
+      to: [],
+      type: 'action',
+    });
+  }
 
   return (
     <div className="sparinggame">
