@@ -23,8 +23,8 @@ const RoomDecoPage = ({ closePhoto, language, setSelectedPhoto }) => {
         <div className="character-options">
           {[
             { id: 'photo1', img: Photo1 },
-            { id: 'photo2', img: Photo2 },
             { id: 'photo3', img: Photo3 },
+            { id: 'photo2', img: Photo2 },
           ].map((photo) => (
             <label key={photo.id} className="photo-option">
               <img

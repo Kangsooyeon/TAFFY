@@ -22,7 +22,7 @@ const MyPage = ({ language }) => {
   const [userData, setUserData] = useState(null);
   const [userRecord, setUserRecord] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState('photo1'); // 초기값을 'photo1'으로 설정
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +85,7 @@ const MyPage = ({ language }) => {
         className="photoselectbutton"
         onClick={openPhoto}
         language={language}
-        style={{ backgroundImage: selectedPhoto ? `url(${getPhotoSrc()})` : null }}
+        style={{ backgroundImage: `url(${getPhotoSrc()})` }} // 기본값으로 설정된 사진이 배경에 적용됩니다.
       ></button>
       {isUpdateOpen && <Update closeUpdate={closeUpdate} language={language} userdata={userData} />}
       {isPhotoOpen && <Photo closePhoto={closePhoto} setSelectedPhoto={setSelectedPhoto} language={language} />}
@@ -93,4 +93,4 @@ const MyPage = ({ language }) => {
   );
 };
 
-export default MyPage
+export default MyPage;
