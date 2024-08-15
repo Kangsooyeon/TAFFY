@@ -1,4 +1,3 @@
-// PoomsaeEduAllPage.jsx
 import '../../styles/poomsaeEduPage/poomsaeEduAll.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
@@ -11,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { unlockNextStage } from '../../store/poomsaeEdu/stagesSlice';
 import PopUp from '../../components/common/popUp';
 import Webcam from '../../components/poomsaeEduPage/modelEduAll';
+import okSound from '../../assets/sounds/poomsaeTestPage/ok.mp3';
 
 const PoomsaeEduAllPage = ({ language }) => {
   const [buttonText, setButtonText] = useState('');
@@ -21,13 +21,13 @@ const PoomsaeEduAllPage = ({ language }) => {
   const [progress, setProgress] = useState(0);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [stageDetails, setStageDetails] = useState(null);
+  const hasPlayedOkSound = useRef(false); // To track OK sound playback
 
   const { stageNum } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const audioRef = useRef(null);
-  // const audioTimeoutRef = useRef(null);
 
   useEffect(() => {
     setButtonText(language === 'ko' ? '나가기' : 'Exit');
@@ -57,23 +57,18 @@ const PoomsaeEduAllPage = ({ language }) => {
     if (audioRef.current && audioUrl) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      // if (audioTimeoutRef.current) {
-      //   clearTimeout(audioTimeoutRef.current);
-      // }
 
-      // audioTimeoutRef.current = setTimeout(() => {
-        audioRef.current.src = audioUrl;
-        audioRef.current.play().then(() => {
-          audioRef.current.onended = () => {
-            setTimeout(() => {
-              audioRef.current.play();
-              audioRef.current.onended = null;
-            }, 2000);
-          };
-        }).catch(error => {
-          console.error('Audio playback failed:', error);
-        });
-      // }, 3000);
+      audioRef.current.src = audioUrl;
+      audioRef.current.play().then(() => {
+        audioRef.current.onended = () => {
+          setTimeout(() => {
+            audioRef.current.play();
+            audioRef.current.onended = null;
+          }, 2000);
+        };
+      }).catch(error => {
+        console.error('Audio playback failed:', error);
+      });
     }
   };
 
@@ -91,14 +86,21 @@ const PoomsaeEduAllPage = ({ language }) => {
   };
 
   const handlePrediction = (predictions) => {
-    const moveIndex = currentMoveIndex % 6
+    const moveIndex = currentMoveIndex % 6;
     const MovePrediction = predictions[moveIndex];
-    const calculatedAccuracy = Math.round(MovePrediction * 100)
-    setAccuracy(calculatedAccuracy); 
+    const calculatedAccuracy = Math.round(MovePrediction * 100);
+    setAccuracy(calculatedAccuracy);
 
-    // 70% 이상이면 다음 동작으로 자동 이동
-    if (calculatedAccuracy >= 70) {
-      handleNextMove();
+    if (calculatedAccuracy >= 70 && !hasPlayedOkSound.current) {
+      const okAudio = new Audio(okSound);
+      hasPlayedOkSound.current = true; // Prevent multiple OK sound playback
+      okAudio.play();
+
+      // Transition to the next move after the OK sound ends
+      okAudio.onended = () => {
+        handleNextMove();
+        hasPlayedOkSound.current = false; // Reset flag after sound ends
+      };
     }
   };
 
@@ -106,8 +108,8 @@ const PoomsaeEduAllPage = ({ language }) => {
     if (currentMoveIndex < moves.length - 1) {
       setCurrentMoveIndex(currentMoveIndex + 1);
       setDescription(language === 'ko' ? moves[currentMoveIndex + 1].mvKoDesc : moves[currentMoveIndex + 1].mvEnDesc);
-      setProgress(((currentMoveIndex) / moves.length) * 100);
-      setAccuracy(0); // 예시값
+      setProgress(((currentMoveIndex + 1) / moves.length) * 100);
+      setAccuracy(0); // Reset accuracy for the new move
 
       const audioUrl = language === 'ko' ? moves[currentMoveIndex + 1].mvKoVo : moves[currentMoveIndex + 1].mvEnVo;
       playAudio(audioUrl);
@@ -154,21 +156,21 @@ const PoomsaeEduAllPage = ({ language }) => {
             <img src={moves[currentMoveIndex]?.mvUrl} alt="move gif" className="mvGifImage" />
           </div>
           <div>
-          <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} currentMoveIndex={currentMoveIndex}/>
+            <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} currentMoveIndex={currentMoveIndex}/>
           </div>
           <div className='progress'>
-            <ProgressBar
+            {/* <ProgressBar
               value={accuracy}
-              title={language === 'ko' ? '정확도' : 'Accuracy'}              
+              title={language === 'ko' ? '정확도' : 'Accuracy'}
               text={`${accuracy.toFixed(2)}%`}
               pathColor="#DA1E28"
               trailColor="#FFD7D9"
               textColor="black"
-            />
+            /> */}
             <ProgressBar
               value={progress}
               title={language === 'ko' ? '진행률' : 'Progress'}
-              text={`${currentMoveIndex} / ${moves.length}`}
+              text={`${currentMoveIndex + 1} / ${moves.length}`}
             />
           </div>
         </div>
