@@ -27,6 +27,7 @@ public class UserModel implements Serializable {
     private int loseCnt;
     private int drawCnt;
 
+<<<<<<< HEAD
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,4 +40,3 @@ public class UserModel implements Serializable {
     public int hashCode() {
         return Objects.hash(userId, nickname, beltName, profileImg, winCnt, loseCnt, drawCnt);
     }
-}

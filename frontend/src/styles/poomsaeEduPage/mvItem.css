@@ -1,0 +1,88 @@
+.mvItem {
+  width: 140px;
+  height: 200px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mvItemNumberContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 50px solid #383838;
+  border-bottom: 50px solid transparent;
+}
+
+.mvItemNumber {
+  position: absolute;
+  top: 2.5px;
+  margin-left: -42px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+}
+
+.mvItem:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  box-shadow: 8px 8px 15px 0px rgba(0, 0, 0, 0.5);
+}
+
+.mvItem:hover .mvItemImage {
+  animation: flipHorizontal 0.8s ease-in-out; /* 좌우로 뒤집기 애니메이션 적용, 속도 조절 */
+}
+
+.mvItemImage {
+  width: auto;
+  height: 70%;
+  object-fit: contain;
+  background-repeat: no-repeat;
+  border: none;
+  outline: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: scaleX(-1); /* 수평으로 이미지 뒤집기 */
+}
+
+.completedImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto; /* 이미지 크기를 적절히 조정하세요 */
+  height: 70px;
+  z-index: 1;
+  pointer-events: none; /* 이미지 클릭 불가능하게 설정 */
+}
+
+@keyframes flipHorizontal {
+  0% {
+    transform: scaleX(-1) scale(1);
+  }
+  25% {
+    transform: scaleX(0) scale(1.1);
+  }
+  50% {
+    transform: scaleX(1) scale(1.1);
+  }
+  75% {
+    transform: scaleX(0) scale(1.1); 
+  }
+  100% {
+    transform: scaleX(-1) scale(1);
+  }
+}
+
+.element {
+  animation: flipHorizontal 5s infinite;
+}

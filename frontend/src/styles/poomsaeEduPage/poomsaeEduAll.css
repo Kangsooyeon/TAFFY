@@ -1,0 +1,156 @@
+.poomsaeEduAllPage {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url('/src/assets/images/poomsaeEduPage/bgc.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.allEduContainer {
+  flex-direction: column;
+  width: 87vw;
+  height: 88vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5% auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.90);
+  box-shadow: 7px 7px 5px 0px rgba(0, 0, 0, 0.35);
+}
+
+.allEduContent {
+  width: 93%;
+  height: 65%;
+  display: flex;
+}
+
+.mvGif {
+  width: 35%;
+  height: 100%;
+  border-radius: 15px;
+  background: lightblue 50%;
+  box-shadow: 7px 7px 5px 0px rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 이미지가 영역을 벗어나지 않도록 설정 */
+}
+
+.mvGifImage {
+  width: auto;
+  height: 100%;
+  object-fit: contain; /* 이미지 비율을 유지하며 크기에 맞추기 */
+  transform: scaleX(-1); /* 수평으로 이미지 뒤집기 */
+}
+
+.userCam {
+  margin: 0 0 0 50%;
+  width: 50%;
+  height: 91%;
+  border-radius: 5%;
+  transform: scaleX(-1); 
+}
+
+.progress {
+  width: 15%;
+  height: 100%;
+  margin: 0 -2% 0 2%;
+}
+
+.mvDescription {
+  width: 93%;
+  height: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-left: -6%;
+}
+
+.mvPs{
+  width: 31%;
+  padding: 1.2%;
+  margin-left: -1%;
+}
+
+.mvPsDes {
+  max-height: 100%;
+  overflow-y: auto;
+  flex: 1;
+  text-align: left;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 19px;
+  margin-top: -2px;
+  margin-left: -2%;
+
+}
+
+.mvPsDiv{
+  display: flex;
+  width: 100%;
+  text-align: top;
+  gap: 2%;
+}
+
+.allEduFooter {
+  width: 94%;
+  height: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 1%;
+  margin-left: 1%;
+}
+
+.mvDescription img {
+  width: 3%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin-top: -2.5%;
+}
+
+.mvPsName {
+  margin: 0 2% 0 0;
+}
+
+.exitButton {
+  cursor: pointer;
+  border: none;
+  font-family: 'HappinessM';
+  font-size: 43px;
+  color: black;
+  border-radius: 5px;
+  margin-top: -1%;
+}
+
+.eduPopUp h1{
+  width: 100%;
+  font-size: 55px !important;
+}
+
+.countdownOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 4rem;
+  z-index: 9999;
+}

@@ -1,0 +1,98 @@
+.loginPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('/src/assets/images/mainPage/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    box-sizing: border-box;
+    overflow: hidden;
+
+}
+
+.login-box {
+    width: 50%;
+    height: 450px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 0px 20px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.login-box hr {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.login-title {
+    color: black;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.login-title p {
+    color: black;
+    font-family: 'HappinessM';
+    font-size: 80px;
+    margin: 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    text-align: center;
+    padding: 50px 30px;
+    gap: 40px;
+    /* border: 1px solid gray; */
+}
+
+.login-form label{
+    display: inline-block;
+    align-items: center;
+    width: 20%;
+    height: 50px;
+    text-align: center;
+    color: black;
+    font-family: 'HappinessL';
+    font-size: 40px;
+}
+
+
+.input-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-form input{
+    /* display: inline-block; */
+    width: 75%;
+    height: 50px;
+    margin: 0;
+    border: 0.5px solid grey;
+    border-radius: 10px;
+    font-family: 'HappinessL';
+    font-size: 30px;
+}
+
+.login-form button {
+    margin-top: 20px; /* 버튼과 입력 필드 간의 간격 */
+    padding: 10px 20px; /* 버튼 크기 조정 */
+    width: 120px;
+    height: 50px;
+    background-color: #163665; /* 버튼 배경 색상 */
+    color: white; /* 버튼 텍스트 색상 */
+    font-family: 'HappinessM';
+    font-size: 30px;
+    border: none;
+    border-radius: 5px; /* 버튼 테두리 둥글게 */
+    cursor: pointer; /* 마우스 커서 모양 변경 */
+}

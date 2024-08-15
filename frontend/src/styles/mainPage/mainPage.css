@@ -1,0 +1,23 @@
+.mainPage {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url('/src/assets/images/mainPage/background.jpg'); /* Ensure the path is correct */
+  background-size: cover; /* Change this to 'contain' if you want to see the full image */
+  background-position: center center; /* Ensure the image is centered */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 15%; /* Reduce padding to show more of the background */
+  box-sizing: border-box;
+  overflow: hidden; /* Keep overflow hidden */
+}
+
+/* Ensure body and html elements also respect the fixed size */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

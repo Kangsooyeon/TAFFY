@@ -1,0 +1,107 @@
+.menuItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 320px;
+  max-width: 200px;
+  width: 22%;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgba(43, 43, 43, 0.7);
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  transition: height 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.menuItem:hover {
+  height: 350px;
+}
+
+.imageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  margin: 20px 0;
+}
+
+.menuButton {
+  width: 50%;
+  height: auto;
+  aspect-ratio: 2.6 / 1;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-indent: -9999px;
+  display: block;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.menuItem:hover .menuButton {
+  opacity: 1;
+}
+
+.menuItem h2 {
+  color: white;
+  margin: 0 0 -20px;
+  font-family: 'HappinessM';
+  font-size: 50px;
+}
+
+.menuItem hr {
+  width: 90%;
+  border: 0.3px solid white;
+  margin: 10px 0;
+}
+
+.menuItem img {
+  max-width: 73%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.menuItem:hover img {
+  opacity: 1;
+}
+
+@media (max-width: 800px) {
+  .menuItem {
+    width: 20%;
+    margin: 10px auto;
+    height: 270px;
+  }
+
+  .menuItem:hover {
+    height: 300px;
+  }
+
+  .menuItem h2 {
+    margin: 0 0 -15px;
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .menuItem {
+    width: 20%;
+    margin: 10px auto;
+    height: 200px;
+  }
+
+  .menuItem:hover {
+    height: 240px;
+  }
+
+  .menuItem h2 {
+    font-size: 20px;
+    margin: 0 0 -10px;
+  }
+}
