@@ -64,7 +64,7 @@ const Invitation = ({
           if (language === "ko") {
             alert("상대방이 초대를 거절했습니다.");
           } else {
-            alert("The other person declined the invitation.");
+            alert("상대방이 초대를 거절했습니다.");
           }
         } else if (
           receivedMessage.status === "timeout" &&
@@ -111,7 +111,7 @@ const Invitation = ({
         if (language === "ko") {
           alert("유효하지 않은 닉네임입니다.");
         } else {
-          alert("Invalid nickname.");
+          alert("유효하지 않은 닉네임입니다.");
         }
         return; // Exit the function if nickname is invalid
       }
@@ -121,14 +121,14 @@ const Invitation = ({
         if (language === "ko") {
           alert("유효하지 않은 닉네임입니다.");
         } else {
-          alert("Invalid nickname.");
+          alert("유효하지 않은 닉네임입니다.");
         }
       } else {
         console.error("Error validating nickname:", error);
         if (language === "ko") {
           alert("닉네임 유효성 검사 중 오류가 발생했습니다.");
         } else {
-          alert("An error occurred during nickname validation.");
+          alert("닉네임 유효성 검사 중 오류가 발생했습니다.");
         }
       }
       return; // Exit the function if an error occurs
