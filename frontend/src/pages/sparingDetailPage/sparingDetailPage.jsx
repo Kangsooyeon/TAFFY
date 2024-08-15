@@ -507,7 +507,7 @@ const SparingDetailPage = ({language}) => {
   }, [predictedLabel]);
 
   useEffect(() => {
-    if (time === 0) {
+    if (time === 0, status==='start') {
       handleDraw()
       nextRound();
     }
@@ -555,9 +555,9 @@ const SparingDetailPage = ({language}) => {
         <img src={Mat} className="sparingmat" alt="" />
       </div>
       <h1 className="roundcontainer">{round}{language=='ko'? '회' : 'R'}</h1>
-      <h1>
+      {/* <h1>
         {predictedLabel}, {myMission.data}
-      </h1>
+      </h1> */}
 
       <div className="timerbox">
         <p>{time}</p>
