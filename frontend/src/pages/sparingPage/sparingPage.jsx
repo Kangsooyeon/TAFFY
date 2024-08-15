@@ -192,13 +192,13 @@ const SparingPage = ({ language }) => {
 
   const joinGame = (message) => {
     const receivedData = JSON.parse(message.body);
-    console.log("Game data received: ", receivedData);
-    console.log("Received sessionId:", receivedData.sessionId);
-    console.log("Current sessionID:", sessionIDRef.current);
-    console.log("roomType:", roomTypeRef.current);
-    console.log("status:", statusRef.current);
-    console.log("connectionToken:", connectionTokenRef.current);
-    console.log("userdata:", userdataRef.current);
+    // console.log("Game data received: ", receivedData);
+    // console.log("Received sessionId:", receivedData.sessionId);
+    // console.log("Current sessionID:", sessionIDRef.current);
+    // console.log("roomType:", roomTypeRef.current);
+    // console.log("status:", statusRef.current);
+    // console.log("connectionToken:", connectionTokenRef.current);
+    // console.log("userdata:", userdataRef.current);
 
     if (
       sessionIDRef.current &&
