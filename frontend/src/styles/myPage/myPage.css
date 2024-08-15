@@ -36,4 +36,6 @@
   position: absolute;
   top: 17%;
   right: 31.5%;
+  background-size: cover; /* Ensure the background image covers the button */
+  background-position: center;
 }
