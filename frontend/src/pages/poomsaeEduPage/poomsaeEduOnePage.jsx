@@ -16,6 +16,7 @@ const PoomsaeEduOnePage = ({ language }) => {
   const [buttonText, setButtonText] = useState('');
   const [accuracy, setAccuracy] = useState(0);
   const [count, setCount] = useState(0);
+  const [countdown, setCountdown] = useState(0); // Countdown state
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showFailurePopup, setShowFailurePopup] = useState(false);
   const [okAudioPlaying, setOkAudioPlaying] = useState(false); // okSound 음성 재생 상태 관리
@@ -80,7 +81,7 @@ const PoomsaeEduOnePage = ({ language }) => {
   };
 
   const handlePrediction = (predictions) => {
-    if (count >= 3 || okAudioPlaying) return; // 3번 완료되었거나 okSound 재생 중이면 리턴
+    if (count >= 3 || okAudioPlaying || countdown > 0) return; // 3번 완료되었거나 okSound 재생 중이거나 카운트다운 중이면 리턴
 
     const calculatedAccuracy = Math.round(predictions * 100);
     console.log(`@@@@ 동작 ${mvSeq}번 / 예측값 ${predictions} / 정확도 : ${calculatedAccuracy}%`);    
@@ -92,9 +93,12 @@ const PoomsaeEduOnePage = ({ language }) => {
       okAudioRef.current.play();
       okAudioRef.current.onended = () => {
         setOkAudioPlaying(false); // okSound 재생이 끝나면 상태 해제
+        setAccuracy(0);
         setCount((prevCount) => {
           const newCount = prevCount + 1;
-          if (newCount === 3) {
+          if (newCount < 3) {
+            setCountdown(5); // 카운트가 3보다 작으면 카운트다운 시작
+          } else {
             handleCompletion(); // 3번 성공 시 교육 완료
           }
           return newCount;
@@ -102,6 +106,22 @@ const PoomsaeEduOnePage = ({ language }) => {
       };
     }
   };
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const countdownTimer = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          const newCountdown = prevCountdown - 1;
+          if (newCountdown <= 0) {
+            clearInterval(countdownTimer);
+          }
+          return newCountdown;
+        });
+      }, 1000);
+
+      return () => clearInterval(countdownTimer); // Clear countdown timer on unmount
+    }
+  }, [countdown]);
 
   const handleClosePopup = () => {
     setShowSuccessPopup(false);
@@ -141,6 +161,11 @@ const PoomsaeEduOnePage = ({ language }) => {
           <div>
             <Webcam onPrediction={handlePrediction} poomsaeId={stageNum} mvSeq={mvSeq} />
           </div>
+          {countdown > 0 && (
+            <div className="countdownOverlay">
+              <h1>{countdown}</h1>
+            </div>
+          )}
           <div className='progress'>
             <ProgressBar
               value={accuracy}

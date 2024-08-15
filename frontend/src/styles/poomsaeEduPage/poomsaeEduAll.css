@@ -150,10 +150,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-}
-
-.countdownNumber {
-  font-size: 5rem;
   color: white;
+  font-size: 4rem;
+  z-index: 9999;
 }
