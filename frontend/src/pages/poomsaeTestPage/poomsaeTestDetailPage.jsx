@@ -147,12 +147,12 @@ const PoomsaeTestDetailPage = ({language}) => {
         if (!isModelActive) return;
 
         const predictionArray = Array.from(predictions);
-        const top3Predictions = predictionArray
-            .map((p, index) => ({ class: index, probability: p }))
-            .sort((a, b) => b.probability - a.probability)
-            .slice(0, 3);
-        const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
-        setPredictions(predictionResults);
+        // const top3Predictions = predictionArray
+        //     .map((p, index) => ({ class: index, probability: p }))
+        //     .sort((a, b) => b.probability - a.probability)
+        //     .slice(0, 3);
+        // const predictionResults = top3Predictions.map((p) => `Class ${p.class}: ${p.probability.toFixed(2)}`);
+        // setPredictions(predictionResults);
 
         const moveIndex = currentMoveIndex % 6;
         const predictionValue = predictionArray[moveIndex]?.toFixed(2);
@@ -171,22 +171,22 @@ const PoomsaeTestDetailPage = ({language}) => {
             {language==='ko'?
                 (<div className="detail-title">
                     <p>태극 {poomsaeId}장</p>
-                    <p className="exit" onClick={handleExit}>나가기</p>
+                    <p className="exit" onClick={handleExit} style={{ cursor: 'pointer' }}>나가기</p>
                 </div>
                 ) : (
                     
                 <div className="detail-title">
                     <p>Taegeuk {poomsaeId}</p>
-                    <p className="exit" onClick={handleExit}>Exit</p>
+                    <p className="exit" onClick={handleExit} style={{ cursor: 'pointer' }}>Exit</p>
                 </div>
                 )
             }
             <div className="detail-content">
                 <p>{instruction}</p>
                 <Webcam onPrediction={handlePrediction} poomsaeId={poomsaeId} isModelActive={isModelActive} currentMoveIndex={currentMoveIndex}/>
-                <div className="predictions">
+                {/* <div className="predictions">
                     <p>{predictions.join(', ')}</p>
-                </div>
+                </div> */}
                 {/* <div className="temp">
                     <button onClick={() => handleProgressUpdate(true)}>Increase Progress</button>
                     <button onClick={() => handleProgressUpdate(false)}>Fail Stage</button>

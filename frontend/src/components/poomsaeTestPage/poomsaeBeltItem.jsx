@@ -5,7 +5,7 @@ import Locked from "/src/assets/images/common/lock.png";  // 잠금 아이콘 �
 
 const PoomsaeBeltItem = ({ imageUrl, onClick, completed, locked }) => {
   return (
-    <div className={`belt-item ${locked ? 'locked' : ''}`} onClick={locked ? null : onClick}>
+    <div className={`belt-item ${locked ? 'locked' : ''}`} onClick={locked ? null : onClick} style={{ cursor: 'pointer' }}>
       <img src={imageUrl} alt="Belt" className="belt-img" />
       {completed && <img src={Completed} alt="Completed" className="completed-icon" />}
       {locked && <img src={Locked} alt="Locked" className="locked-icon" />}
