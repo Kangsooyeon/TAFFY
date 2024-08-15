@@ -1,5 +1,6 @@
 package com.taffy.backend.global.config;
 
+import com.taffy.backend.global.security.cors.CustomCorsConfigurationSource;
 import com.taffy.backend.global.security.jwt.CustomAuthenticationEntryPoint;
 import com.taffy.backend.global.security.jwt.JwtAuthenticationFilter;
 import com.taffy.backend.member.domain.Role;
@@ -12,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Slf4j
 @Configuration
@@ -43,7 +47,13 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
         );
 
+        http.addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfigurationSource source = new CustomCorsConfigurationSource();
+        return new CorsFilter(source);
+    }
 }

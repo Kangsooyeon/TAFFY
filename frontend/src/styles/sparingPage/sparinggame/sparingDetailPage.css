@@ -1,0 +1,149 @@
+.sparinggame {
+  box-sizing: border-box;
+  background-image: url('/src/assets/images/sparingPage/background-layer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* display: flex; */
+  height: calc(100vh);
+  position: relative;
+  z-index: 1
+}
+
+.sparinggameleft {
+  position: absolute;
+  width: 12%;
+  height: 26%;
+  z-index: 9999;
+}
+
+.sparinggameright {
+  position: absolute;
+  width: 12%;
+  height: 26%;
+  right: 0px;
+  z-index: 9999
+}
+
+.sparingstage {
+  position: absolute;
+  border-radius: 10px;
+  border: 3px solid #000;
+  background: #F5E8D7;
+  width: 94%;
+  height: 61%; 
+  top: 15%;
+  left: 3%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Align items to the top */
+  padding: 0px; 
+}
+
+.sparingmat {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  width: 90%;
+  height: 35%;
+  transform: translate(-50%)
+}
+
+.sparinggamebox {
+  display: flex;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.webcamleft {
+  /* z-index: 9999; */
+  /* position: absolute; */
+  left: 1%;
+  bottom: 1.5%
+}
+
+.webcamright {
+  /* z-index: 9999; */
+  /* position: absolute; */
+  right: 1%;
+  bottom: 1.5%
+}
+
+.hpbarleft {
+  top: 5%;
+  left: 3%
+}
+
+.hpbarright {
+  top: 5%;
+  right: 3%;
+  transform: scale(-1);
+}
+
+.gameuserright {
+  right: 1.5%;
+  top: 12%
+}
+
+.gameuserleft {
+  left: 1.5%;
+  top: 12%
+}
+
+.characterleft {
+  left: 28%;
+  transform: scaleX(-1);
+  bottom: 35%
+}
+
+.characterright {
+  right: 28%;
+  bottom: 35%
+}
+
+.finishimg {
+  z-index: 9999;
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%
+}
+
+.countdown-text {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%);
+  font-family: 'Su';
+  font-size: 40px;
+  text-align: center
+}
+
+.roundcontainer {
+  position: absolute;
+  top: 2.5%;
+  left: 50%;
+  font-family: 'Su';
+  font-size: 60px;
+  transform: translate(-50%, -50%);
+}
+
+.timerbox {
+  box-sizing: border-box;
+  z-index: 9997;
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+  height: 13%;
+  font-family: 'Su';
+  font-size: 90px;
+}
+
+.timerbox p {
+  margin: 0
+}

@@ -1,0 +1,123 @@
+.poomsae-test-detail-page {
+    position: relative; /* ::before 가상 요소를 위한 상대 위치 설정 */
+    width: 100%;
+    height: 100vh; /* 페이지 전체 높이 */
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.poomsae-test-detail-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/src/assets/images/poomsaeTestPage/psTestDetail_bg.png'); 
+    background-size: cover; /* 이미지를 컨테이너에 맞게 조정 */
+    background-position: center; /* 이미지 중앙으로 위치 */
+    background-repeat: no-repeat; /* 이미지를 반복하지 않도록 설정 */
+    opacity: 0.8; /* 투명도 설정 (0.0 - 1.0) */
+    z-index: -1; /* 배경 이미지가 콘텐츠 뒤에 오도록 설정 */
+}
+.detail-title {
+    display: flex; 
+    justify-content: space-between;
+    width: 90%;
+    margin-top: 20px;
+
+}
+
+.detail-title p {
+    margin: 0px;
+    font-size: 50px;
+    font-family: 'HappinessM';
+    color: white;
+
+}
+
+.detail-content {
+    position: relative;
+    width:90%;
+    height: 85%;
+    background-color: rgba(255, 255, 255, 0.8);;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-content p{
+    margin-top:10px;
+    margin-bottom: 0px;
+    font-size: 80px;
+    font-family: 'HappinessM';
+    color: black;
+}
+
+.webcam {
+    width: 70%;
+    height: 70%;
+    border: 1px solid black;
+    overflow: hidden;
+
+}
+
+.webcam canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+.predictions p {
+    color: black;
+    font-size: 30px; /* 텍스트 크기 조정 */
+    text-align: center;
+    overflow-y: auto; /* 내용이 넘치면 스크롤 */
+}
+
+
+
+
+.temp {
+    display: flex;
+    justify-content: space-between;
+    color: black;
+}
+
+.temp button {
+    color: black;
+}
+
+.poomsae-image {
+    max-width: 100%; /* 이미지가 div를 넘지 않도록 */
+    height: auto;    /* 비율을 유지하면서 높이 조정 */
+    display: block;  /* 이미지 주위에 여백이 생기지 않도록 */
+    margin: 0 auto;  /* 가운데 정렬 */
+}
+
+.pop-up-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 2; 
+}
+
+.progress-bar-container {
+    position: absolute;
+    top: 180px;
+    right: -50px;
+    width: 300px; /* 적절한 크기로 설정 */
+    height: 300px;
+    text-align: center;
+    z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
+}

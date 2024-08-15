@@ -2,6 +2,7 @@ package com.taffy.backend.global.webrtc;
 
 import java.util.Map;
 
+import com.taffy.backend.global.config.RedisConfig;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import io.openvidu.java.client.SessionProperties;
 @RestController
 public class WebrtcController {
 
+    private final RedisConfig redisConfig;
     @Value("${openvidu.url}")
     private String OPENVIDU_URL;
 
@@ -29,6 +31,10 @@ public class WebrtcController {
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
+
+    public WebrtcController(RedisConfig redisConfig) {
+        this.redisConfig = redisConfig;
+    }
 
     @PostConstruct
     public void init() {
@@ -40,7 +46,7 @@ public class WebrtcController {
             throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+        return new ResponseEntity<>(session.getSessionId() , HttpStatus.OK);
     }
 
     @PostMapping("/api/sessions/{sessionId}/connections")

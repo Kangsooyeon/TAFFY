@@ -12,13 +12,17 @@ import lombok.NoArgsConstructor;
 public class Belt {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "belt_id")
     private Long id;
 
     @Column(name = "belt_level")
-    private int belt_level;
+    private int beltLevel;
 
     @Column(name = "belt_name")
-    private String belt_name;
+    private String beltName;
+
+    @Column(name = "belt_title")
+    private String beltTitle;
 
 }

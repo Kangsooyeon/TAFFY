@@ -1,8 +1,13 @@
 package com.taffy.backend.member.domain;
 
 import com.taffy.backend.global.audit.BaseTime;
+import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
+import com.taffy.backend.record.domain.Record;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -26,16 +31,33 @@ public class Member extends BaseTime {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "country_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Country country;
 
     @Column(name = "profile_img")
+    @ColumnDefault("'Tiger'")
     private String profile_img;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "belt_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Belt belt;
 
     @Column(name = "nickname")
     private String nickname;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Record record;
+
+    public void updateInfo(MemberInfoUpdateRequestDto memberInfoUpdateRequestDto, Country country){
+        this.nickname = memberInfoUpdateRequestDto.getNickName();
+        this.profile_img = memberInfoUpdateRequestDto.getProfileImg();
+        if (country != null) {
+            this.country = country;
+        }
+    }
+    public void setBelt(Belt belt) {
+        this.belt = belt;
+    }
 
 }

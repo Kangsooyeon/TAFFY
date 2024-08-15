@@ -1,0 +1,41 @@
+.mypage {
+  background-image: url('/src/assets/images/myPage/background-layer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: calc(100vh);
+  position: relative;
+}
+
+.mypageupdatebutton {
+  border-radius: 10px;
+  border: 3px solid #F9E225;
+  background: #F9E225;
+  color: black;
+  font-family: 'Lee';
+  font-size: 13.9px;
+  position: absolute;
+  left: 37.5%;
+  bottom: 9.5%;
+  width: 5%;
+  height: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.photoselectbutton {
+  border: 3px solid #464145;
+  background: #D9D9D9;
+  box-shadow: 4px 4px 4px 0px #282831;
+  width: 9.5%;
+  height: 29%;
+  flex-shrink: 0;
+  position: absolute;
+  top: 17%;
+  right: 31.5%;
+  background-size: cover; /* Ensure the background image covers the button */
+  background-position: center;
+}

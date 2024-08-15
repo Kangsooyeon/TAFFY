@@ -4,16 +4,23 @@ import com.taffy.backend.global.email.MailService;
 import com.taffy.backend.global.email.dto.MailDto;
 import com.taffy.backend.global.security.jwt.dto.TokensResponseDTO;
 import com.taffy.backend.member.dto.LoginRequestDto;
+import com.taffy.backend.member.dto.MemberInfoUpdateRequestDto;
+import com.taffy.backend.member.dto.NicknameDuplicateDto;
 import com.taffy.backend.member.dto.SignUpRequestDto;
 import com.taffy.backend.member.service.MemberService;
+import com.taffy.backend.poomsae.dto.MyPageDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -26,15 +33,21 @@ public class MemberController {
 
     @PostMapping("/api/sign-up")
     public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto, BindingResult bindingResult){
-        memberService.signUp(signUpRequestDto);
+        memberService.signUpWithInitialData(signUpRequestDto);
         return ResponseEntity.status(CREATED).body("회원가입 완료");
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDto loginRequestDto, BindingResult bindingResult, HttpServletResponse httpServletResponse){
         TokensResponseDTO tokens = memberService.login(loginRequestDto);
         cookieTokenSetting(httpServletResponse, tokens);
-        return ResponseEntity.status(OK).body("로그인 완료");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("accessToken", tokens.getAtk());
+        response.put("refreshToken", tokens.getRtk());
+
+        return ResponseEntity.status(OK).body(response);
+//        return ResponseEntity.status(OK).body("로그인 완료");
     }
 
     @PostMapping("/api/mail")
@@ -50,22 +63,60 @@ public class MemberController {
     }
 
     @GetMapping("/api/reissue")
-    public ResponseEntity<?> reissueToken(@AuthenticationPrincipal Long memberId, HttpServletResponse httpServletResponse) {
+    public ResponseEntity<String> reissueToken(@AuthenticationPrincipal Long memberId, HttpServletResponse httpServletResponse) {
         TokensResponseDTO reissueToken = memberService.reissueToken(memberId);
         cookieTokenSetting(httpServletResponse, reissueToken);
         return ResponseEntity.status(OK).body("토큰 재발급 완료");
     }
-    
-    private static void cookieTokenSetting(HttpServletResponse httpServletResponse, TokensResponseDTO tokens) {
-        Cookie cookieAtk = new Cookie("atk", tokens.getAtk());
-        Cookie cookieRtk = new Cookie("rtk", tokens.getRtk());
-        cookieAtk.setHttpOnly(true);
-        cookieAtk.setPath("/");
-        cookieAtk.setMaxAge(60 * 60);
-        cookieRtk.setHttpOnly(true);
-        cookieRtk.setPath("/");
-        cookieRtk.setMaxAge(60 * 60);
-        httpServletResponse.addCookie(cookieAtk);
-        httpServletResponse.addCookie(cookieRtk);
+
+    @PatchMapping("/api/user")
+    public ResponseEntity<String> modificationInfo(@AuthenticationPrincipal Long memberId, @RequestBody MemberInfoUpdateRequestDto memberInfoUpdateRequestDto){
+        memberService.modificationInfo(memberId, memberInfoUpdateRequestDto);
+        return ResponseEntity.status(OK).body("회원정보 수정 완료");
+    }
+
+    @Deprecated
+    @PutMapping("/api/belt")
+    public ResponseEntity<String> beltPromotion(@AuthenticationPrincipal Long memberId){
+        memberService.beltPromotion(memberId);
+        return ResponseEntity.status(OK).body("축하합니다! 띠 단계 1단계 승급하였습니다.");
+    }
+
+    @GetMapping("/api/user")
+    public ResponseEntity<MyPageDto> myPage(@AuthenticationPrincipal Long memberId){
+        MyPageDto myPageDto = memberService.myPage(memberId);
+        return ResponseEntity.status(OK).body(myPageDto);
+    }
+
+    @PostMapping("/api/nickname")
+    public ResponseEntity<String> duplicateNickname(@RequestBody NicknameDuplicateDto nicknameDuplicateDto){
+        memberService.isNicknameDuplicate(nicknameDuplicateDto);
+        return ResponseEntity.status(OK).body("사용가능한 닉네임 입니다");
+    }
+
+    @PostMapping("/api/")
+
+    private static void cookieTokenSetting(HttpServletResponse response, TokensResponseDTO tokens) {
+        // Access Token 설정
+        ResponseCookie
+                cookieAtk = ResponseCookie.from("atk", tokens.getAtk())
+                .httpOnly(true)
+                .secure(true) // HTTPS 사용 시
+                .path("/")
+                .maxAge(60 * 60)
+                .sameSite("None") // 크로스사이트 전송 허용
+                .build();
+
+        // Refresh Token 설정
+        ResponseCookie cookieRtk = ResponseCookie.from("rtk", tokens.getRtk())
+                .httpOnly(true)
+                .secure(true) // HTTPS 사용 시
+                .path("/")
+                .maxAge(60 * 60)
+                .sameSite("None") // 크로스사이트 전송 허용
+                .build();
+
+        response.addHeader("Set-Cookie", cookieAtk.toString());
+        response.addHeader("Set-Cookie", cookieRtk.toString());
     }
 }
