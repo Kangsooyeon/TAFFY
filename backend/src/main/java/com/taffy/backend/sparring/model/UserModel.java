@@ -26,8 +26,6 @@ public class UserModel implements Serializable {
     private int winCnt;
     private int loseCnt;
     private int drawCnt;
-
-<<<<<<< HEAD
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
