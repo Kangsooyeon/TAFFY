@@ -93,6 +93,7 @@ const PoomsaeEduOnePage = ({ language }) => {
       okAudioRef.current.play();
       okAudioRef.current.onended = () => {
         setOkAudioPlaying(false); // okSound 재생이 끝나면 상태 해제
+        setAccuracy(0);
         setCount((prevCount) => {
           const newCount = prevCount + 1;
           if (newCount < 3) {
