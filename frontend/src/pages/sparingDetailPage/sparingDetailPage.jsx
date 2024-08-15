@@ -296,6 +296,7 @@ const SparingDetailPage = ({language}) => {
           setIsGamePaused(false);
         }, 3000);
         playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
+        startTimer()
       }
     });
 
@@ -447,8 +448,46 @@ const SparingDetailPage = ({language}) => {
 
     setTimeout(() => {
       setIsGamePaused(false);
+      startTimer()
     }, 3000);
   };  
+
+  const [time, setTime] = useState(5);
+  
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    let timer;
+    if (isActive && time > 0) {
+      timer = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (time === 0) {
+      clearInterval(timer);
+      setIsActive(false);
+    }
+
+    return () => clearInterval(timer);
+  }, [isActive, time]);
+
+  const startTimer = () => {
+    setTime(5);
+    setIsActive(true);
+  };
+
+
+  // useEffect(() => {
+  //   if (!isGamePaused) {
+  //     const timer = setTimeout(() => {
+  //       console.log('5 seconds have passed');
+  //       // Add any additional actions you want to trigger after 5 seconds here
+  //     }, 5000);
+  
+  //     // Cleanup function to clear the timer if the component unmounts or `isGamePaused` changes
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [isGamePaused]);
+  
 
   const playAudio = (audioUrl) => {
     if (audioRef.current && audioUrl) {
@@ -492,6 +531,7 @@ const SparingDetailPage = ({language}) => {
       <h1>
         {predictedLabel}, {isAttack ? 'true' : 'false'}, {myMission.data}
       </h1>
+      <h1>{time}</h1>
 
       {opponentDataReady && (
         <>
