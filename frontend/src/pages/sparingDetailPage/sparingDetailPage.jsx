@@ -291,12 +291,14 @@ const SparingDetailPage = ({language}) => {
         setIsAttack(data.opponentIsAttack);
         setMyMission(data.opponentMission);
         setOpponentMission(data.myMission);
-
+        
         setTimeout(() => {
           setIsGamePaused(false);
         }, 3000);
+        setTimeout(() => {
+          startTimer()
+        }, 3000);
         playAudio(language === 'ko' ? myMission.mvKoVo : myMission.mvEnVo)
-        startTimer()
       }
     });
 
@@ -450,6 +452,7 @@ const SparingDetailPage = ({language}) => {
       setIsGamePaused(false);
       startTimer()
     }, 3000);
+    
   };  
 
   const [time, setTime] = useState(5);
@@ -474,21 +477,7 @@ const SparingDetailPage = ({language}) => {
     setTime(5);
     setIsActive(true);
   };
-
-
-  // useEffect(() => {
-  //   if (!isGamePaused) {
-  //     const timer = setTimeout(() => {
-  //       console.log('5 seconds have passed');
-  //       // Add any additional actions you want to trigger after 5 seconds here
-  //     }, 5000);
   
-  //     // Cleanup function to clear the timer if the component unmounts or `isGamePaused` changes
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [isGamePaused]);
-  
-
   const playAudio = (audioUrl) => {
     if (audioRef.current && audioUrl) {
       audioRef.current.pause();
@@ -529,9 +518,13 @@ const SparingDetailPage = ({language}) => {
       </div>
       <h1 className="roundcontainer">{round}{language=='ko'? '회' : 'R'}</h1>
       <h1>
-        {predictedLabel}, {isAttack ? 'true' : 'false'}, {myMission.data}
+        {predictedLabel}, {myMission.data}
       </h1>
-      <h1>{time}</h1>
+
+      <div className="timerbox">
+        <p>{time}</p>
+      </div>
+      {/* <h1>{time}</h1> */}
 
       {opponentDataReady && (
         <>
@@ -555,7 +548,6 @@ const SparingDetailPage = ({language}) => {
           ) : (
             <>
               {fisrtMissionOn && <Mission myMission={myMission} opponentMission={opponentMission} language={language} />}
-              <Timer />
               <WebCam key={`webcam-left-${round}-${isAttack}`} className="webcamleft" streamManager={publisher} isAttack={isAttack} isLocalUser={true} setPredictedLabel={setPredictedLabel} language={language} isGamePaused={isGamePaused}/>
               {subscribers.map((subscriber, index) => (
                 <WebCam key={`webcam-right-${round}-${!isAttack}-${index}`} className="webcamright" streamManager={subscriber} isAttack={!isAttack} isLocalUser={false} setPredictedLabel={() => {}} language={language} />
