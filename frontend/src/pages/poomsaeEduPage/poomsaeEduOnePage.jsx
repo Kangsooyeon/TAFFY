@@ -97,7 +97,7 @@ const PoomsaeEduOnePage = ({ language }) => {
         setCount((prevCount) => {
           const newCount = prevCount + 1;
           if (newCount < 3) {
-            setCountdown(5); // 카운트가 3보다 작으면 카운트다운 시작
+            setCountdown(3); // 카운트가 3보다 작으면 카운트다운 시작
           } else {
             handleCompletion(); // 3번 성공 시 교육 완료
           }

@@ -116,10 +116,10 @@
   position: absolute;
   bottom: 5%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%);
   font-family: 'Su';
-  font-size: 50px;
-
+  font-size: 40px;
+  text-align: center
 }
 
 .roundcontainer {
@@ -129,4 +129,21 @@
   font-family: 'Su';
   font-size: 60px;
   transform: translate(-50%, -50%);
+}
+
+.timerbox {
+  box-sizing: border-box;
+  z-index: 9997;
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+  height: 13%;
+  font-family: 'Su';
+  font-size: 90px;
+}
+
+.timerbox p {
+  margin: 0
 }
