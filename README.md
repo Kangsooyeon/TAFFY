@@ -37,56 +37,69 @@
 
 [2. 프로젝트 개요](#프로젝트-개요)
 
-  [- 프로젝트 기간](#프로젝트-기간)
+  - [프로젝트 기간](#프로젝트-기간)
 
-  [- 구성원](#구성원)
+  - [구성원](#구성원)
 
-  [- 기술 아키텍쳐](#기술-아키텍쳐)
+  - [기술 아키텍쳐](#기술-아키텍쳐)
 
-  [- ERD 다이어그램](#ERD-다이어그램)
+  - [ERD 다이어그램](#erd-다이어그램)
 
-  [- MOCK UP](#MOCK-UP)
+  - [MOCK UP](#mock-up)
 
-  [- 포팅메뉴얼](#포팅메뉴얼)
+  - [포팅메뉴얼](#포팅메뉴얼)
 
-  [- 기능의 특장점](#기능의-특장점)
+  - [기능의 특장점](#기능의-특장점)
 
-  [- 기술의 차별점](#기술의-차별점)
-
-
-  
+  - [기술의 차별점](#기술의-차별점)
 
 [3. 주요 기능](#주요-기능)
 
-  [- 품새 교육](#품새-교육)
+  - [품새 교육](#품새-교육)
 
-  [- 품새 심사](#품새-심사)
+  - [품새 심사](#품새-심사)
 
-  [- 겨루기](#겨루기)
+  - [겨루기](#겨루기)
 
 [4. 사용법](#사용법)
 
 ---
+<a name="프로젝트-배경"></a>
 ## 🖼️ 프로젝트 배경
 > 태권도는 특별한 장비 없이 접근할 수 있는 스포츠로, 덕분에 다양한 국가에서 올림픽 태권도 메달을 획득하여 태권도에 대한 관심이 높아지고 있습니다.
 
 > 이러한 관심의 증가를 기회로 삼아, 태권도를 배우고 싶어하는 외국인들을 위해 언제 어디서나 태권도를 접할 수 있는 환경을 제공하고자 합니다.
+
+<a name="프로젝트-개요"></a>
 ## 🐕 프로젝트 개요
+
+<a name="프로젝트-기간"></a>
 ### 🗓️ 프로젝트 기간
 > 2024.07.02(화) - 2024.08.15(목) <br>
 기획 및 설계 : 2024.07.02. ~ 2024.07.12. (2주) <br>
 개발 : 2024.07.15. ~ 2024.08.15. (5주)
+
+<a name="구성원"></a>
 ### 👨‍👩‍👧‍👦 구성원
 ![teammember](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/team_member.png)
+
+<a name="기술-아키텍쳐"></a>
 ### 🛠️ 기술 아키텍쳐
 ![architecture](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/architecture2.png)
+
+<a name="erd-다이어그램"></a>
 ### 💾 ERD 다이어그램
 ![ERD](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/TAFFY_ERD.png)
 
+<a name="mock-up"></a>
 ### 🧸 MOCK UP
 > [TAFFY Figma](https://www.figma.com/proto/31a4ZFi5xrGGXsZLu8jLBb/TAFFY?page-id=212%3A353&node-id=334-1339&viewport=3344%2C1469%2C0.19&t=tPpbuzotJ6dNcJek-1&scaling=contain&content-scaling=fixed&starting-point-node-id=334%3A1339)
+
+<a name="포팅메뉴얼"></a>
 ### 🛳️ 포팅메뉴얼
 > [포팅 메뉴얼](https://www.notion.so/2ebec9e366d245b6ae146bde79212011)
+
+<a name="기능의-특장점"></a>
 ### 기능의 특장점
 1. 한/영 변환
 - 글로벌 유저 타깃으로 한영 변환해 서비스 이용 가능
@@ -106,6 +119,7 @@
 - 닉네임 / 캐릭터 / 국적 변경
 - 겨루기 승률 확인
 
+<a name="기술의-차별점"></a>
 ### 기술의 차별점
 1. OpenCV, mediapipe를 활용하여 Keras 모델을 통해 
 직접 모션인식 AI 모델 제작
@@ -117,12 +131,17 @@ tensorflow.js로 변환하여 모델 탑재
 CDN으로 제작하여 모델 사용
 
 4. WebRTC를 활용하여 실시간 겨루기 대결 가능
+
 ---
+<a name="주요-기능"></a>
 ## 🎈 주요 기능
+
+<a name="품새-교육"></a>
 ###  🌏 다국어 지원
 > 전세계인의 태권도 접근성을 위해 한국어, 영어 등 다국어 기능 지원, 더 많은 언어 추가예정
 ![다국어](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/%ED%95%9C%EC%98%81%EB%B3%80%ED%99%98.gif)
 
+<a name="품새-교육"></a>
 ### 👨‍🎓 품새 교육
 > 학습된 AI모델 품새의 개별 동작과 전체 동작을 학습할 수 있습니다. <br><br>
 **개별 동작 교육**
@@ -130,9 +149,12 @@ CDN으로 제작하여 모델 사용
 <br><br>**전체 동작 교육**
 ![전체동작](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/%EC%A0%84%EC%B2%B4%EA%B5%90%EC%9C%A1.gif)
 
+<a name="품새-심사"></a>
 ### 💯 품새 심사
 > 품새 교육에서 임의의 품새의 전체 교육을 성공하면 해당 품새를 심사 받을 수 있습니다. 심사를 통과하면 해당 품새에 해당하는 띠를 얻을 수 있습니다.
 ![품새심사](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/%ED%92%88%EC%83%88%EC%8B%9C%ED%97%98.gif)
+
+<a name="겨루기"></a>
 ### 🏆 겨루기
 > 다른 유저와의 화상통신을 통해, 주어진 동작을 먼저 정확하게 수행하여 겨룹니다.
 
@@ -142,11 +164,10 @@ CDN으로 제작하여 모델 사용
 >**초대 기능**
 ![초대기능](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/%EC%B4%88%EB%8C%80%EA%B8%B0%EB%8A%A5.gif)
 
-
 >****겨루기 진행 및 결과****
 ![겨루기](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/%EA%B2%A8%EB%A3%A8%EA%B8%B0+%EC%A7%84%ED%96%89+%EB%B0%8F+%EA%B2%B0%EA%B3%BC.gif)
 
-
+<a name="사용법"></a>
 ### **마이페이지**
 ![마이페이지](https://taffy104.s3.ap-northeast-2.amazonaws.com/readme/%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80.gif)
 
@@ -156,4 +177,4 @@ CDN으로 제작하여 모델 사용
 > 준비물 <br>
 웹캠이 탑재된 노트북 또는 웹캠이 연결된 데스크탑
 
-**TAFFY 사이트로 [이동](https://i11e104.p.ssafy.io/)**
+### **TAFFY 사이트로 [이동](https://i11e104.p.ssafy.io/)**
